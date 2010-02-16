@@ -1,6 +1,6 @@
 = sauce
 
-Description goes here.
+Ruby access to SauceLab's features
 
 == Note on Patches/Pull Requests
  
@@ -14,4 +14,4 @@ Description goes here.
 
 == Copyright
 
-Copyright (c) 2010 Sean Grove. See LICENSE for details.
+Copyright (c) 2010 Sauce Labs Inc. See LICENSE for details.

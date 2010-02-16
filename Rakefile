@@ -5,9 +5,9 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "sauce"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
-    gem.email = "sean@chuwe.com"
+    gem.summary = "Ruby access to Sauce Labs' features"
+    gem.description = "A ruby interface to Sauce Labs' services. Start/stop tunnels, retrieve Selenium logs, access video replays, etc."
+    gem.email = "sean@saucelabs.com"
     gem.homepage = "http://github.com/sgrove/sauce"
     gem.authors = ["Sean Grove"]
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
