@@ -2,6 +2,14 @@
 
 Ruby access to SauceLab's features
 
+== Features
+Current:
+* Treat tunnels like ruby objects. Find/create/destroy
+
+Planned:
+* ActiveRecord-like interface for video recordings, jobs logs, reverse tunnels
+* Start/stop local instances of Sauce RC
+
 == Note on Patches/Pull Requests
  
 * Fork the project.
