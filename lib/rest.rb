@@ -2,6 +2,7 @@ require 'rest_client'
 require 'json'
 
 module Sauce
+  # The module that brokers most communication with Sauce Labs' REST API
   class Client
     class BadAccessError < StandardError; end #nodoc
     class MisconfiguredError < StandardError; end #nodoc
@@ -24,14 +25,13 @@ module Sauce
     end
 
     def tunnels(options = {})
-      response = JSON.parse @client[:tunnels].get
-      return response.collect{|r| Sauce::Tunnel.new(@client, r)}
+      responses = JSON.parse @client[:tunnels].get
+      return responses.collect{|response| Sauce::Tunnel.new(@client, response)}
     end
 
     def destroy_all_tunnels(options={})
-      tunnels.each do |t|
-        t.destroy
-      end
+      tunnels.each {|tunnel| tunnel.destroy}
     end
+
   end
 end
