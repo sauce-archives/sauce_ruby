@@ -1,2 +1,3 @@
-require 'rest'
 require 'tunnel'
+require 'rest'
+

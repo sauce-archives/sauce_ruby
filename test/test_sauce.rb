@@ -65,6 +65,15 @@ class TestSauce < Test::Unit::TestCase
       end
 
       assert_equal true, tunnel.says_hello?
+
+      tunnel.destroy # cleanup
+    end
+
+    should "not attempt to telnet if status is not running" do
+      tunnel = @client.tunnels.create('DomainNames' => [@ip])
+
+      tunnel.status = "booting"
+      assert_equal false, tunnel.says_hello?
     end
 
     def teardown
