@@ -60,7 +60,7 @@ module Sauce
     # Creates a new tunnel machine
     def self.create(options)
       response = JSON.parse @@client[:tunnels].post(options.to_json, :content_type => 'application/json')
-      puts response.inspect
+      #puts response.inspect
       Tunnel.new response
     end
 
@@ -118,6 +118,8 @@ module Sauce
     # Sauce Labs' server will say hello on port 1025 as a sanity check. If no hello, something is wrong.
     # TODO: Make it say hello on port 1025. Currently a hack.
     def says_hello?(options={})
+      return false unless self.status == "running"
+
       # TODO: Read from options if necessary
       connection = {}
       connection[:host]        = @host
