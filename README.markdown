@@ -7,16 +7,17 @@ Features
 --------
 Current:
 
-*   Treat tunnels like ruby objects. Find/create/destroy
+*   ActiveRecord-like interface for tunnels: Find/create/destroy
+*   Same with jobs
 
 Planned:
 
-*   ActiveRecord-like interface for video recordings, jobs logs, reverse tunnels
+*   Extend to automatic retrieval of jobs logs, videos, reverse tunnels
 *   Start/stop local instances of Sauce RC
 
 Install
 -------
-Make sure you're pulling in gems from gemcutter, and then:
+Make sure you're pulling in gems from http://rubygems.org/, and then:
 
 `gem install sauce`
 
@@ -29,20 +30,21 @@ Here's how to start a tunnel using the Sauce gem
     account = YAML.load_file "live_account.yml"
     client = Sauce::Client.new(:username => account["username"],
                                :access_key => account["access_key"])
-    tunnel = client.create_tunnel('DomainNames' => ["123.456.789.123"])
+
+    tunnel = client.tunnel.create('DomainNames' => ["example.com"])
     tunnel.refresh!
     
-    client.tunnels # => [#<Sauce::Tunnel:0x1250e6c
-                             @host=nil,
-                             @status="running",
-                             @id="389a1c2a3d49861474c512e9a904be9e",
-                             @client=#<RestClient::Resource:0x1257fb4
-                               @block=nil,
-                               @url="https://username:access_key@saucelabs.com/rest/username/",
-                               @options={}>,
-                             @owner="username">]
+    client.tunnels.all # => [#<Sauce::Tunnel:0x1250e6c
+                                 @host=nil,
+                                 @status="running",
+                                 @id="389a1c2a3d49861474c512e9a904be9e",
+                                 @client=#<RestClient::Resource:0x1257fb4
+                                   @block=nil,
+                                   @url="https://username:access_key@saucelabs.com/rest/username/",
+                                   @options={}>,
+                                 @owner="username">]
 
-    tunnel.destroy # or client.destroy_all_tunnels
+    tunnel.destroy
 
 Note on Patches/Pull Requests
 ----------------------------- 

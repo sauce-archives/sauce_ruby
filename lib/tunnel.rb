@@ -53,7 +53,7 @@ module Sauce
       return responses.collect{|response| Sauce::Tunnel.new(response)}
     end
 
-    def self.destroy
+    def self.destroy_all
       self.all.each { |tunnel| tunnel.destroy }
     end
 

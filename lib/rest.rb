@@ -8,7 +8,7 @@ module Sauce
     class MisconfiguredError < StandardError; end #nodoc
 
     attr_accessor :username, :access_key, :client, :ip, :api_url
-    attr_accessor :tunnels
+    attr_accessor :tunnels, :jobs
 
     def initialize(options)
       @username   = options[:username]
@@ -22,6 +22,12 @@ module Sauce
       @tunnels = Sauce::Tunnel
       @tunnels.client = @client
       @tunnels.account = {:username => @username,
+        :access_key => @access_key,
+        :ip => @ip}
+
+      @jobs = Sauce::Job
+      @jobs.client = @client
+      @jobs.account = {:username => @username,
         :access_key => @access_key,
         :ip => @ip}
     end
