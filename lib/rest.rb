@@ -4,8 +4,8 @@ require 'json'
 module Sauce
   # The module that brokers most communication with Sauce Labs' REST API
   class Client
-    class BadAccessError < StandardError; end #nodoc
-    class MisconfiguredError < StandardError; end #nodoc
+    class BadAccessError < StandardError; end #:nodoc
+    class MisconfiguredError < StandardError; end #:nodoc
 
     attr_accessor :username, :access_key, :client, :ip, :api_url
     attr_accessor :tunnels, :jobs
@@ -16,20 +16,23 @@ module Sauce
       @ip         = options[:ip]
 
       raise MisconfiguredError if @username.nil? or @access_key.nil?
-      @api_url = "https://#{@username}:#{@access_key}@saucelabs.com/rest/#{@username}/"
+      @api_url = "https://#{@username}:#{@access_key}@saucelabs.com/api/v1/#{@username}/"
       @client = RestClient::Resource.new @api_url
 
       @tunnels = Sauce::Tunnel
       @tunnels.client = @client
-      @tunnels.account = {:username => @username,
+      @tunnels.account = {
+        :username => @username,
         :access_key => @access_key,
         :ip => @ip}
 
       @jobs = Sauce::Job
       @jobs.client = @client
-      @jobs.account = {:username => @username,
+      @jobs.account = {
+        :username => @username,
         :access_key => @access_key,
-        :ip => @ip}
+        :ip => @ip
+      }
     end
   end
 end
