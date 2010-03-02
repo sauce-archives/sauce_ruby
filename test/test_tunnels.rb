@@ -1,7 +1,7 @@
 require 'helper'
 
 class TestSauce < Test::Unit::TestCase
-  context "A Client instance" do
+  context "A V1 tunnel instance" do
     setup do
       # Create this file and put in your details to run the tests
       account = YAML.load_file "live_account.yml"
@@ -16,7 +16,7 @@ class TestSauce < Test::Unit::TestCase
     should "initialize with passed variables" do
       client = Sauce::Client.new(:username => "test_user",
                                  :access_key => "abc123")
-      assert_equal client.api_url, "https://test_user:abc123@saucelabs.com/rest/test_user/"
+      assert_equal "https://test_user:abc123@saucelabs.com/api/v1/test_user/", client.api_url
     end
 
     should "create a tunnel with the current user" do
