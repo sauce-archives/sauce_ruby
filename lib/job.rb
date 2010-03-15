@@ -49,7 +49,10 @@ module Sauce
     # Misnomer: Gets the most recent 100 jobs
     # TODO: Allow/automate paging
     def self.all(options={})
-      responses = JSON.parse @@client["jobs/full"].get
+      url = "jobs"
+      url += "?full=true" if options[:full] #unless options[:id_only]
+      responses = @@client[url].get
+      responses = JSON.parse responses.to_s
       return responses.collect{|response| Sauce::Job.new(response)}
     end
 
@@ -64,8 +67,11 @@ module Sauce
         id = options[:id]
       end
       
-      #puts "GET-URL: #{@@client.url}jobs/#{id}"
-      Sauce::Job.new JSON.parse(@@client["jobs/#{id}"].get)
+      puts "GET-URL: #{@@client.url}jobs/#{id}"
+      response = @@client["jobs/#{id}"].get
+
+      # TODO: Return nil if bad response
+      Sauce::Job.new JSON.parse(response.to_s)
     end
 
     # Creates an instance representing a job.
@@ -83,7 +89,10 @@ module Sauce
 
     # Save/update the current information for the job
     def save
-      response = JSON.parse(@@client["jobs/#{@id}"]. self.to_json, :content_type => :json, :accept => :json)
+      response = @@client["jobs/#{@id}"].put(self.to_json,
+                                             {:content_type => :json,
+                                               :accept => :json})
+      JSON.parse(response)
     end
 
     def self.to_json(options={})
@@ -119,6 +128,9 @@ module Sauce
 
     # Sets all internal variables from a hash
     def build!(options)
+      # Massage JSON
+      options.each { |key,value| options[key] = false if options[key] == "false" }
+
       @id              = options["id"]
       @owner           = options["owner"]
       @status          = options["status"]

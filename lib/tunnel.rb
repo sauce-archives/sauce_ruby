@@ -49,7 +49,7 @@ module Sauce
     end
 
     def self.all
-      responses = JSON.parse @@client[:tunnels].get
+      responses = JSON.parse @@client[:tunnels].get.body
       return responses.collect{|response| Sauce::Tunnel.new(response)}
     end
 
@@ -59,7 +59,7 @@ module Sauce
 
     # Creates a new tunnel machine
     def self.create(options)
-      response = JSON.parse @@client[:tunnels].post(options.to_json, :content_type => 'application/json')
+      response = JSON.parse @@client[:tunnels].post(options.to_json, :content_type => 'application/json').body
       #puts response.inspect
       Tunnel.new response
     end
@@ -72,13 +72,13 @@ module Sauce
     # Hits the destroy url for this tunnel, and then refreshes. Keep in mind it takes some time to completely teardown a tunnel.
     def destroy
       close_gateway
-      response = @@client["tunnels/#{@id}"].delete
+      response = @@client["tunnels/#{@id}"].delete.body
       refresh!
     end
 
     # Retrieves the latest information on this tunnel from the Sauce Labs' server
     def refresh!
-      response = JSON.parse @@client["tunnels/#{@id}"].get
+      response = JSON.parse @@client["tunnels/#{@id}"].get.body
       #puts "\Tunnel refresh with: #{response.inspect}"
       build! response
       self
@@ -128,7 +128,7 @@ module Sauce
       connection[:telnet_mode] = true
       connection[:timeout]     = 10
 
-      #puts "telnet: #{connection.inspect}"
+      puts "telnet: #{connection.inspect}"
 
       host = Net::Telnet::new("Host"       => connection[:host],
                               "Port"       => connection[:port],
@@ -138,6 +138,7 @@ module Sauce
       line = host.lines.first.chomp
 
       # Temporary workaround port 1025 problem
+      puts "Receieved: #{line}"
       prefix = "SSH-2.0-Twisted"
       line[0,prefix.length] == prefix
     end
@@ -199,22 +200,40 @@ module Sauce
       not @thread.nil?
     end
 
+    # Returns a json representation of the current state of the tunnel object
+    def to_json(options={})
+      json = {
+        :id =>              @id,
+        :owner =>           @owner,
+        :status =>          @status,
+        :creation_time =>   @creation_time,
+        :start_time =>      @start_time,
+        :end_time =>        @end_time,
+        :domain_name =>     @domain_names
+      }
+
+      options[:except].each { |key| json.delete(key) } if options[:except]
+      json = json.select { |key,value| options[:only].include? key } if options[:only]
+      
+      return json
+    end
+
     protected 
 
     # Sets all internal variables from a hash
     def build!(options)
+      options = options["tunnel"] unless options["tunnel"].nil?
       #puts "\tBuild with #{options.inspect}"
-      @status = options["Status"]
-      @owner  = options["Owner"]
-      @id     = options["_id"]
-      @id     = options["id"] if @id.nil? or @id.empty?
-      @host   = options["Host"]
-      @created_at = options["CreationTime"]
-      @updated_at = options["ModificationTime"]
-      @launch_time = options["LaunchTime"]
-      @domain_names = options["DomainNames"]
+      @status = options["status"]
+      @owner  = options["owner"]
+      @id     = options["id"]
+      @host   = options["host"]
+      @creation_time = options["creation_time"]
+      @start_time = options["start_time"]
+      @end_time = options["end_time"]
+      @domain_names = options["domain_names"]
 
-      raise NoIDError if @id.nil? or @id.empty?
+      raise NoIDError if @id.nil?
     end
   end
 end

@@ -1,22 +1,27 @@
 require 'helper'
+require 'yaml'
 
 class TestSauce < Test::Unit::TestCase
   context "A V1 tunnel instance" do
     setup do
       # Create this file and put in your details to run the tests
-      account = YAML.load_file "live_account.yml"
+      account = YAML.load_file "account.yml"
       @username = account["username"]
       @access_key = account["access_key"]
       @ip = account["ip"]
       @client = Sauce::Client.new(:username => @username,
-                                  :access_key => @access_key)
+                                  :access_key => @access_key,
+                                  :ip => @ip
+                                  )
+
+      #STDOUT.puts @client.api_url
       @client.tunnels.destroy_all
     end
 
     should "initialize with passed variables" do
       client = Sauce::Client.new(:username => "test_user",
                                  :access_key => "abc123")
-      assert_equal "https://test_user:abc123@saucelabs.com/api/v1/test_user/", client.api_url
+      assert_equal "http://test_user:abc123@saucelabs.com:80/rest/v1/test_user/", client.api_url
     end
 
     should "create a tunnel with the current user" do
@@ -49,6 +54,8 @@ class TestSauce < Test::Unit::TestCase
       @client.tunnels.destroy_all
 
       @client.tunnels.all.each do |tunnel|
+        # This could be failing because the tunnels are already dead. Our servers too fast?
+        tunnel.refresh!
         assert_equal "halting", tunnel.status
       end
     end
@@ -65,6 +72,24 @@ class TestSauce < Test::Unit::TestCase
       end
 
       assert_equal true, tunnel.says_hello?
+
+      tunnel.destroy # cleanup
+    end
+
+    should "have a host if finished booting" do
+      tunnel = @client.tunnels.create('DomainNames' => [@ip])
+
+      max_retries = 30
+      retries = 0
+      until tunnel.status == "running" or retries >= max_retries
+        sleep 5
+        retries += 1
+        tunnel.refresh!
+      end
+
+      tunnel.refresh!
+
+      assert_not_nil tunnel.host
 
       tunnel.destroy # cleanup
     end
