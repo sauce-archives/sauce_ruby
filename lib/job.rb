@@ -67,7 +67,7 @@ module Sauce
         id = options[:id]
       end
       
-      puts "GET-URL: #{@@client.url}jobs/#{id}"
+      #puts "GET-URL: #{@@client.url}jobs/#{id}"
       response = @@client["jobs/#{id}"].get
 
       # TODO: Return nil if bad response
@@ -81,7 +81,7 @@ module Sauce
 
     # Retrieves the latest information on this job from the Sauce Labs' server
     def refresh!
-      response = JSON.parse @@client["jobs/#{@id}"].get
+      response = JSON.parse @@client["jobs/#{@id}"].get.body
       #puts "\tjob refresh with: #{response}"
       build! response
       self
@@ -89,13 +89,14 @@ module Sauce
 
     # Save/update the current information for the job
     def save
+      #puts "Saving job:\n -X PUT #{@@client['jobs']}/#{@id} -H 'Content-Type: application/json' -d '#{self.to_json}'"
       response = @@client["jobs/#{@id}"].put(self.to_json,
                                              {:content_type => :json,
-                                               :accept => :json})
+                                               :accept => :json}).body
       JSON.parse(response)
     end
 
-    def self.to_json(options={})
+    def to_json(options={})
       json = {
         :id =>              @id,
         :owner =>           @owner,
@@ -117,7 +118,7 @@ module Sauce
       options[:except].each { |key| json.delete(key) } if options[:except]
       json = json.select { |key,value| options[:only].include? key } if options[:only]
       
-      return json
+      return json.to_json
     end
 
     def delete
@@ -128,6 +129,7 @@ module Sauce
 
     # Sets all internal variables from a hash
     def build!(options)
+      #puts "\tBuild with: #{options.inspect}"
       # Massage JSON
       options.each { |key,value| options[key] = false if options[key] == "false" }
 

@@ -118,7 +118,7 @@ module Sauce
     # Sauce Labs' server will say hello on port 1025 as a sanity check. If no hello, something is wrong.
     # TODO: Make it say hello on port 1025. Currently a hack.
     def says_hello?(options={})
-      return false unless self.status == "running"
+      return false unless self.status == "running" and not @host.nil?
 
       # TODO: Read from options if necessary
       connection = {}
@@ -128,8 +128,6 @@ module Sauce
       connection[:telnet_mode] = true
       connection[:timeout]     = 10
 
-      puts "telnet: #{connection.inspect}"
-
       host = Net::Telnet::new("Host"       => connection[:host],
                               "Port"       => connection[:port],
                               "Prompt"     => connection[:prompt],
@@ -138,7 +136,6 @@ module Sauce
       line = host.lines.first.chomp
 
       # Temporary workaround port 1025 problem
-      puts "Receieved: #{line}"
       prefix = "SSH-2.0-Twisted"
       line[0,prefix.length] == prefix
     end
@@ -206,6 +203,7 @@ module Sauce
         :id =>              @id,
         :owner =>           @owner,
         :status =>          @status,
+        :host =>            @host,
         :creation_time =>   @creation_time,
         :start_time =>      @start_time,
         :end_time =>        @end_time,
