@@ -1,7 +1,7 @@
 sauce
 =====
 
-Ruby access to SauceLab's features
+Ruby access to Sauce OnDemand
 
 Features
 --------
@@ -17,8 +17,6 @@ Planned:
 
 Install
 -------
-Make sure you're pulling in gems from http://rubygems.org/, and then:
-
 `gem install sauce`
 
 Example
