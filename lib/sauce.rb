@@ -1,3 +1,5 @@
 require 'tunnel'
 require 'job'
 require 'client'
+require 'config'
+require 'selenium'

@@ -14,6 +14,7 @@ begin
     gem.add_runtime_dependency "rest-client", ">= 0"
     gem.add_runtime_dependency "net-ssh", ">= 0"
     gem.add_runtime_dependency "net-ssh-gateway", ">= 0"
+    gem.add_runtime_dependency "selenium-client", ">= 1.2.18"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
