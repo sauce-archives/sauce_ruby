@@ -1,6 +1,6 @@
-module Sauce
-  begin
-    require 'spec'
+begin
+  require 'spec'
+  module Sauce
     module RSpec
       class SeleniumExampleGroup < Spec::Example::ExampleGroup
         attr_reader :selenium
@@ -23,7 +23,7 @@ module Sauce
         Spec::Example::ExampleGroupFactory.register(:selenium, self)
       end
     end
-  rescue LoadError
-    # User doesn't have RSpec installed
   end
+rescue LoadError
+  # User doesn't have RSpec installed
 end
