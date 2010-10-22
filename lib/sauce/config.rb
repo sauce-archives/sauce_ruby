@@ -61,6 +61,7 @@ module Sauce
         paths = [
             "ondemand.yml",
             File.join("config", "ondemand.yml"),
+            File.join(File.dirname(File.dirname(File.expand_path(File.dirname(__FILE__)))), "ondemand.yml"),
             File.join(ENV['HOME'], ".ondemand.yml")
         ]
 

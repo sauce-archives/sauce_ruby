@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'cmdparse'
+require 'yaml'
+
+cmd = CmdParse::CommandParser.new(true, true)
+cmd.program_name = "sauce "
+cmd.program_version = [0, 1, 0]
+
+cmd.add_command(CmdParse::HelpCommand.new)
+
+# configure
+configure = CmdParse::Command.new('configure', false)
+configure.short_desc = "Configure Sauce OnDemand credentials"
+configure.set_execution_block do |args|
+  if args.length < 2:
+    puts "Usage: sauce configure USERNAME ACCESS_KEY"
+    exit 1
+  end
+  username = args[0]
+  access_key = args[1]
+  out = File.new(File.join(File.dirname(File.expand_path(File.dirname(__FILE__))), "ondemand.yml"), 'w')
+  out.write(YAML.dump({"username" => username, "access_key" => access_key}))
+  out.close()
+end
+cmd.add_command(configure, true)
+
+cmd.parse
