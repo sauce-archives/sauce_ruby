@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'sauce/tunnel'
 require 'sauce/job'
 require 'sauce/client'

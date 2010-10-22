@@ -4,6 +4,10 @@ require 'rubygems'
 require 'cmdparse'
 require 'yaml'
 
+sauce_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+$LOAD_PATH.unshift(sauce_dir) unless $LOAD_PATH.include?(sauce_dir)
+require 'lib/sauce'
+
 cmd = CmdParse::CommandParser.new(true, true)
 cmd.program_name = "sauce "
 cmd.program_version = [0, 1, 0]
@@ -24,6 +28,39 @@ configure.set_execution_block do |args|
   out.write(YAML.dump({"username" => username, "access_key" => access_key}))
   out.close()
 end
-cmd.add_command(configure, true)
+cmd.add_command(configure)
+
+#create
+create = CmdParse::Command.new('create', false)
+create.short_desc = "Create a new Sauce OnDemand account"
+create.set_execution_block do |args|
+  puts "Let's create a new account!"
+  print "Username: "
+  username = $stdin.gets.chomp
+  print "password: "
+  password = $stdin.gets.chomp
+  print "password confirmation: "
+  password_confirmation = $stdin.gets.chomp
+  print "email: "
+  email = $stdin.gets.chomp
+  print "Full name: "
+  name = $stdin.gets.chomp
+
+  # TODO: Add error handling, of course
+  result = RestClient.post "http://saucelabs.com/rest/v1/users",
+    {
+    :username => username,
+    :password => password,
+    :password_confirmation => password_confirmation,
+    :email => email,
+    :token => "c8eb3e2645005bcbbce7e2c208c6b7a71555d908",
+    :name => name
+  }.to_json,
+    :content_type => :json, :accept => :json
+
+  puts result.inspect
+end
+
+cmd.add_command(create)
 
 cmd.parse
