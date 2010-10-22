@@ -1,6 +1,8 @@
+require 'rubygems'
 require 'sauce/tunnel'
 require 'sauce/job'
 require 'sauce/client'
 require 'sauce/config'
 require 'sauce/selenium'
 require 'sauce/integrations'
+require 'sauce/command_line'

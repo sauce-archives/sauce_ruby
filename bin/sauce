@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+sauce_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+$LOAD_PATH.unshift(sauce_dir) unless $LOAD_PATH.include?(sauce_dir)
+require 'lib/sauce'
+exit ::Sauce::CommandLine.run
+
