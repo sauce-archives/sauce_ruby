@@ -23,5 +23,36 @@ class TestConfig < Test::Unit::TestCase
       config = Sauce::Config.new
       assert_equal "saucelabs.com", config.host
     end
+
+    should "gracefully degrade the browsers field" do
+      Sauce.config {|c|}
+      config = Sauce::Config.new
+      config.os = "A"
+      config.browser = "B"
+      config.browser_version = "C"
+
+      assert_equal [["A", "B", "C"]], config.browsers
+    end
+  end
+
+  context "The Sauce.config method" do
+    should "Allow you to set a default OS" do
+      Sauce.config {|c| c.os = "TEST_OS" }
+
+      config = Sauce::Config.new
+      assert_equal "TEST_OS", config.os
+    end
+
+    should "Be callable twice" do
+      Sauce.config {|c| c.os = "A"}
+      assert_equal "A", Sauce::Config.new.os
+      Sauce.config {|c|}
+      assert_not_equal "A", Sauce::Config.new.os
+    end
+
+    should "not retain config after being called again" do
+      Sauce.config {|c|}
+      assert_not_equal [["Windows 2003", "firefox", "3.6."]], Sauce::Config.new.browsers
+    end
   end
 end

@@ -2,6 +2,15 @@ require 'json'
 require 'yaml'
 
 module Sauce
+  def self.config
+    @cfg = Sauce::Config.new(false)
+    yield @cfg
+  end
+
+  def self.get_config
+    @cfg
+  end
+
   class Config
     attr_reader :opts
     DEFAULT_OPTIONS = {
@@ -15,13 +24,23 @@ module Sauce
     }
 
     def initialize(opts={})
-      @opts = DEFAULT_OPTIONS.merge(load_options_from_yaml)
-      @opts.merge! load_options_from_environment
-      @opts.merge! opts
+      @opts = {}
+      if opts != false
+        @opts.merge! DEFAULT_OPTIONS
+        @opts.merge! load_options_from_yaml
+        @opts.merge! load_options_from_environment
+        @opts.merge! Sauce.get_config.opts rescue {}
+        @opts.merge! opts
+      end
     end
 
     def method_missing(meth, *args)
-      return @opts[meth]
+      if meth.to_s =~ /(.*)=$/
+        @opts[$1.to_sym] = args[0]
+        return args[0]
+      else
+        return @opts[meth]
+      end
     end
 
     def to_browser_string
@@ -33,6 +52,11 @@ module Sauce
         'browser-version' => @opts[:browser_version],
         'name' => @opts[:job_name]}
       return browser_options.to_json
+    end
+
+    def browsers
+      return @opts[:browsers] if @opts.include? :browsers
+      return [[os, browser, browser_version]]
     end
 
     private
