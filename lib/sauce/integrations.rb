@@ -15,8 +15,10 @@ begin
 
         def execute(*args)
           config = Sauce::Config.new
+          description = [self.class.description, self.description].join(" ")
           config.browsers.each do |os, browser, version|
-            @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version})
+            @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
+              :job_name => "#{description}"})
             super(*args)
           end
         end

@@ -13,4 +13,8 @@ describe "The Sauce website", :type => :selenium do
     page.open "/"
     page.is_text_present("Sauce Labs").should be_true
   end
+
+  it "has a pricing page" do
+    browser.open "/pricing"
+  end
 end
