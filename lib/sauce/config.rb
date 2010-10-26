@@ -1,5 +1,6 @@
 require 'json'
 require 'yaml'
+require 'uri'
 
 module Sauce
   def self.config
@@ -57,6 +58,11 @@ module Sauce
     def browsers
       return @opts[:browsers] if @opts.include? :browsers
       return [[os, browser, browser_version]]
+    end
+
+    def domain
+      return @opts[:domain] if @opts.include? :domain
+      return URI.parse(@opts[:browser_url]).host
     end
 
     private

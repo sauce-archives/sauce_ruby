@@ -6,61 +6,68 @@ require 'yaml'
 
 sauce_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(sauce_dir) unless $LOAD_PATH.include?(sauce_dir)
-require 'sauce'
 
-cmd = CmdParse::CommandParser.new(true, true)
-cmd.program_name = "sauce "
-cmd.program_version = [0, 1, 0]
+# special case for sauce connect
+if ARGV.length > 0 && ARGV[0] == 'connect'
+  require 'sauce/connect'
+  system ([Sauce::Connect.find_sauce_connect] + ARGV[1..100]).join(" ")
+else
+  require 'sauce'
 
-cmd.add_command(CmdParse::HelpCommand.new)
+  cmd = CmdParse::CommandParser.new(true, true)
+  cmd.program_name = "sauce "
+  cmd.program_version = [0, 1, 0]
 
-# configure
-configure = CmdParse::Command.new('configure', false)
-configure.short_desc = "Configure Sauce OnDemand credentials"
-configure.set_execution_block do |args|
-  if args.length < 2:
-    puts "Usage: sauce configure USERNAME ACCESS_KEY"
-    exit 1
+  cmd.add_command(CmdParse::HelpCommand.new)
+
+  # configure
+  configure = CmdParse::Command.new('configure', false)
+  configure.short_desc = "Configure Sauce OnDemand credentials"
+  configure.set_execution_block do |args|
+    if args.length < 2:
+      puts "Usage: sauce configure USERNAME ACCESS_KEY"
+      exit 1
+    end
+    username = args[0]
+    access_key = args[1]
+    out = File.new(File.join(File.dirname(File.expand_path(File.dirname(__FILE__))), "ondemand.yml"), 'w')
+    out.write(YAML.dump({"username" => username, "access_key" => access_key}))
+    out.close()
   end
-  username = args[0]
-  access_key = args[1]
-  out = File.new(File.join(File.dirname(File.expand_path(File.dirname(__FILE__))), "ondemand.yml"), 'w')
-  out.write(YAML.dump({"username" => username, "access_key" => access_key}))
-  out.close()
+  cmd.add_command(configure)
+
+  #create
+  create = CmdParse::Command.new('create', false)
+  create.short_desc = "Create a new Sauce OnDemand account"
+  create.set_execution_block do |args|
+    puts "Let's create a new account!"
+    print "Username: "
+    username = $stdin.gets.chomp
+    print "password: "
+    password = $stdin.gets.chomp
+    print "password confirmation: "
+    password_confirmation = $stdin.gets.chomp
+    print "email: "
+    email = $stdin.gets.chomp
+    print "Full name: "
+    name = $stdin.gets.chomp
+
+    # TODO: Add error handling, of course
+    result = RestClient.post "http://saucelabs.com/rest/v1/users",
+      {
+      :username => username,
+      :password => password,
+      :password_confirmation => password_confirmation,
+      :email => email,
+      :token => "c8eb3e2645005bcbbce7e2c208c6b7a71555d908",
+      :name => name
+    }.to_json,
+      :content_type => :json, :accept => :json
+
+    puts result.inspect
+  end
+
+  cmd.add_command(create)
+
+  cmd.parse
 end
-cmd.add_command(configure)
-
-#create
-create = CmdParse::Command.new('create', false)
-create.short_desc = "Create a new Sauce OnDemand account"
-create.set_execution_block do |args|
-  puts "Let's create a new account!"
-  print "Username: "
-  username = $stdin.gets.chomp
-  print "password: "
-  password = $stdin.gets.chomp
-  print "password confirmation: "
-  password_confirmation = $stdin.gets.chomp
-  print "email: "
-  email = $stdin.gets.chomp
-  print "Full name: "
-  name = $stdin.gets.chomp
-
-  # TODO: Add error handling, of course
-  result = RestClient.post "http://saucelabs.com/rest/v1/users",
-    {
-    :username => username,
-    :password => password,
-    :password_confirmation => password_confirmation,
-    :email => email,
-    :token => "c8eb3e2645005bcbbce7e2c208c6b7a71555d908",
-    :name => name
-  }.to_json,
-    :content_type => :json, :accept => :json
-
-  puts result.inspect
-end
-
-cmd.add_command(create)
-
-cmd.parse
