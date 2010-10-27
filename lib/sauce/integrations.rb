@@ -5,6 +5,20 @@ begin
       class SeleniumExampleGroup < Spec::Example::ExampleGroup
         attr_reader :selenium
 
+        before :suite do
+          config = Sauce::Config.new
+          if config.application_host
+            @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+            @@tunnel.wait_until_ready
+          end
+        end
+
+        after :suite do
+          if defined? @@tunnel
+            @@tunnel.disconnect
+          end
+        end
+
         before(:each) do
           @selenium.start
         end

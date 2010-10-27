@@ -1,12 +1,4 @@
-require 'helper'
-
-# This should go in a test helper
-Sauce.config do |config|
-  config.browsers = [
-    ["Windows 2003", "firefox", "3.6."],
-    ["Windows 2003", "safariproxy", "5."]
-  ]
-end
+require File.join(File.dirname(File.expand_path(File.dirname(__FILE__))), "test", "helper")
 
 describe "The Sauce website", :type => :selenium do
   it "works" do
