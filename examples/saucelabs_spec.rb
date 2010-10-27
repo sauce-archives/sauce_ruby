@@ -1,4 +1,4 @@
-require File.join(File.dirname(File.expand_path(File.dirname(__FILE__))), "test", "helper")
+require File.join(File.dirname(__FILE__), "helper")
 
 describe "The Sauce website", :type => :selenium do
   it "works" do
