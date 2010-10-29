@@ -11,7 +11,7 @@ module Sauce
       options.delete(:host)
       options.delete(:port)
       config = Sauce::Config.new(options)
-      args = ['-u', config.username, '-k', config.access_key, '-s', host, '-p', port, '-d', config.domain]
+      args = ['-u', config.username, '-k', config.access_key, '-s', host, '-p', port, '-d', config.domain, '-t', '80']
       @pipe = IO.popen(([Sauce::Connect.find_sauce_connect] + args).join(' '))
       at_exit do
         Process.kill("INT", @pipe.pid)

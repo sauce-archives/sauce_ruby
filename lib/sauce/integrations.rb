@@ -110,3 +110,36 @@ begin
 rescue LoadError
   # User doesn't have Test::Unit installed
 end
+
+if defined?(ActiveSupport::TestCase)
+  module Sauce
+    class RailsTestCase < ::ActiveSupport::TestCase
+      attr_reader :selenium
+
+      alias_method :page, :selenium
+      alias_method :s, :selenium
+
+      def run(*args, &blk)
+        unless name =~ /^default_test/
+          config = Sauce::Config.new
+          config.browsers.each do |os, browser, version|
+            @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
+              :job_name => "#{name}"})
+            @selenium.start
+            super(*args, &blk)
+            @selenium.stop
+          end
+        end
+      end
+
+      # Placeholder so test/unit ignores test cases without any tests.
+      def default_test
+      end
+
+      def self.ensure_tunnel_running
+        unless defined?(@tunnel)
+        end
+      end
+    end
+  end
+end
