@@ -49,7 +49,7 @@ rescue LoadError
 end
 
 begin
-  require 'test/unit'
+  require 'test/unit/testcase'
   module Sauce
     class TestCase < Test::Unit::TestCase
       attr_reader :selenium
