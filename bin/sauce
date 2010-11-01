@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'cmdparse'
 require 'yaml'
+require 'fileutils'
 
 sauce_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(sauce_dir) unless $LOAD_PATH.include?(sauce_dir)
@@ -30,7 +31,10 @@ else
     end
     username = args[0]
     access_key = args[1]
-    out = File.new(File.join(File.dirname(File.expand_path(File.dirname(__FILE__))), "ondemand.yml"), 'w')
+    dir = File.join(File.expand_path("~"), ".sauce")
+    FileUtils.mkdir(dir) unless File.directory?(dir)
+
+    out = File.new(File.join(dir, "ondemand.yml"), 'w')
     out.write(YAML.dump({"username" => username, "access_key" => access_key}))
     out.close()
   end

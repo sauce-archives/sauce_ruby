@@ -92,7 +92,7 @@ module Sauce
             "ondemand.yml",
             File.join("config", "ondemand.yml"),
             File.join(File.dirname(File.dirname(File.expand_path(File.dirname(__FILE__)))), "ondemand.yml"),
-            File.join(ENV['HOME'], ".ondemand.yml")
+            File.join(File.expand_path("~"), ".sauce", "ondemand.yml")
         ]
 
         paths.each do |path|
