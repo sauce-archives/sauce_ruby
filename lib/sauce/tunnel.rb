@@ -1,3 +1,5 @@
+# NOTE: This has been superseded by sauce/connect. Consider for deprecation
+
 require 'net/telnet'
 require 'net/ssh'
 require 'net/ssh/gateway'

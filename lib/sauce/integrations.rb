@@ -7,7 +7,7 @@ begin
 
         before :suite do
           config = Sauce::Config.new
-          if config.application_host
+          if config.application_host && !config.local?
             @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
             @@tunnel.wait_until_ready
           end
@@ -19,21 +19,22 @@ begin
           end
         end
 
-        before(:each) do
-          @selenium.start
-        end
-
-        after(:each) do
-          @selenium.stop
-        end
-
         def execute(*args)
           config = Sauce::Config.new
           description = [self.class.description, self.description].join(" ")
           config.browsers.each do |os, browser, version|
-            @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
-              :job_name => "#{description}"})
+            if config.local?
+              @selenium = ::Selenium::Client::Driver.new(:host => "127.0.0.1",
+                                                         :port => 4444,
+                                                         :browser => "*" + browser,
+                                                         :url => "http://127.0.0.1:#{config.local_application_port}/")
+            else
+              @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
+                :job_name => "#{description}"})
+            end
+            @selenium.start
             super(*args)
+            @selenium.stop
           end
         end
 
@@ -61,8 +62,15 @@ begin
         unless name =~ /^default_test/
           config = Sauce::Config.new
           config.browsers.each do |os, browser, version|
-            @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
-              :job_name => "#{name}"})
+            if config.local?
+              @selenium = ::Selenium::Client::Driver.new(:host => "127.0.0.1",
+                                                         :port => 4444,
+                                                         :browser => "*" + browser,
+                                                         :url => "http://127.0.0.1:#{config.local_application_port}/")
+            else
+              @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
+                :job_name => "#{name}"})
+            end
             @selenium.start
             super(*args, &blk)
             @selenium.stop
@@ -72,11 +80,6 @@ begin
 
       # Placeholder so test/unit ignores test cases without any tests.
       def default_test
-      end
-
-      def self.ensure_tunnel_running
-        unless defined?(@tunnel)
-        end
       end
     end
   end
@@ -95,7 +98,7 @@ begin
 
     def start_tunnel(msg)
       config = Sauce::Config.new
-      if config.application_host
+      if config.application_host && !config.local?
         @sauce_tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
         @sauce_tunnel.wait_until_ready
       end
@@ -123,8 +126,15 @@ if defined?(ActiveSupport::TestCase)
         unless name =~ /^default_test/
           config = Sauce::Config.new
           config.browsers.each do |os, browser, version|
-            @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
-              :job_name => "#{name}"})
+            if config.local?
+              @selenium = ::Selenium::Client::Driver.new(:host => "127.0.0.1",
+                                                         :port => 4444,
+                                                         :browser => "*" + browser,
+                                                         :url => "http://127.0.0.1:#{config.local_application_port}/")
+            else
+              @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
+                :job_name => "#{name}"})
+            end
             @selenium.start
             super(*args, &blk)
             @selenium.stop
@@ -134,11 +144,6 @@ if defined?(ActiveSupport::TestCase)
 
       # Placeholder so test/unit ignores test cases without any tests.
       def default_test
-      end
-
-      def self.ensure_tunnel_running
-        unless defined?(@tunnel)
-        end
       end
     end
   end

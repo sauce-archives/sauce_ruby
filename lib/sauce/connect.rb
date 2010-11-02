@@ -30,7 +30,7 @@ module Sauce
           if line =~ /- (Problem.*)$/
             @error = $1
           end
-          puts line
+          puts line unless options[:quiet]
         end
         @ready = false
       }

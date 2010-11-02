@@ -13,9 +13,10 @@ Current:
 
 Planned:
 
+*   Include selenium-client RSpec/Test::Unit integration
+*   Webrat integration
 *   Extend to automatic retrieval of jobs logs, videos, reverse tunnels
 *   Start/stop local instances of Sauce RC
-*   Webrat integration
 
 Install
 -------

@@ -1,3 +1,5 @@
+# NOTE: This has been superseded by sauce/connect. Consider for deprecation
+
 # http://groups.google.com/group/capistrano/browse_thread/thread/455c0c8a6faa9cc8?pli=1
 class Net::SSH::Gateway
   # Opens a SSH tunnel from a port on a remote host to a given host and port

@@ -14,6 +14,7 @@ module Sauce
 
   class Config
     attr_reader :opts
+
     DEFAULT_OPTIONS = {
         :host => "saucelabs.com",
         :port => 4444,
@@ -21,7 +22,8 @@ module Sauce
         :os => "Linux",
         :browser => "firefox",
         :browser_version => "3.",
-        :job_name => "Unnamed Ruby job"
+        :job_name => "Unnamed Ruby job",
+        :local_application_port => "3001"
     }
 
     def initialize(opts={})
@@ -63,6 +65,10 @@ module Sauce
     def domain
       return @opts[:domain] if @opts.include? :domain
       return URI.parse(@opts[:browser_url]).host
+    end
+
+    def local?
+      return ENV['LOCAL_SELENIUM']
     end
 
     private
