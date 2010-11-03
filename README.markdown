@@ -145,4 +145,4 @@ Note on Patches/Pull Requests
 
 Copyright
 ---------
-Copyright (c) 2010 Sauce Labs Inc. See LICENSE for details.
+Copyright (c) 2009-2010 Sauce Labs Inc. See LICENSE for details.
