@@ -5,7 +5,7 @@ class SauceGenerator < Rails::Generator::Base
   def initialize(runtime_args, runtime_options = {})
     config = Sauce::Config.new
     if config.username.nil? || config.access_key.nil?
-      if runtime_args.size < 2
+      if runtime_args.size != 2
         raise "Usage: #{$0} sauce <USERNAME> <ACCESS_KEY>"
       else
         system("sauce config #{runtime_args[0]} #{runtime_args[1]}")
