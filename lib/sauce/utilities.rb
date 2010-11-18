@@ -28,15 +28,7 @@ module Sauce
 
     def with_rails_server
       STDERR.puts "Starting Rails server on port 3001..."
-      server = IO.popen("script/server RAILS_ENV=test --port 3001 2>&1")
-      pid = nil
-      Thread.new do
-        while (line = server.gets)
-          if line =~ /pid=(.*) /
-            pid = $1.to_i
-          end
-        end
-      end
+      server = IO.popen("ruby script/server RAILS_ENV=test --port 3001 --daemon")
 
       silence_stream(STDOUT) do
         TCPSocket.wait_for_service(:host => "127.0.0.1", :port => 3001)
@@ -45,7 +37,12 @@ module Sauce
       begin
         yield
       ensure
-        Process.kill("INT", pid)
+        begin
+          pid = IO.read(File.join('tmp', 'pids', 'server.pid')).to_i
+          Process.kill("INT", pid)
+        rescue
+          STDERR.puts "Rails server could not be killed. Is the pid in #{File.join('tmp', 'pids', 'server.pid')}?"
+        end
       end
     end
   end
