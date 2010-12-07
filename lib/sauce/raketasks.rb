@@ -6,32 +6,34 @@ end
 
 include Sauce::Utilities
 
-namespace :spec do
-  namespace :selenium do
-    desc "Run the Selenium acceptance tests in spec/selenium using Sauce OnDemand"
-    task :sauce => spec_prereq do
-      with_rails_server do
-        Rake::Task["spec:selenium:runtests"].invoke
-      end
-    end
-
-    desc "Run the Selenium acceptance tests in spec/selenium using a local Selenium server"
-    task :local => spec_prereq do
-      with_rails_server do
-        with_selenium_rc do
+if defined?(Spec)
+  namespace :spec do
+    namespace :selenium do
+      desc "Run the Selenium acceptance tests in spec/selenium using Sauce OnDemand"
+      task :sauce => spec_prereq do
+        with_rails_server do
           Rake::Task["spec:selenium:runtests"].invoke
         end
       end
+
+      desc "Run the Selenium acceptance tests in spec/selenium using a local Selenium server"
+      task :local => spec_prereq do
+        with_rails_server do
+          with_selenium_rc do
+            Rake::Task["spec:selenium:runtests"].invoke
+          end
+        end
+      end
+
+      desc "" # Hide it from rake -T
+      Spec::Rake::SpecTask.new :runtests do |t|
+        t.spec_opts = ['--options', "\"#{RAILS_ROOT}/spec/spec.opts\""]
+        t.spec_files = FileList["spec/selenium/**/*_spec.rb"]
+      end
     end
 
-    desc "" # Hide it from rake -T
-    Spec::Rake::SpecTask.new :runtests do |t|
-      t.spec_opts = ['--options', "\"#{RAILS_ROOT}/spec/spec.opts\""]
-      t.spec_files = FileList["spec/selenium/**/*_spec.rb"]
-    end
+    task :selenium => "selenium:sauce"
   end
-
-  task :selenium => "selenium:sauce"
 end
 
 namespace :test do

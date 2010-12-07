@@ -3,12 +3,14 @@
 from __future__ import with_statement
 
 # TODO:
+#   * ?? Use "-o StrictHostKeyChecking no"
 #   * Move to REST API v1
 #   * windows: SSH link healthcheck (PuTTY session file hack?)
 #   * Daemonizing
 #     * issue: windows: no os.fork()
 #     * issue: unix: null file descriptors causes Expect script to fail
 #   * Renew tunnel lease (backend not implemented)
+#   * Check tunnel machine ports are open (backend not implemented)
 #
 
 import os
@@ -18,6 +20,7 @@ import optparse
 import logging
 import logging.handlers
 import signal
+import atexit
 import httplib
 import urllib2
 import subprocess
@@ -36,7 +39,7 @@ except ImportError:
     import simplejson as json  # Python 2.5 dependency
 
 NAME = "sauce_connect"
-RELEASE = 17
+RELEASE = 20
 DISPLAY_VERSION = "%s release %s" % (NAME, RELEASE)
 PRODUCT_NAME = u"Sauce Connect"
 VERSIONS_URL = "http://saucelabs.com/versions.json"
@@ -49,6 +52,8 @@ REST_POLL_WAIT = 3
 RETRY_SSH_MAX = 4
 HEALTH_CHECK_INTERVAL = 15
 HEALTH_CHECK_FAIL = 5 * 60  # no good check after this amount of time == fail
+LATENCY_LOG = 150  # log when making connections takes this many ms
+LATENCY_WARNING = 350  # warn when making connections takes this many ms
 SIGNALS_RECV_MAX = 4  # used with --allow-unclean-exit
 
 is_windows = platform.system().lower() == "windows"
@@ -124,8 +129,7 @@ class TunnelMachine(object):
                 try:
                     result = f(*args, **kwargs)
                     if previous_failed:
-                        logger.info(
-                            "Connection succeeded")
+                        logger.info("Connection succeeded")
                     return result
                 except (HTTPResponseError,
                         urllib2.URLError, httplib.HTTPException,
@@ -140,6 +144,10 @@ class TunnelMachine(object):
                     previous_failed = True
                     logger.debug("Retrying in %ds", RETRY_REST_WAIT)
                     time.sleep(RETRY_REST_WAIT)
+                except Exception, e:
+                    raise TunnelMachineError(
+                        "An error occurred while contacting Sauce Labs REST "
+                        "API (%s). Please contact help@saucelabs.com." % str(e))
         return wrapper
 
     @_retry_rest_api
@@ -207,7 +215,7 @@ class TunnelMachine(object):
                     "or value for '%s'" % key)
         self.id = doc['id']
         self.url = "%s/%s" % (self.base_url, self.id)
-        logger.debug("Provisioned tunnel host: %s" % self.id)
+        logger.info("Tunnel host is provisioned (%s)" % self.id)
 
     def ready_wait(self):
         """Wait for the machine to reach the 'running' state."""
@@ -236,7 +244,12 @@ class TunnelMachine(object):
         logger.info("Shutting down tunnel host (please wait)")
         logger.debug("Tunnel host ID: %s" % self.id)
 
-        doc = self._get_delete_doc(self.url)
+        try:
+            doc = self._get_delete_doc(self.url)
+        except TunnelMachineError:
+            logger.warning("Unable to shut down tunnel host")
+            self.is_shutdown = True  # fuhgeddaboudit
+            return
         assert doc.get('ok')
 
         previous_status = None
@@ -271,6 +284,8 @@ class HealthCheckFail(Exception):
 
 class HealthChecker(object):
 
+    latency_log = LATENCY_LOG
+
     def __init__(self, host, ports, fail_msg=None):
         """fail_msg can include '%(host)s' and '%(port)d'"""
         self.host = host
@@ -280,34 +295,54 @@ class HealthChecker(object):
                              "can not get to %(host)s:%(port)d.")
         self.ports = frozenset(int(p) for p in ports)
         self.last_tcp_connect = defaultdict(time.time)
-        self.previous_failed = defaultdict(lambda: False)
+        self.last_tcp_ping = defaultdict(lambda: None)
 
-    def _tcp_connected(self, port):
+    def _tcp_ping(self, port):
         with closing(socket.socket()) as sock:
+            start_time = time.time()
             try:
                 sock.connect((self.host, port))
-                return True
+                return int(1000 * (time.time() - start_time))
             except (socket.gaierror, socket.error), e:
                 logger.warning("Could not connect to %s:%s (%s)",
                                self.host, port, str(e))
-                return False
 
     def check(self):
+        now = time.time()
         for port in self.ports:
-            if self._tcp_connected(port):
+            ping_time = self._tcp_ping(port)
+            if ping_time is not None:
                 # TCP connection succeeded
-                self.last_tcp_connect[port] = time.time()
-                if self.previous_failed[port]:
-                    logger.info(
-                        "Succesfully connected to %s:%s" % (self.host, port))
-                self.previous_failed[port] = False
+                self.last_tcp_connect[port] = now
+                result = (self.host, port, ping_time)
+
+                if ping_time >= self.latency_log:
+                    logger.debug("Connected to %s:%s in in %dms" % result)
+
+                if ping_time >= LATENCY_WARNING:
+                    if (self.last_tcp_ping[port] is None
+                        or self.last_tcp_ping[port] < LATENCY_WARNING):
+                        logger.warn("High latency to %s:%s (took %dms to "
+                                    "connect); tests may run slowly" % result)
+
+                if (ping_time < (LATENCY_WARNING / 2)
+                    and self.last_tcp_ping[port]
+                    and self.last_tcp_ping[port] >= LATENCY_WARNING):
+                    logger.info("Latency to %s:%s has lowered (took %dms to "
+                                "connect)" % result)
+
+                if self.last_tcp_ping[port] is None:
+                    logger.info("Succesfully connected to %s:%s in %dms" % result)
+
+                self.last_tcp_ping[port] = ping_time
                 continue
+
             # TCP connection failed
-            self.previous_failed[port] = True
+            self.last_tcp_ping[port] = ping_time
             logger.warning(self.fail_msg % dict(host=self.host, port=port))
-            if time.time() - self.last_tcp_connect[port] > HEALTH_CHECK_FAIL:
+            if now - self.last_tcp_connect[port] > HEALTH_CHECK_FAIL:
                 raise HealthCheckFail(
-                    "Could not connect to %s:%s for %s seconds"
+                    "Could not connect to %s:%s for over %s seconds"
                     % (self.host, port, HEALTH_CHECK_FAIL))
 
 
@@ -401,10 +436,13 @@ class ReverseSSH(object):
 
         # ssh process is running
         announced_running = False
+
+        # setup recurring healthchecks
         forwarded_health = HealthChecker(self.host, self.ports)
         tunnel_health = HealthChecker(host=self.tunnel.host, ports=[22],
             fail_msg="!! Your tests may fail because your network can not get "
                      "to the tunnel host (%s:%d)." % (self.tunnel.host, 22))
+
         start_time = int(time.time())
         while self.proc.poll() is None:
             now = int(time.time())
@@ -463,14 +501,16 @@ class ReverseSSH(object):
 
     def stop(self):
         self._rm_readyfile()
-        self._log_output()
-        if is_windows or not self.proc:
+        if not self.proc or self.proc.poll() is not None:  # not running, done
             return
-        try:
-            os.kill(self.proc.pid, signal.SIGHUP)
-            logger.debug("Sent SIGHUP to PID %d", self.proc.pid)
-        except OSError:
-            pass
+
+        if not is_windows:  # windows no have kill()
+            try:
+                os.kill(self.proc.pid, signal.SIGHUP)
+                logger.debug("Sent SIGHUP to PID %d", self.proc.pid)
+            except OSError:
+                pass
+        self._log_output()
 
     def run(self, readyfile=None):
         clean_exit = False
@@ -481,41 +521,51 @@ class ReverseSSH(object):
             # TODO: revisit if server uses OpenSSH instead of Twisted SSH
             if self._start_reverse_ssh(readyfile) == 0:
                 clean_exit = True
+                break
+            if attempt < RETRY_SSH_MAX:
+                logger.debug("Will restart SSH in 3 seconds")
+                time.sleep(3)  # wait a bit for old connections to close
         self._rm_readyfile()
         if not clean_exit:
             raise ReverseSSHError(
                 "SSH process errored %d times (bad network?)" % attempt)
 
 
-def peace_out(tunnel=None, returncode=0):
+def peace_out(tunnel=None, returncode=0, atexit=False):
     """Shutdown the tunnel and raise SystemExit."""
     if tunnel:
         tunnel.shutdown()
-    logger.info("\ Exiting /")
-    raise SystemExit(returncode)
+    if not atexit:
+        logger.info("\ Exiting /")
+        raise SystemExit(returncode)
+    else:
+        logger.debug("--- fin ---")
 
 
 def setup_signal_handler(tunnel, options):
     signal_count = defaultdict(int)
+    signal_name = {}
 
     def sig_handler(signum, frame):
         if options.allow_unclean_exit:
             signal_count[signum] += 1
             if signal_count[signum] > SIGNALS_RECV_MAX:
-                logger.info("Received signal %d too many times (%d). Making "
-                            "unclean exit now!", signum, signal_count[signum])
+                logger.info(
+                    "Received %s too many times (%d). Making unclean "
+                    "exit now!", signal_name[signum], signal_count[signum])
                 raise SystemExit(1)
-        logger.info("Received signal %d", signum)
+        logger.info("Received signal %s", signal_name[signum])
         peace_out(tunnel)  # exits
 
     # TODO: ?? remove SIGTERM when we implement tunnel leases
     if is_windows:
-        # TODO: What do these Windows signals really mean?
         supported_signals = ["SIGABRT", "SIGBREAK", "SIGINT", "SIGTERM"]
     else:
         supported_signals = ["SIGHUP", "SIGINT", "SIGQUIT", "SIGTERM"]
     for sig in supported_signals:
-        signal.signal(getattr(signal, sig), sig_handler)
+        signum = getattr(signal, sig)
+        signal_name[signum] = sig
+        signal.signal(signum, sig_handler)
 
 
 def check_version():
@@ -544,9 +594,13 @@ def check_version():
         logger.info(failed_msg)
         return
     if RELEASE < latest:
-        update_msg = "** Please update %s: %s" % (PRODUCT_NAME, download_url)
-        logger.warning(update_msg)
-        sys.stderr.write("%s\n" % update_msg)
+        msgs = ["** This version of %s is outdated." % PRODUCT_NAME,
+                "** Please update with %s" % download_url]
+        for update_msg in msgs:
+            logger.warning(update_msg)
+        for update_msg in msgs:
+            sys.stderr.write("%s\n" % update_msg)
+        time.sleep(15)
 
 
 def setup_logging(logfile=None, quiet=False):
@@ -567,6 +621,38 @@ def setup_logging(logfile=None, quiet=False):
         fileout.setFormatter(logging.Formatter(
             "%(asctime)s - %(name)s:%(lineno)d - %(levelname)s - %(message)s"))
         logger.addHandler(fileout)
+
+
+def check_domains(domains):
+    """Display error and exit script if any requested domains are invalid."""
+
+    for dom in domains:
+        # no URLs
+        if '/' in dom:
+            sys.stderr.write(
+                "Error: Domain contains illegal character '/' in it.\n")
+            print "       Did you use a URL instead of just the domain?\n"
+            print "Examples: -d example.com -d '*.example.com' -d cdn.example.org"
+            print
+            raise SystemExit(1)
+
+        # no numerical addresses
+        if all(map(lambda c: c.isdigit() or c == '.', dom)):
+            sys.stderr.write("Error: Domain must be a hostname not an IP\n")
+            print
+            print "Examples: -d example.com -d '*.example.com' -d cdn.example.org"
+            print
+            raise SystemExit(1)
+
+        # need a dot and 2 char TLD
+        # NOTE: if this restriction is relaxed, still check for "localhost"
+        if '.' not in dom or len(dom.rpartition('.')[2]) < 2:
+            sys.stderr.write(
+                "Error: Domain requires a TLD of 2 characters or more\n")
+            print
+            print "Example: -d example.tld -d '*.example.tld' -d cdn.example.tld"
+            print
+            raise SystemExit(1)
 
 
 def get_options():
@@ -629,6 +715,9 @@ Performance tip:
     og.add_option("--rest-url", default="https://saucelabs.com/rest",
                   help="[%default]")
     og.add_option("--debug-ssh", action="store_true", default=False)
+    og.add_option("--latency-log", type=int, default=LATENCY_LOG,
+                  help="Threshold above which latency (ms) will be "
+                       "logged. [%default]")
     og.add_option("--allow-unclean-exit", action="store_true", default=False)
     op.add_option_group(og)
 
@@ -658,17 +747,7 @@ Performance tip:
             op.print_help()
             raise SystemExit(1)
 
-    # check for '/' in any domain names (might be a URL)
-    # TODO: domain is not an IP
-    # TODO: check domain uses a dot and a tld of 2 chars or more
-    if [dom for dom in options.domains if '/' in dom]:
-        sys.stderr.write(
-              "Error: Domain contains illegal character '/' in it.\n")
-        print "       Did you use a URL instead of just the domain?\n"
-        print "Examples: -d example.com -d '*.example.com' -d cdn.example.org"
-        print ""
-        raise SystemExit(1)
-
+    check_domains(options.domains)
     return options
 
 
@@ -717,15 +796,18 @@ def check_dependencies():
                 dependency = command.split(" ")[0]
                 raise MissingDependenciesError(dependency)
             output.seek(0)
-            return output.read()
+            return output.read().strip()
 
-    check("expect -v")
+    version = {}
+    version['expect'] = check("expect -v")
 
-    output = check("ssh -V")
-    if not output.startswith("OpenSSH"):
+    version['ssh'] = check("ssh -V")
+    if not version['ssh'].startswith("OpenSSH"):
         msg = "You have '%s' installed,\nbut %s only supports OpenSSH." % (
-              output.strip(), PRODUCT_NAME)
+              version['ssh'], PRODUCT_NAME)
         raise MissingDependenciesError("OpenSSH", extra_msg=msg)
+
+    return version
 
 
 def _get_loggable_options(options):
@@ -734,7 +816,7 @@ def _get_loggable_options(options):
     return ops
 
 
-def _run(options):
+def run(options, dependency_versions=None):
     if not options.quiet:
         print ".---------------------------------------------------."
         print "|  Have questions or need help with Sauce Connect?  |"
@@ -744,9 +826,6 @@ def _run(options):
     logger.info("%s" % DISPLAY_VERSION)
     check_version()
 
-    # log the options
-    logger.debug("options: %s" % _get_loggable_options(options))
-
     metadata = dict(ScriptName=NAME,
                     ScriptRelease=RELEASE,
                     Platform=platform.platform(),
@@ -754,13 +833,19 @@ def _run(options):
                     OwnerHost=options.host,
                     OwnerPorts=options.ports,
                     Ports=options.tunnel_ports, )
+    if dependency_versions:
+        metadata['DependencyVersions'] = dependency_versions
+
+    logger.debug("System is %s hours off UTC" %
+                 (- (time.timezone, time.altzone)[time.daylight] / 3600.))
+    logger.debug("options: %s" % _get_loggable_options(options))
     logger.debug("metadata: %s" % metadata)
 
-    logger.info("Forwarding: %s:%s -> %s:%s",
-                options.domains, options.tunnel_ports,
-                options.host, options.ports)
+    logger.info("Forwarding: %s:%s -> %s:%s", options.domains,
+                options.tunnel_ports, options.host, options.ports)
 
-    # Initial check of forwarded ports
+    # Setup HealthChecker latency and make initial check of forwarded ports
+    HealthChecker.latency_log = options.latency_log
     fail_msg = ("!! Are you sure this machine can get to your web server on "
                 "host '%(host)s' listening on port %(port)d? Your tests will "
                 "fail while the server is unreachable.")
@@ -774,6 +859,7 @@ def _run(options):
             logger.error(e)
             peace_out(returncode=1)  # exits
         setup_signal_handler(tunnel, options)
+        atexit.register(peace_out, tunnel, atexit=True)
         try:
             tunnel.ready_wait()
             break
@@ -796,8 +882,14 @@ def _run(options):
 
 
 def main():
+    # more complicated so this works on old Python
+    pyver = float("%s.%s" % tuple(platform.python_version().split('.')[:2]))
+    if pyver < 2.5:
+        print "%s requires Python 2.5 (2006) or newer." % PRODUCT_NAME
+        raise SystemExit(1)
+
     try:
-        check_dependencies()
+        dependency_versions = check_dependencies()
     except MissingDependenciesError, e:
         print "\n== Missing requirements ==\n"
         print e
@@ -807,7 +899,7 @@ def main():
     setup_logging(options.logfile, options.quiet)
 
     try:
-        _run(options)
+        run(options, dependency_versions)
     except Exception, e:
         logger.exception("Unhandled exception: %s", str(e))
         msg = "*** Please send this error to help@saucelabs.com. ***"
