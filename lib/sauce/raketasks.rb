@@ -6,7 +6,7 @@ end
 
 include Sauce::Utilities
 
-if defined?(Spec)
+if defined?(Spec::Rake::SpecTask)
   namespace :spec do
     namespace :selenium do
       desc "Run the Selenium acceptance tests in spec/selenium using Sauce OnDemand"
