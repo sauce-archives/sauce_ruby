@@ -28,7 +28,11 @@ module Sauce
 
     def with_rails_server
       STDERR.puts "Starting Rails server on port 3001..."
-      server = IO.popen("ruby script/server RAILS_ENV=test --port 3001 --daemon")
+      if File.exists?('script/server')
+        server = IO.popen("ruby script/server RAILS_ENV=test --port 3001 --daemon")
+      elsif File.exists?('script/rails')
+        server = IO.popen("script/rails server -p 3001 -e test")
+      end
 
       silence_stream(STDOUT) do
         TCPSocket.wait_for_service(:host => "127.0.0.1", :port => 3001)

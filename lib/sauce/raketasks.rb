@@ -1,6 +1,6 @@
 require 'sauce'
 
-spec_prereq = File.exist?(File.join(RAILS_ROOT, 'config', 'database.yml')) ? "db:test:prepare" : :noop
+spec_prereq = File.exist?(File.join(::Rails.root.to_s, 'config', 'database.yml')) ? "db:test:prepare" : :noop
 task :noop do
 end
 
