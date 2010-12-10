@@ -59,7 +59,12 @@ begin
       alias_method :s, :selenium
 
       def run(*args, &blk)
-        unless name =~ /^default_test/
+        if self.respond_to? :name
+          my_name = self.name
+        else
+          my_name = self.__name__
+        end
+        unless my_name =~ /^default_test/
           config = Sauce::Config.new
           config.browsers.each do |os, browser, version|
             if config.local?
@@ -69,7 +74,7 @@ begin
                                                          :url => "http://127.0.0.1:#{config.local_application_port}/")
             else
               @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
-                :job_name => "#{name}"})
+                :job_name => "#{my_name}"})
             end
             @selenium.start
             super(*args, &blk)
@@ -83,6 +88,10 @@ begin
       end
     end
   end
+rescue LoadError
+  # User doesn't have Test::Unit installed
+end
+begin
   require 'test/unit/ui/console/testrunner'
   class Test::Unit::UI::Console::TestRunner
     def attach_to_mediator_with_sauce_tunnel
@@ -111,7 +120,31 @@ begin
     end
   end
 rescue LoadError
-  # User doesn't have Test::Unit installed
+  # User is on Ruby 1.9
+end
+
+begin
+  require 'minitest/unit'
+  module MiniTest
+    class Unit
+      run_without_tunnel = self.instance_method(:run)
+
+      define_method(:run) do |args|
+        config = Sauce::Config.new
+        if config.application_host && !config.local?
+          @sauce_tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+          @sauce_tunnel.wait_until_ready
+        end
+        result = run_without_tunnel.bind(self).call(args)
+        if defined? @sauce_tunnel
+          @sauce_tunnel.disconnect
+        end
+        return result
+      end
+    end
+  end
+rescue LoadError
+  # User is not on Ruby 1.9
 end
 
 if defined?(ActiveSupport::TestCase)
@@ -123,7 +156,12 @@ if defined?(ActiveSupport::TestCase)
       alias_method :s, :selenium
 
       def run(*args, &blk)
-        unless name =~ /^default_test/
+        if self.respond_to? :name
+          my_name = self.name
+        else
+          my_name = self.__name__
+        end
+        unless my_name =~ /^default_test/
           config = Sauce::Config.new
           config.browsers.each do |os, browser, version|
             if config.local?
@@ -133,7 +171,7 @@ if defined?(ActiveSupport::TestCase)
                                                          :url => "http://127.0.0.1:#{config.local_application_port}/")
             else
               @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
-                :job_name => "#{name}"})
+                :job_name => "#{my_name}"})
             end
             @selenium.start
             super(*args, &blk)
