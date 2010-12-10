@@ -46,7 +46,66 @@ begin
     end
   end
 rescue LoadError
-  # User doesn't have RSpec installed
+  # User doesn't have RSpec 1.x installed
+end
+
+begin
+  require 'rspec'
+  module Sauce
+    module RSpec
+      module SeleniumExampleGroup
+        attr_reader :selenium
+        alias_method :page, :selenium
+        alias_method :s, :selenium
+
+        def self.included(othermod)
+          othermod.around do |the_test|
+            config = Sauce::Config.new
+            description = the_test.metadata[:full_description]
+            config.browsers.each do |os, browser, version|
+              if config.local?
+                @selenium = ::Selenium::Client::Driver.new(:host => "127.0.0.1",
+                                                           :port => 4444,
+                                                           :browser => "*" + browser,
+                                                           :url => "http://127.0.0.1:#{config.local_application_port}/")
+              else
+                @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
+                                                :job_name => "#{description}"})
+              end
+              @selenium.start
+              begin
+                the_test.run
+              ensure
+                @selenium.stop
+              end
+            end
+          end
+        end
+
+        ::RSpec.configuration.include(self, :example_group => {
+              :file_path => Regexp.compile('spec[\\\/]selenium')
+            })
+        ::RSpec.configuration.before :suite do
+          need_tunnel = false
+          config = Sauce::Config.new
+          if config.application_host && !config.local?
+            need_tunnel = ::RSpec.configuration.settings[:files_to_run].any? {|file| file =~ /spec\/selenium\//}
+          end
+          if need_tunnel
+            @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+            @@tunnel.wait_until_ready
+          end
+        end
+        ::RSpec.configuration.after :suite do
+          if defined? @@tunnel
+            @@tunnel.disconnect
+          end
+        end
+      end
+    end
+  end
+rescue LoadError
+  # User doesn't have RSpec 2.x installed
 end
 
 begin
