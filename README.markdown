@@ -10,13 +10,12 @@ Current:
 *   Drop-in replacement for Selenium::Client::Driver that takes care of connecting to Sauce OnDemand
 *   RSpec, Test::Unit, and Rails integration for tests, including automatic setup of Sauce Connect
 *   ActiveRecord-like interface for tunnels and jobs: Find/create/destroy
+*   Start/stop local instances of Sauce RC
 
 Planned:
 
-*   Include selenium-client RSpec/Test::Unit integration
 *   Webrat integration
 *   Extend to automatic retrieval of jobs logs, videos, reverse tunnels
-*   Start/stop local instances of Sauce RC
 
 Install
 -------
