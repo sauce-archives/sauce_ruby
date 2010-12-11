@@ -1,3 +1,6 @@
+require 'timeout'
+require 'socket'
+
 module Sauce
   module Utilities
     def silence_stream(stream)
@@ -9,6 +12,22 @@ module Sauce
       stream.reopen(old_stream)
     end
 
+    def wait_for_server_on_port(port)
+      while true
+        begin
+          Timeout::timeout(2) do
+              socket = TCPSocket.new('127.0.0.1', port)
+              socket.close unless socket.nil?
+              return
+          end
+        rescue Errno::ECONNREFUSED, 
+          Errno::EBADF,           # Windows
+          Timeout::Error
+        end
+        sleep 2
+      end
+    end
+
     def with_selenium_rc
       ENV['LOCAL_SELENIUM'] = "true"
       STDERR.puts "Starting Selenium RC server on port 4444..."
@@ -16,7 +35,7 @@ module Sauce
       server.jar_file = File.expand_path(File.dirname(__FILE__) + "/../../support/selenium-server.jar")
       silence_stream(STDOUT) do
         server.start :background => true
-        TCPSocket.wait_for_service(:host => "127.0.0.1", :port => 4444)
+        wait_for_server_on_port(4444)
       end
       STDERR.puts "Selenium RC running!"
       begin
@@ -34,9 +53,8 @@ module Sauce
         server = IO.popen("script/rails server -p 3001 -e test")
       end
 
-      silence_stream(STDOUT) do
-        TCPSocket.wait_for_service(:host => "127.0.0.1", :port => 3001)
-      end
+      STDERR.puts "Waiting for service"
+      wait_for_server_on_port(3001)
       STDERR.puts "Rails server running!"
       begin
         yield
