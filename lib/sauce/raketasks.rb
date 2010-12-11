@@ -27,7 +27,7 @@ if defined?(Spec::Rake::SpecTask)
 
       desc "" # Hide it from rake -T
       Spec::Rake::SpecTask.new :runtests do |t|
-        t.spec_opts = ['--options', "\"#{RAILS_ROOT}/spec/spec.opts\""]
+        t.spec_opts = ['--options', "\"#{Rails.root.join('spec', 'spec.opts')}\""]
         t.spec_files = FileList["spec/selenium/**/*_spec.rb"]
       end
     end
