@@ -53,7 +53,6 @@ module Sauce
         server = IO.popen("script/rails server -p 3001 -e test")
       end
 
-      STDERR.puts "Waiting for service"
       wait_for_server_on_port(3001)
       STDERR.puts "Rails server running!"
       begin
