@@ -4,6 +4,12 @@ spec_prereq = File.exist?(File.join(::Rails.root.to_s, 'config', 'database.yml')
 task :noop do
 end
 
+class Rake::Task
+  def abandon
+    @actions.clear
+  end
+end
+
 include Sauce::Utilities
 
 if defined?(Spec::Rake::SpecTask)
@@ -33,6 +39,13 @@ if defined?(Spec::Rake::SpecTask)
     end
 
     task :selenium => "selenium:sauce"
+  end
+
+  Rake::Task[:spec].abandon
+  desc "Run all specs in spec directory (excluding plugin specs)"
+  Spec::Rake::SpecTask.new(:spec => spec_prereq) do |t|
+    t.spec_opts = ['--options', "\"#{RAILS_ROOT}/spec/spec.opts\""]
+    t.spec_files = FileList['spec/**/*_spec.rb'].exclude('spec/selenium/*')
   end
 end
 

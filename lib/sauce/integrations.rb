@@ -4,10 +4,17 @@ begin
     module RSpec
       class SeleniumExampleGroup < Spec::Example::ExampleGroup
         attr_reader :selenium
+        @@need_tunnel = false
+
+        def self.inherited(subclass)
+          # only setup tunnel if somebody needs it
+          @@need_tunnel = true
+          super(subclass)
+        end
 
         before :suite do
           config = Sauce::Config.new
-          if config.application_host && !config.local?
+          if @@need_tunnel && config.application_host && !config.local?
             @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
             @@tunnel.wait_until_ready
           end
