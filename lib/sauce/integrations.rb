@@ -157,51 +157,52 @@ begin
 rescue LoadError
   # User doesn't have Test::Unit installed
 end
-begin
-  require 'test/unit/ui/console/testrunner'
-  class Test::Unit::UI::Console::TestRunner
-    def attach_to_mediator_with_sauce_tunnel
-      @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::STARTED, &method(:start_tunnel))
-      @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:stop_tunnel))
-      attach_to_mediator_without_sauce_tunnel
-    end
 
-    alias_method :attach_to_mediator_without_sauce_tunnel, :attach_to_mediator
-    alias_method :attach_to_mediator, :attach_to_mediator_with_sauce_tunnel
+if defined?(Test::Unit::AutoRunner)
+  class Test::Unit::AutoRunner
+    run_without_tunnel = self.instance_method(:run)
 
-    private
-
-    def start_tunnel(msg)
-      config = Sauce::Config.new
-      if config.application_host && !config.local?
-        @sauce_tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
-        @sauce_tunnel.wait_until_ready
+    define_method(:run) do |*args|
+      @suite = @collector[self]
+      need_tunnel = suite.tests.any? do |test_suite|
+        test_suite.tests.any? do |test_case|
+          [Sauce::TestCase, Sauce::RailsTestCase].include? test_case.class.superclass
+        end
       end
-    end
-
-    def stop_tunnel(msg)
+      if need_tunnel
+        config = Sauce::Config.new
+        if config.application_host && !config.local?
+          @sauce_tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+          @sauce_tunnel.wait_until_ready
+        end
+      end
+      result = run_without_tunnel.bind(self).call(*args)
       if defined? @sauce_tunnel
         @sauce_tunnel.disconnect
       end
+      return result
     end
   end
-rescue LoadError
-  # User is on Ruby 1.9
 end
 
 begin
   require 'minitest/unit'
   module MiniTest
     class Unit
-      run_without_tunnel = self.instance_method(:run)
+      run_without_tunnel = self.instance_method(:run_test_suites)
 
-      define_method(:run) do |args|
-        config = Sauce::Config.new
-        if config.application_host && !config.local?
-          @sauce_tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
-          @sauce_tunnel.wait_until_ready
+      define_method(:run_test_suites) do |*args|
+        need_tunnel = TestCase.test_suites.any? do |suite|
+          [Sauce::TestCase, Sauce::RailsTestCase].include? suite.superclass
         end
-        result = run_without_tunnel.bind(self).call(args)
+        if need_tunnel
+          config = Sauce::Config.new
+          if config.application_host && !config.local?
+            @sauce_tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+            @sauce_tunnel.wait_until_ready
+          end
+        end
+        result = run_without_tunnel.bind(self).call(*args)
         if defined? @sauce_tunnel
           @sauce_tunnel.disconnect
         end
