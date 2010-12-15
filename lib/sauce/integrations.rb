@@ -166,7 +166,7 @@ if defined?(Test::Unit::AutoRunner)
       @suite = @collector[self]
       need_tunnel = suite.tests.any? do |test_suite|
         test_suite.tests.any? do |test_case|
-          [Sauce::TestCase, Sauce::RailsTestCase].include? test_case.class.superclass
+          test_case.class.superclass.to_s =~ /^Sauce::/
         end
       end
       if need_tunnel
@@ -193,7 +193,7 @@ begin
 
       define_method(:run_test_suites) do |*args|
         need_tunnel = TestCase.test_suites.any? do |suite|
-          [Sauce::TestCase, Sauce::RailsTestCase].include? suite.superclass
+          suite.superclass.to_s =~ /^Sauce::/
         end
         if need_tunnel
           config = Sauce::Config.new
