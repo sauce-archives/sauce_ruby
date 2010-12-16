@@ -8,6 +8,10 @@ class SauceGenerator < Rails::Generators::Base
     copy_file "sauce.rake", "lib/tasks/sauce.rake"
   end
 
+  def configure_credentials
+    system("sauce config #{username} #{api_key}")
+  end
+
   def setup_spec
     if File.directory? 'spec'
       empty_directory "spec/selenium"
