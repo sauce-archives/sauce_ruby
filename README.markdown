@@ -1,24 +1,17 @@
-sauce
-=====
-
-Ruby access to Sauce OnDemand
+Sauce OnDemand is a Selenium testing cloud service, developed by Sauce
+Labs Inc (saucelabs.com). This is the Ruby client adapter for Sauce
+OnDemand.
 
 Features
 --------
-Current:
 
 *   Drop-in replacement for Selenium::Client::Driver that takes care of connecting to Sauce OnDemand
 *   RSpec, Test::Unit, and Rails integration for tests, including automatic setup of Sauce Connect
 *   ActiveRecord-like interface for tunnels and jobs: Find/create/destroy
-*   Start/stop local instances of Sauce RC
-
-Planned:
-
-*   Webrat integration
-*   Extend to automatic retrieval of jobs logs, videos, reverse tunnels
 
 Install
 -------
+
 `gem install sauce`
 
 Rails Integration
@@ -66,9 +59,13 @@ Here's how you run Test::Unit tests with Sauce OnDemand using rake:
 `rake test:selenium:sauce`
 
 RSpec integration without Rails
---------
+-------------------------------
+
+First, configure with your account info:
 
 `sauce config USERNAME ACCESS_KEY`
+
+And here's an example test:
 
     #!/usr/bin/env ruby
     #
@@ -105,9 +102,13 @@ RSpec integration without Rails
     end
 
 Test::Unit integration without Rails
---------
+------------------------------------
+
+First, configure with your account info:
 
 `sauce config USERNAME ACCESS_KEY`
+
+And here's an example test:
 
     #!/usr/bin/env ruby
     #
@@ -137,9 +138,13 @@ Test::Unit integration without Rails
     end
 
 Direct use of the Selenium Client driver
---------
+----------------------------------------
+
+First, configure with your account info:
 
 `sauce config USERNAME ACCESS_KEY`
+
+And here's an example test:
 
     require 'rubygems'
     require 'sauce'
@@ -152,12 +157,20 @@ Direct use of the Selenium Client driver
 
 Note on Patches/Pull Requests
 ----------------------------- 
+
 *   Fork the project.
 *   Make your feature addition or bug fix.
 *   Add tests for it. This is important so we don't break it in a future version unintentionally.
 *   Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 *   Send me a pull request. Bonus points for topic branches.
 
+Plans
+-----
+
+*   Webrat integration
+*   Extend to automatic retrieval of jobs logs, videos, reverse tunnels
+
 Copyright
 ---------
+
 Copyright (c) 2009-2011 Sauce Labs Inc. See LICENSE for details.
