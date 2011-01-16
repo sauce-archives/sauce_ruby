@@ -24,11 +24,16 @@ else
   cmd.add_command(CmdParse::HelpCommand.new)
 
   # configure
-  configure = CmdParse::Command.new('configure', false)
+  class ConfigureCommand < CmdParse::Command
+    def usage
+      "Usage: #{commandparser.program_name}configure USERNAME ACCESS_KEY"
+    end
+  end
+  configure = ConfigureCommand.new('configure', false)
   configure.short_desc = "Configure Sauce OnDemand credentials"
   configure.set_execution_block do |args|
     if args.length < 2:
-      puts "Usage: sauce configure USERNAME ACCESS_KEY"
+      puts configure.usage
       exit 1
     end
     username = args[0]
