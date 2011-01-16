@@ -4,6 +4,7 @@ require 'rubygems'
 require 'cmdparse'
 require 'yaml'
 require 'fileutils'
+require 'json'
 
 sauce_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(sauce_dir) unless $LOAD_PATH.include?(sauce_dir)
@@ -56,19 +57,23 @@ else
     print "Full name: "
     name = $stdin.gets.chomp
 
-    # TODO: Add error handling, of course
-    result = RestClient.post "http://saucelabs.com/rest/v1/users",
-      {
-      :username => username,
+
+    body = {:username => username,
       :password => password,
       :password_confirmation => password_confirmation,
       :email => email,
       :token => "c8eb3e2645005bcbbce7e2c208c6b7a71555d908",
       :name => name
-    }.to_json,
-      :content_type => :json, :accept => :json
+    }.to_json
 
-    puts result.inspect
+    # TODO: Add error handling, of course
+    result = RestClient.post("http://saucelabs.com/rest/v1/users",
+                             body, :content_type => :json, :accept => :json)
+
+    result = JSON.load(result)
+
+    puts "Account #{username} created successfully."
+    puts "Your access key is: #{result['access_key']}"
   end
 
   cmd.add_command(create)
