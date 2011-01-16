@@ -5,6 +5,7 @@ require 'cmdparse'
 require 'yaml'
 require 'fileutils'
 require 'json'
+require 'highline/import'
 
 sauce_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(sauce_dir) unless $LOAD_PATH.include?(sauce_dir)
@@ -46,34 +47,34 @@ else
   create.short_desc = "Create a new Sauce OnDemand account"
   create.set_execution_block do |args|
     puts "Let's create a new account!"
-    print "Username: "
-    username = $stdin.gets.chomp
-    print "password: "
-    password = $stdin.gets.chomp
-    print "password confirmation: "
-    password_confirmation = $stdin.gets.chomp
-    print "email: "
-    email = $stdin.gets.chomp
-    print "Full name: "
-    name = $stdin.gets.chomp
+    username = ask("Username: ")
+    password = ask("Password: ") { |q| q.echo = "*" }
+    email = ask("Email: ")
+    name = ask("Full name: ")
 
-
-    body = {:username => username,
+    body = {
+      :username => username,
       :password => password,
-      :password_confirmation => password_confirmation,
       :email => email,
-      :token => "c8eb3e2645005bcbbce7e2c208c6b7a71555d908",
-      :name => name
+      :name => name,
+      :token => "c8eb3e2645005bcbbce7e2c208c6b7a71555d908"
     }.to_json
 
-    # TODO: Add error handling, of course
-    result = RestClient.post("http://saucelabs.com/rest/v1/users",
-                             body, :content_type => :json, :accept => :json)
+    begin
+      result = RestClient.post("http://saucelabs.com/rest/v1/users",
+                               body, :content_type => :json, :accept => :json)
+    rescue => e
+      begin
+        puts "ERROR: #{JSON.load(e.response)['errors']}"
+      rescue
+        puts "ERROR: #{e.response}"
+      end
+    else
+      result = JSON.load(result)
 
-    result = JSON.load(result)
-
-    puts "Account #{username} created successfully."
-    puts "Your access key is: #{result['access_key']}"
+      puts "Account #{username} created successfully."
+      puts "Your access key is: #{result['access_key']}"
+    end
   end
 
   cmd.add_command(create)

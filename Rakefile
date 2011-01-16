@@ -6,10 +6,10 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "sauce"
     gem.summary = "Ruby access to Sauce Labs' features"
-    gem.description = "A ruby interface to Sauce Labs' services. Start/stop tunnels, retrieve Selenium logs, access video replays, etc."
+    gem.description = "A Ruby interface to Sauce Labs' services. Start/stop tunnels, retrieve Selenium logs, access video replays, etc."
     gem.email = "help@saucelabs.com"
     gem.homepage = "http://github.com/saucelabs/sauce"
-    gem.authors = ["Sean Grove", "Eric Allen"]
+    gem.authors = ["Sean Grove", "Eric Allen", "Steven Hazel"]
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     gem.add_runtime_dependency "rest-client", ">= 0"
     gem.add_runtime_dependency "net-ssh", ">= 0"
@@ -17,6 +17,7 @@ begin
     gem.add_runtime_dependency "selenium-client", ">= 1.2.18"
     gem.add_runtime_dependency "json", ">= 1.4.6"
     gem.add_runtime_dependency "cmdparse", ">= 2.0.2"
+    gem.add_runtime_dependency "highline", ">= 1.5.0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
