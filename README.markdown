@@ -35,69 +35,6 @@ Examples
     selenium.open "/"
     selenium.stop
 
-### RSpec integration
-    #!/usr/bin/env ruby
-    #
-    # Sample RSpec test case using the Sauce gem
-    #
-    require "rubygems"
-    require "sauce"
-    
-    # This should go in your spec_helper.rb file if you have one
-    Sauce.config do |config|
-      config.browser_url = "http://saucelabs.com/"
-      config.browsers = [
-        ["Linux", "firefox", "3.6."]
-      ]
-    
-      # uncomment this if your server is not publicly accessible
-      #config.application_host = "localhost"
-      #config.application_port = "80"
-    end
-    
-    # If this goes in spec/selenium/foo_spec.rb, you can omit the :type parameter
-    describe "The Sauce Labs website", :type => :selenium do
-      it "should have a home page" do
-        page.open "/"
-        page.is_text_present("Sauce Labs").should be_true
-      end
-    
-      it "should have a pricing page" do
-        page.open "/"
-        page.click "link=Pricing"
-        page.wait_for_page_to_load 30000
-        page.is_text_present("Free Trial").should be_true
-      end
-    end
-
-### Test::Unit integration
-    #!/usr/bin/env ruby
-    #
-    # Sample Test:Unit test case using the Sauce gem
-    #
-    require "test/unit"
-    require "rubygems"
-    require "sauce"
-    
-    # This should go in your test_helper.rb file if you have one
-    Sauce.config do |config|
-      config.browser_url = "http://saucelabs.com/"
-      config.browsers = [
-        ["Linux", "firefox", "3.6."]
-      ]
-    
-      # uncomment this if your server is not publicly accessible
-      #config.application_host = "localhost"
-      #config.application_port = "80"
-    end
-    
-    class ExampleTest < Sauce::TestCase
-        def test_sauce
-            page.open "/"
-            assert page.title.include?("Sauce Labs")
-        end
-    end
-
 ### Rails integration
 You can use either RSpec or Test::Unit with Rails and Sauce OnDemand.
 The generator will take care of setting up your helpers with Sauce OnDemand
@@ -134,6 +71,69 @@ To run your tests, use rake:
 `rake spec:selenium:sauce`
 
 `rake test:selenium:sauce`
+
+### RSpec integration without Rails
+    #!/usr/bin/env ruby
+    #
+    # Sample RSpec test case using the Sauce gem
+    #
+    require "rubygems"
+    require "sauce"
+    
+    # This should go in your spec_helper.rb file if you have one
+    Sauce.config do |config|
+      config.browser_url = "http://saucelabs.com/"
+      config.browsers = [
+        ["Linux", "firefox", "3.6."]
+      ]
+    
+      # uncomment this if your server is not publicly accessible
+      #config.application_host = "localhost"
+      #config.application_port = "80"
+    end
+    
+    # If this goes in spec/selenium/foo_spec.rb, you can omit the :type parameter
+    describe "The Sauce Labs website", :type => :selenium do
+      it "should have a home page" do
+        page.open "/"
+        page.is_text_present("Sauce Labs").should be_true
+      end
+    
+      it "should have a pricing page" do
+        page.open "/"
+        page.click "link=Pricing"
+        page.wait_for_page_to_load 30000
+        page.is_text_present("Free Trial").should be_true
+      end
+    end
+
+### Test::Unit integration without Rails
+    #!/usr/bin/env ruby
+    #
+    # Sample Test:Unit test case using the Sauce gem
+    #
+    require "test/unit"
+    require "rubygems"
+    require "sauce"
+    
+    # This should go in your test_helper.rb file if you have one
+    Sauce.config do |config|
+      config.browser_url = "http://saucelabs.com/"
+      config.browsers = [
+        ["Linux", "firefox", "3.6."]
+      ]
+    
+      # uncomment this if your server is not publicly accessible
+      #config.application_host = "localhost"
+      #config.application_port = "80"
+    end
+    
+    class ExampleTest < Sauce::TestCase
+        def test_sauce
+            page.open "/"
+            assert page.title.include?("Sauce Labs")
+        end
+    end
 
 Note on Patches/Pull Requests
 ----------------------------- 
