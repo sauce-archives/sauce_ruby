@@ -21,16 +21,17 @@ Install
 -------
 `gem install sauce`
 
-Examples
+Rails Integration
 -------
 
-### Rails integration
 You can use either RSpec or Test::Unit with Rails and Sauce OnDemand.  To get started, run the generator:
 
 `script/generate sauce USERNAME ACCESS_KEY`
 
 The generator will take care of setting up your helpers with Sauce OnDemand
 configuration, which you can tweak inside the `Sauce.config` block if necessary.
+
+### Example RSpec test for Rails
 
 Here's an example test for RSpec.  Drop something like this in spec/selenium/example.rb:
 
@@ -47,6 +48,8 @@ Here's how you run RSpec tests with Sauce OnDemand using rake:
 
 `rake spec:selenium:sauce`
 
+### Example Test::Unit test for Rails
+
 Here's an example test for Test::Unit.  Drop something like this in test/selenium/example.rb:
 
     require "test_helper"
@@ -62,7 +65,8 @@ Here's how you run Test::Unit tests with Sauce OnDemand using rake:
 
 `rake test:selenium:sauce`
 
-### RSpec integration without Rails
+RSpec integration without Rails
+--------
 
 `sauce config USERNAME ACCESS_KEY`
 
@@ -100,7 +104,8 @@ Here's how you run Test::Unit tests with Sauce OnDemand using rake:
       end
     end
 
-### Test::Unit integration without Rails
+Test::Unit integration without Rails
+--------
 
 `sauce config USERNAME ACCESS_KEY`
 
@@ -131,7 +136,8 @@ Here's how you run Test::Unit tests with Sauce OnDemand using rake:
         end
     end
 
-### Direct use of the Selenium Client driver
+Direct use of the Selenium Client driver
+--------
 
 `sauce config USERNAME ACCESS_KEY`
 
@@ -154,4 +160,4 @@ Note on Patches/Pull Requests
 
 Copyright
 ---------
-Copyright (c) 2009-2010 Sauce Labs Inc. See LICENSE for details.
+Copyright (c) 2009-2011 Sauce Labs Inc. See LICENSE for details.
