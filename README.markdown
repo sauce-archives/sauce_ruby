@@ -21,30 +21,18 @@ Install
 -------
 `gem install sauce`
 
-`sauce config USERNAME ACCESS_KEY`
-
 Examples
 -------
-### Selenium Client driver
-    require 'rubygems'
-    require 'sauce'
-    selenium = Sauce::Selenium.new(:browser_url => "http://saucelabs.com",
-        :browser => "firefox", :browser_version => "3.", :os => "Windows 2003",
-        :job_name => "My first test!")
-    selenium.start
-    selenium.open "/"
-    selenium.stop
 
 ### Rails integration
-You can use either RSpec or Test::Unit with Rails and Sauce OnDemand.
-The generator will take care of setting up your helpers with Sauce OnDemand
-configuration, which you can tweak inside the `Sauce.config` block.
-
-`gem install sauce`
+You can use either RSpec or Test::Unit with Rails and Sauce OnDemand.  To get started, run the generator:
 
 `script/generate sauce USERNAME ACCESS_KEY`
 
-For RSpec, drop something like this in spec/selenium:
+The generator will take care of setting up your helpers with Sauce OnDemand
+configuration, which you can tweak inside the `Sauce.config` block if necessary.
+
+Here's an example test for RSpec.  Drop something like this in spec/selenium/example.rb:
 
     require "spec_helper"
     
@@ -55,7 +43,11 @@ For RSpec, drop something like this in spec/selenium:
       end
     end
 
-For Test::Unit, drop something like this in test/selenium:
+Here's how you run RSpec tests with Sauce OnDemand using rake:
+
+`rake spec:selenium:sauce`
+
+Here's an example test for Test::Unit.  Drop something like this in test/selenium/example.rb:
 
     require "test_helper"
     
@@ -66,13 +58,14 @@ For Test::Unit, drop something like this in test/selenium:
       end
     end
 
-To run your tests, use rake:
-
-`rake spec:selenium:sauce`
+Here's how you run Test::Unit tests with Sauce OnDemand using rake:
 
 `rake test:selenium:sauce`
 
 ### RSpec integration without Rails
+
+`sauce config USERNAME ACCESS_KEY`
+
     #!/usr/bin/env ruby
     #
     # Sample RSpec test case using the Sauce gem
@@ -108,6 +101,9 @@ To run your tests, use rake:
     end
 
 ### Test::Unit integration without Rails
+
+`sauce config USERNAME ACCESS_KEY`
+
     #!/usr/bin/env ruby
     #
     # Sample Test:Unit test case using the Sauce gem
@@ -134,6 +130,19 @@ To run your tests, use rake:
             assert page.title.include?("Sauce Labs")
         end
     end
+
+### Direct use of the Selenium Client driver
+
+`sauce config USERNAME ACCESS_KEY`
+
+    require 'rubygems'
+    require 'sauce'
+    selenium = Sauce::Selenium.new(:browser_url => "http://saucelabs.com",
+        :browser => "firefox", :browser_version => "3.", :os => "Windows 2003",
+        :job_name => "My first test!")
+    selenium.start
+    selenium.open "/"
+    selenium.stop
 
 Note on Patches/Pull Requests
 ----------------------------- 
