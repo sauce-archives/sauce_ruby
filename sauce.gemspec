@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sauce}
-  s.version = "0.12.3"
+  s.version = "0.12.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sean Grove", "Eric Allen", "Steven Hazel"]
@@ -46,6 +46,7 @@ Gem::Specification.new do |s|
     "lib/sauce/selenium.rb",
     "lib/sauce/tunnel.rb",
     "lib/sauce/utilities.rb",
+    "sauce.gemspec",
     "support/sauce_connect",
     "support/selenium-server.jar",
     "support/simplejson/LICENSE.txt",
