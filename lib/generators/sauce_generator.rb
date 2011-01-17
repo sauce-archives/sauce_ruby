@@ -20,8 +20,10 @@ class SauceGenerator < Rails::Generators::Base
   end
 
   def setup_test
-    empty_directory "test/selenium"
-    append_file "test/test_helper.rb", generate_config
+    if File.directory? 'test'
+      empty_directory "test/selenium"
+      append_file "test/test_helper.rb", generate_config
+    end
   end
 
   private

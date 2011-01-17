@@ -24,7 +24,7 @@ class SauceGenerator < Rails::Generator::Base
       m.directory File.join('lib', 'tasks')
       m.directory File.join('test', 'selenium') if File.directory? 'test'
       m.file      'sauce.rake', File.join('lib', 'tasks', 'sauce.rake')
-      m.setup_helper(File.join('test', 'test_helper.rb'))
+      m.setup_helper(File.join('test', 'test_helper.rb')) if File.directory? 'test'
     end
   end
 
