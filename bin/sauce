@@ -32,7 +32,7 @@ else
   configure = ConfigureCommand.new('configure', false)
   configure.short_desc = "Configure Sauce OnDemand credentials"
   configure.set_execution_block do |args|
-    if args.length < 2:
+    if args.length < 2
       puts configure.usage
       exit 1
     end
