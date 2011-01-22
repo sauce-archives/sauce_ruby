@@ -1,5 +1,7 @@
 require 'timeout'
 require 'socket'
+require 'childprocess'
+require 'net/http'
 
 module Sauce
   module Utilities
@@ -31,17 +33,17 @@ module Sauce
     def with_selenium_rc
       ENV['LOCAL_SELENIUM'] = "true"
       STDERR.puts "Starting Selenium RC server on port 4444..."
-      server = ::Selenium::RemoteControl::RemoteControl.new("0.0.0.0", 4444)
-      server.jar_file = File.expand_path(File.dirname(__FILE__) + "/../../support/selenium-server.jar")
-      silence_stream(STDOUT) do
-        server.start :background => true
-        wait_for_server_on_port(4444)
-      end
+
+      jar_file = File.expand_path(File.dirname(__FILE__) + "/../../support/selenium-server.jar")
+      command = ["java", "-jar", jar_file, "-port", "4444"]
+      server = ChildProcess.build(*command)
+      server.start
+      wait_for_server_on_port(4444)
       STDERR.puts "Selenium RC running!"
       begin
         yield
       ensure
-        server.stop
+        Net::HTTP.get("127.0.0.1", "/selenium-server/driver/?cmd=shutDownSeleniumServer", 4444)
       end
     end
 

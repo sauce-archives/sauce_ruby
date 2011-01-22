@@ -26,7 +26,7 @@ module Sauce
           if line =~ /Tunnel host is (.*) (\.\.|at)/
             @status = $1
           end
-          if line =~/You may start your tests/
+          if line =~/You may start your tests\./
             @ready = true
           end
           if line =~ /- (Problem.*)$/
