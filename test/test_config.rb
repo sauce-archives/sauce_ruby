@@ -3,14 +3,25 @@ require 'helper'
 class TestConfig < Test::Unit::TestCase
   context "A new Config" do
     should "Generate a reasonable browser string from the environment" do
-      ENV['SAUCE_USERNAME'] = "test_user"
-      ENV['SAUCE_ACCESS_KEY'] = "test_access"
-      ENV['SAUCE_OS'] = "Linux"
-      ENV['SAUCE_BROWSER'] = "firefox"
-      ENV['SAUCE_BROWSER_VERSION'] = "3."
+      preserved_env = {}
+      Sauce::Config::ENVIRONMENT_VARIABLES.each do |key|
+        preserved_env[key] = ENV[key] if ENV[key]
+      end
+      begin
 
-      config = Sauce::Config.new
-      assert_equal "{\"name\":\"Unnamed Ruby job\",\"access-key\":\"test_access\",\"os\":\"Linux\",\"username\":\"test_user\",\"browser-version\":\"3.\",\"browser\":\"firefox\"}", config.to_browser_string
+        ENV['SAUCE_USERNAME'] = "test_user"
+        ENV['SAUCE_ACCESS_KEY'] = "test_access"
+        ENV['SAUCE_OS'] = "Linux"
+        ENV['SAUCE_BROWSER'] = "firefox"
+        ENV['SAUCE_BROWSER_VERSION'] = "3."
+
+        config = Sauce::Config.new
+        assert_equal "{\"name\":\"Unnamed Ruby job\",\"access-key\":\"test_access\",\"os\":\"Linux\",\"username\":\"test_user\",\"browser-version\":\"3.\",\"browser\":\"firefox\"}", config.to_browser_string
+      ensure
+        Sauce::Config::ENVIRONMENT_VARIABLES.each do |key|
+          ENV[key] = preserved_env[key] if preserved_env[key]
+        end
+      end
     end
 
     should "Generate a browser string from parameters" do

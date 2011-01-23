@@ -34,6 +34,19 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
+namespace :test do
+  Rake::TestTask.new(:api) do |test|
+    test.libs << 'lib' << 'test'
+    test.pattern = 'test/api/test_*.rb'
+    test.verbose = true
+  end
+  Rake::TestTask.new(:integrations) do |test|
+    test.libs << 'lib' << 'test'
+    test.pattern = 'test/integrations/test_*.rb'
+    test.verbose = true
+  end
+end
+
 Rake::TestTask.new(:examples) do |test|
   test.libs << 'lib' << 'examples'
   test.pattern = 'examples/test_*.rb'

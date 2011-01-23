@@ -19,3 +19,5 @@ rdoc
 pkg
 
 ## PROJECT::SPECIFIC
+sauce_connect.log*
+account.yml

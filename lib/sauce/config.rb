@@ -26,6 +26,10 @@ module Sauce
         :local_application_port => "3001"
     }
 
+    ENVIRONMENT_VARIABLES = %w{SAUCE_HOST SAUCE_PORT SAUCE_BROWSER_URL SAUCE_USERNAME
+        SAUCE_ACCESS_KEY SAUCE_OS SAUCE_BROWSER SAUCE_BROWSER_VERSION SAUCE_JOB_NAME
+        SAUCE_FIREFOX_PROFILE_URL SAUCE_USER_EXTENSIONS_URL}
+
     def initialize(opts={})
       @opts = {}
       if opts != false
