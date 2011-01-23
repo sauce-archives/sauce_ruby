@@ -216,11 +216,12 @@ end
 
 if defined?(ActiveSupport::TestCase)
   module Sauce
-    class RailsTestCase < ::ActiveSupport::TestCase
-      attr_reader :selenium
+    module SeleniumForTestUnit
+      attr_reader :browser
 
-      alias_method :page, :selenium
-      alias_method :s, :selenium
+      alias_method :page, :browser
+      alias_method :s, :browser
+      alias_method :selenium, :browser
 
       def run(*args, &blk)
         if self.respond_to? :name
@@ -232,17 +233,17 @@ if defined?(ActiveSupport::TestCase)
           config = Sauce::Config.new
           config.browsers.each do |os, browser, version|
             if config.local?
-              @selenium = ::Selenium::Client::Driver.new(:host => "127.0.0.1",
+              @browser = ::Selenium::Client::Driver.new(:host => "127.0.0.1",
                                                          :port => 4444,
                                                          :browser => "*" + browser,
                                                          :url => "http://127.0.0.1:#{config.local_application_port}/")
             else
-              @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
+              @browser = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
                 :job_name => "#{my_name}"})
             end
-            @selenium.start
+            @browser.start
             super(*args, &blk)
-            @selenium.stop
+            @browser.stop
           end
         end
       end
@@ -250,6 +251,10 @@ if defined?(ActiveSupport::TestCase)
       # Placeholder so test/unit ignores test cases without any tests.
       def default_test
       end
+    end
+
+    class RailsTestCase < ::ActiveSupport::TestCase
+      include SeleniumForTestUnit
     end
   end
 end
