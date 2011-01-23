@@ -50,7 +50,7 @@ module Sauce
     def with_rails_server
       STDERR.puts "Starting Rails server on port 3001..."
       if File.exists?('script/server')
-        server = IO.popen("ruby script/server RAILS_ENV=test --port 3001 --daemon")
+        server = IO.popen("ruby script/server -e test --port 3001 --daemon")
       elsif File.exists?('script/rails')
         server = IO.popen("script/rails server -p 3001 -e test")
       end
