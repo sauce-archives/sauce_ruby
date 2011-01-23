@@ -111,7 +111,7 @@ begin
       end
     end
   end
-rescue LoadError
+rescue LoadError, TypeError
   # User doesn't have RSpec 2.x installed
 end
 
