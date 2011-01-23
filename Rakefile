@@ -11,12 +11,13 @@ begin
     gem.homepage = "http://github.com/saucelabs/sauce"
     gem.authors = ["Sean Grove", "Eric Allen", "Steven Hazel"]
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
+    gem.add_development_dependency "jeweler", ">= 1.4.0"
     gem.add_runtime_dependency "rest-client", ">= 0"
     gem.add_runtime_dependency "net-ssh", ">= 0"
     gem.add_runtime_dependency "net-ssh-gateway", ">= 0"
     gem.add_runtime_dependency "selenium-webdriver", ">= 0.1.2"
     gem.add_runtime_dependency "childprocess", ">= 0.1.6"
-    gem.add_runtime_dependency "json", ">= 1.4.6"
+    gem.add_runtime_dependency "json", ">= 1.2.0"
     gem.add_runtime_dependency "cmdparse", ">= 2.0.2"
     gem.add_runtime_dependency "highline", ">= 1.5.0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
