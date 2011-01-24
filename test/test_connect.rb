@@ -1,4 +1,4 @@
-require 'helper'
+require File.expand_path("../helper", __FILE__)
 
 class TestConnect < Test::Unit::TestCase
   context "Sauce Connect" do

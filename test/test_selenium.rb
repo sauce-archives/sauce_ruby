@@ -1,4 +1,4 @@
-require 'helper'
+require File.expand_path("../helper", __FILE__)
 
 class TestSelenium < Test::Unit::TestCase
   context "The Sauce Selenium driver" do

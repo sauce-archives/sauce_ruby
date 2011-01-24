@@ -1,4 +1,4 @@
-require 'helper'
+require File.expand_path("../helper", __FILE__)
 
 class TestConfig < Test::Unit::TestCase
   context "A new Config" do
