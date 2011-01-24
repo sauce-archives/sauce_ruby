@@ -45,6 +45,8 @@ module Sauce
       if meth.to_s =~ /(.*)=$/
         @opts[$1.to_sym] = args[0]
         return args[0]
+      elsif meth.to_s =~ /(.*)\?$/
+        return @opts[$1.to_sym]
       else
         return @opts[meth]
       end

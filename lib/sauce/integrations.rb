@@ -232,29 +232,40 @@ if defined?(ActiveSupport::TestCase)
         unless my_name =~ /^default_test/
           config = Sauce::Config.new
           config.browsers.each do |os, browser, version|
-            if config.local?
-              @browser = ::Selenium::Client::Driver.new(:host => "127.0.0.1",
-                                                         :port => 4444,
-                                                         :browser => "*" + browser,
-                                                         :url => "http://127.0.0.1:#{config.local_application_port}/")
+            if config.single_session?
+              if config.local?
+                @browser = Sauce.cached_session(:host => "127.0.0.1", :port => 4444, :browser => "*" +
+                                                browser, :url => "http://127.0.0.1:#{config.local_application_port}/")
+              else
+                @browser = Sauce.cached_session({:os => os, :browser => browser, :browser_version => version,
+                  :job_name => "#{Rails.root.split[1].to_s} test suite"})
+              end
+              super(*args, &blk)
             else
-              @browser = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
-                :job_name => "#{my_name}"})
+              if config.local?
+                @browser = ::Selenium::Client::Driver.new(:host => "127.0.0.1",
+                                                           :port => 4444,
+                                                           :browser => "*" + browser,
+                                                           :url => "http://127.0.0.1:#{config.local_application_port}/")
+              else
+                @browser = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
+                  :job_name => "#{my_name}"})
+              end
+              @browser.start
+              super(*args, &blk)
+              @browser.stop
             end
-            @browser.start
-            super(*args, &blk)
-            @browser.stop
           end
         end
-      end
-
-      # Placeholder so test/unit ignores test cases without any tests.
-      def default_test
       end
     end
 
     class RailsTestCase < ::ActiveSupport::TestCase
       include SeleniumForTestUnit
+
+      # Placeholder so test/unit ignores test cases without any tests.
+      def default_test
+      end
     end
   end
 end

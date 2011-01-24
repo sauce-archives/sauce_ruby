@@ -44,6 +44,12 @@ class TestConfig < Test::Unit::TestCase
 
       assert_equal [["A", "B", "C"]], config.browsers
     end
+
+    should "Let you set and query boolean flags" do
+      config = Sauce::Config.new
+      config.foo = true
+      assert config.foo?
+    end
   end
 
   context "The Sauce.config method" do
