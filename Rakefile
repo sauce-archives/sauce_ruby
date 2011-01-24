@@ -16,7 +16,7 @@ namespace :test do
   end
   Rake::TestTask.new(:integrations) do |test|
     test.libs << 'lib' << 'test'
-    test.pattern = 'test/integrations/test_*.rb'
+    test.pattern = 'test/test_integrations.rb'
     test.verbose = true
   end
 end

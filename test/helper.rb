@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'test/unit'
-require 'shoulda'
 require 'net/telnet'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
@@ -16,4 +15,18 @@ Sauce.config do |config|
 
   #config.application_host = "localhost"
   #config.application_port = "4444"
+end
+
+def ensure_rvm_installed
+  rvm_executable = File.expand_path("~/.rvm/bin/rvm")
+  if File.exist? rvm_executable
+    unless defined?(RVM)
+      rvm_lib_path = File.expand_path("~/.rvm/lib")
+      $LOAD_PATH.unshift(rvm_lib_path) unless $LOAD_PATH.include?(rvm_lib_path)
+      require 'rvm'
+    end
+  else
+    raise "You do not have RVM installed. It is required for the integration tests.\n" +
+      "Please install it from http://rvm.beginrescueend.com/"
+  end
 end
