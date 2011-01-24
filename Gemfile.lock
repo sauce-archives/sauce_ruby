@@ -1,0 +1,59 @@
+PATH
+  remote: .
+  specs:
+    sauce (0.14.2)
+      childprocess (>= 0.1.6)
+      cmdparse (>= 2.0.2)
+      highline (>= 1.5.0)
+      json (>= 1.2.0)
+      net-ssh
+      net-ssh-gateway
+      rest-client
+      selenium-webdriver (>= 0.1.2)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    childprocess (0.1.6)
+      ffi (~> 0.6.3)
+    cmdparse (2.0.2)
+    ffi (0.6.3)
+      rake (>= 0.8.7)
+    git (1.2.5)
+    highline (1.6.1)
+    jeweler (1.5.2)
+      bundler (~> 1.0.0)
+      git (>= 1.2.5)
+      rake
+    json (1.2.0)
+    json_pure (1.4.6)
+    mime-types (1.16)
+    net-ssh (2.0.23)
+    net-ssh-gateway (1.0.1)
+      net-ssh (>= 1.99.1)
+    rake (0.8.7)
+    rest-client (1.6.1)
+      mime-types (>= 1.16)
+    rubyzip (0.9.4)
+    selenium-webdriver (0.1.2)
+      childprocess (~> 0.1.5)
+      ffi (~> 0.6.3)
+      json_pure
+      rubyzip
+    thoughtbot-shoulda (2.11.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  childprocess (>= 0.1.6)
+  cmdparse (>= 2.0.2)
+  highline (>= 1.5.0)
+  jeweler (>= 1.4.0)
+  json (>= 1.2.0)
+  net-ssh
+  net-ssh-gateway
+  rest-client
+  sauce!
+  selenium-webdriver (>= 0.1.2)
+  thoughtbot-shoulda
