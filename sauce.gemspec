@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sauce}
-  s.version = "0.13.2"
+  s.version = "0.14.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sean Grove", "Eric Allen", "Steven Hazel"]
-  s.date = %q{2011-01-22}
+  s.date = %q{2011-01-24}
   s.default_executable = %q{sauce}
   s.description = %q{A Ruby interface to Sauce Labs' services. Start/stop tunnels, retrieve Selenium logs, access video replays, etc.}
   s.email = %q{help@saucelabs.com}
@@ -46,6 +46,7 @@ Gem::Specification.new do |s|
     "lib/sauce/selenium.rb",
     "lib/sauce/tunnel.rb",
     "lib/sauce/utilities.rb",
+    "sauce.gemspec",
     "support/sauce_connect",
     "support/selenium-server.jar",
     "support/simplejson/LICENSE.txt",
@@ -64,7 +65,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = %q{http://github.com/saucelabs/sauce}
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.7}
+  s.rubygems_version = %q{1.4.2}
   s.summary = %q{Ruby access to Sauce Labs' features}
   s.test_files = [
     "examples/helper.rb",
@@ -82,7 +83,6 @@ Gem::Specification.new do |s|
   ]
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
