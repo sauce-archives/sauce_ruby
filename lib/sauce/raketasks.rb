@@ -34,7 +34,8 @@ if defined?(Spec::Rake::SpecTask)
       desc "" # Hide it from rake -T
       Spec::Rake::SpecTask.new :runtests do |t|
         t.spec_opts = ['--options', "\"#{Rails.root.join('spec', 'spec.opts')}\""]
-        t.spec_files = FileList["spec/selenium/**/*_spec.rb"]
+        spec_glob = ENV["SAUCE_SPEC_GLOB"] || "spec/selenium/**/*_spec.rb"
+        t.spec_files = FileList[spec_glob]
       end
     end
 
@@ -70,7 +71,8 @@ if defined?(RSpec::Core::RakeTask)
 
       desc "" # Hide it from rake -T
       RSpec::Core::RakeTask.new :runtests do |t|
-        t.pattern = "spec/selenium/**/*_spec.rb"
+        spec_glob = ENV["SAUCE_SPEC_GLOB"] || "spec/selenium/**/*_spec.rb"
+        t.pattern = spec_glob
       end
     end
 
@@ -98,7 +100,8 @@ namespace :test do
 
     Rake::TestTask.new(:runtests) do |t|
       t.libs << "test"
-      t.pattern = 'test/selenium/**/*_test.rb'
+      test_glob = ENV["SAUCE_TEST_GLOB"] || "test/selenium/**/*_test.rb"
+      t.pattern = test_glob
       t.verbose = true
     end
     # Hide it from rake -T
