@@ -10,7 +10,6 @@ begin
     gem.email = "help@saucelabs.com"
     gem.homepage = "http://github.com/saucelabs/sauce"
     gem.authors = ["Sean Grove", "Eric Allen", "Steven Hazel"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     gem.add_development_dependency "jeweler", ">= 1.4.0"
     gem.add_runtime_dependency "rest-client", ">= 0"
     gem.add_runtime_dependency "net-ssh", ">= 0"
