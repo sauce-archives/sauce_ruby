@@ -158,31 +158,36 @@ rescue LoadError
   # User doesn't have Test::Unit installed
 end
 
-if defined?(Test::Unit::AutoRunner)
-  class Test::Unit::AutoRunner
-    run_without_tunnel = self.instance_method(:run)
+begin
+  require 'test/unit/autorunner'
+  if defined?(Test::Unit::AutoRunner)
+    class Test::Unit::AutoRunner
+      run_without_tunnel = self.instance_method(:run)
 
-    define_method(:run) do |*args|
-      @suite = @collector[self]
-      need_tunnel = suite.tests.any? do |test_suite|
-        test_suite.tests.any? do |test_case|
-          test_case.class.superclass.to_s =~ /^Sauce::/
+      define_method(:run) do |*args|
+        @suite = @collector[self]
+        need_tunnel = suite.tests.any? do |test_suite|
+          test_suite.tests.any? do |test_case|
+            test_case.class.superclass.to_s =~ /^Sauce::/
+          end
         end
-      end
-      if need_tunnel
-        config = Sauce::Config.new
-        if config.application_host && !config.local?
-          @sauce_tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
-          @sauce_tunnel.wait_until_ready
+        if need_tunnel
+          config = Sauce::Config.new
+          if config.application_host && !config.local?
+            @sauce_tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+            @sauce_tunnel.wait_until_ready
+          end
         end
+        result = run_without_tunnel.bind(self).call(*args)
+        if defined? @sauce_tunnel
+          @sauce_tunnel.disconnect
+        end
+        return result
       end
-      result = run_without_tunnel.bind(self).call(*args)
-      if defined? @sauce_tunnel
-        @sauce_tunnel.disconnect
-      end
-      return result
     end
   end
+rescue LoadError, NameError
+  # Ruby 1.8's Test::Unit not found
 end
 
 begin
