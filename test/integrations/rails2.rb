@@ -8,6 +8,7 @@ class TestRails2 < Test::Unit::TestCase
     Dir.mkdir(@temp)
     Dir.chdir(@temp)
     puts "testing in clean working dir #{@temp}"
+    system("echo yes | rvm gemset empty")
     # Make clean Rails project
     system("gem install rails -v 2.3.10")
     system("gem install sqlite3")
