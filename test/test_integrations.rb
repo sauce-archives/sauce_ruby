@@ -9,14 +9,16 @@ class TestIntegrations < Test::Unit::TestCase
     end
     Dir.entries(File.expand_path("../integrations", __FILE__)).find {|entry| entry =~ /\.rb$/ }.each do |integration_test|
       name = integration_test.split(".")[0]
+      test_file = File.expand_path("../integrations/#{integration_test}", __FILE__)
       ruby18 = RVM.environment(ruby_version)
       gemset_name = "saucegem_#{name}"
       ruby18.gemset.create gemset_name
       begin
-        puts "Running #{File.expand_path("../integrations/#{integration_test}", __FILE__)} with Ruby #{ruby_version}"
-        output = ruby18.ruby(File.expand_path("../integrations/#{integration_test}", __FILE__))
+        puts "Running #{test_file} with Ruby #{ruby_version}"
+        output = ruby18.ruby(test_file)
         print output.stdout
         $stderr.print output.stderr
+        assert output.successful?, "#{integration_test} failed on Ruby #{ruby_version}"
       ensure
         ruby18.gemset.delete gemset_name
       end
