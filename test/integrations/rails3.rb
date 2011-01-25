@@ -2,28 +2,30 @@ require 'tmpdir'
 require 'fileutils'
 require 'test/unit'
 
-class TestRails2 < Test::Unit::TestCase
+class TestRails3 < Test::Unit::TestCase
   def setup
     @temp = File.join(Dir.tmpdir, "sauce_gem_integration_test_#{rand(100000)}")
     Dir.mkdir(@temp)
     Dir.chdir(@temp)
     puts "testing in clean working dir #{@temp}"
     # Make clean Rails project
-    system("gem install rails -v 2.3.10")
-    system("gem install sqlite3")
-    system("rails rails2_testapp")
-    Dir.chdir("rails2_testapp")
+    system("gem install rails")
+    system("rails new rails3_testapp")
+    Dir.chdir("rails3_testapp")
+    system("bundle install")
     system("rake db:migrate")
-
   end
 
   def test_testunit
     # Add some Sauce
-    system("gem install sauce")
-    system("script/generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
+    open("Gemfile", 'a') do |f|
+      f.puts "gem 'sauce'"
+    end
+    system("bundle install")
+    system("rails generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
 
     open("test/selenium/demo_test.rb", 'wb') do |file|
-      test_file = <<-EOF
+      file.write(<<-EOF)
         require "test_helper"
 
         class DemoTest < Sauce::RailsTestCase
@@ -33,24 +35,21 @@ class TestRails2 < Test::Unit::TestCase
           end
         end
       EOF
-      file.write(test_file)
     end
 
     assert system("rake test:selenium:sauce"), "Test::Unit suite failed in Sauce OnDemand"
     assert system("rake test:selenium:local"), "Test::Unit suite failed with local Selenium"
   end
 
-  def test_rspec1
-    system("gem install rspec-rails -v '< 2'")
-    if RUBY_VERSION >= "1.9"
-      # this is a strange dependency...
-      system("gem install test-unit -v 1.2.3")
+  def test_rspec2
+    open("Gemfile", 'a') do |f|
+      f.puts "gem 'sauce'"
+      f.puts "gem 'rspec-rails'"
     end
-    system("script/generate rspec")
+    system("bundle install")
 
     # Add some Sauce
-    system("gem install sauce")
-    system("script/generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
+    system("rails generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
 
     open("spec/selenium/demo_spec.rb", 'wb') do |file|
       file.write(<<-EOF)
