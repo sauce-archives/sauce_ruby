@@ -20,7 +20,7 @@ class TestRails2 < Test::Unit::TestCase
 
   def test_testunit
     # Add some Sauce
-    system("gem install sauce")
+    system("gem install $SAUCE_GEM")
     system("script/generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
 
     open("test/selenium/demo_test.rb", 'wb') do |file|
@@ -50,7 +50,7 @@ class TestRails2 < Test::Unit::TestCase
     system("script/generate rspec")
 
     # Add some Sauce
-    system("gem install sauce")
+    system("gem install $SAUCE_GEM")
     system("script/generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
 
     open("spec/selenium/demo_spec.rb", 'wb') do |file|

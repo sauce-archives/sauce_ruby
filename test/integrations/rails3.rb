@@ -21,6 +21,7 @@ class TestRails3 < Test::Unit::TestCase
     open("Gemfile", 'a') do |f|
       f.puts "gem 'sauce'"
     end
+    system("gem install $SAUCE_GEM")
     system("bundle install")
     system("rails generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
 
@@ -46,6 +47,7 @@ class TestRails3 < Test::Unit::TestCase
       f.puts "gem 'sauce'"
       f.puts "gem 'rspec-rails'"
     end
+    system("gem install $SAUCE_GEM")
     system("bundle install")
 
     # Add some Sauce

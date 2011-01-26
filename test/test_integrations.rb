@@ -3,6 +3,10 @@ require File.expand_path("../helper.rb", __FILE__)
 class TestIntegrations < Test::Unit::TestCase
   def setup
     ensure_rvm_installed
+    Dir.chdir File.expand_path("../..", __FILE__) do
+      system("gem build sauce.gemspec")
+    end
+    ENV['SAUCE_GEM'] = File.expand_path("../../"+Dir.entries(".").select {|f| f =~ /sauce-.*.gem/}.sort.last, __FILE__)
   end
 
   def test_ruby18
@@ -31,6 +35,7 @@ class TestIntegrations < Test::Unit::TestCase
       gemset_name = "saucegem_#{name}"
       rubie.gemset.create gemset_name
       begin
+        rubie = RVM.environment("#{ruby_version}@#{gemset_name}")
         output = rubie.ruby(test_file)
         unless output.successful?
           puts "==== #{test_file} with Ruby #{ruby_version} ===="
