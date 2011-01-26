@@ -36,6 +36,7 @@ module Sauce
         @opts.merge! DEFAULT_OPTIONS
         @opts.merge! load_options_from_yaml
         @opts.merge! load_options_from_environment
+        @opts.merge! load_options_from_heroku
         @opts.merge! Sauce.get_config.opts rescue {}
         @opts.merge! opts
       end
@@ -80,23 +81,18 @@ module Sauce
     private
 
     def load_options_from_environment
-      opts = {}
-      opts[:host] = ENV['SAUCE_HOST']
-      opts[:port] = ENV['SAUCE_PORT']
-      opts[:browser_url] = ENV['SAUCE_BROWSER_URL']
+      return extract_options_from_hash(ENV)
+    end
 
-      opts[:username] = ENV['SAUCE_USERNAME']
-      opts[:access_key] = ENV['SAUCE_ACCESS_KEY']
-
-      opts[:os] = ENV['SAUCE_OS']
-      opts[:browser] = ENV['SAUCE_BROWSER']
-      opts[:browser_version] = ENV['SAUCE_BROWSER_VERSION']
-      opts[:job_name] = ENV['SAUCE_JOB_NAME']
-
-      opts[:firefox_profile_url] = ENV['SAUCE_FIREFOX_PROFILE_URL']
-      opts[:user_extensions_url] = ENV['SAUCE_USER_EXTENSIONS_URL']
-
-      return opts.delete_if {|key, value| value.nil?}
+    def load_options_from_heroku
+      begin
+        require 'heroku/command'
+        command = Heroku::Command::BaseWithApp.new([])
+        environment = command.heroku.config_vars(command.app)
+        return extract_options_from_hash(environment)
+      rescue LoadError
+        return {}
+      end
     end
 
     def load_options_from_yaml
@@ -114,6 +110,35 @@ module Sauce
             end
         end
         return {}
+    end
+
+    def extract_options_from_hash(env)
+      opts = {}
+      opts[:host] = env['SAUCE_HOST']
+      opts[:port] = env['SAUCE_PORT']
+      opts[:browser_url] = env['SAUCE_BROWSER_URL']
+
+      opts[:username] = env['SAUCE_USERNAME']
+      opts[:access_key] = env['SAUCE_ACCESS_KEY']
+
+      opts[:os] = env['SAUCE_OS']
+      opts[:browser] = env['SAUCE_BROWSER']
+      opts[:browser_version] = env['SAUCE_BROWSER_VERSION']
+      opts[:job_name] = env['SAUCE_JOB_NAME']
+
+      opts[:firefox_profile_url] = env['SAUCE_FIREFOX_PROFILE_URL']
+      opts[:user_extensions_url] = env['SAUCE_USER_EXTENSIONS_URL']
+
+      if env.include? 'URL'
+        opts['SAUCE_BROWSER_URL'] = "http://#{env['URL']}/"
+      end
+
+      if env.include? 'SAUCE_BROWSERS'
+        browsers = JSON.parse(env['SAUCE_BROWSERS'])
+        opts.browsers = browsers.map { |x| [x['os'], x['browser'], x['version']] }
+      end
+
+      return opts.delete_if {|key, value| value.nil?}
     end
   end
 end
