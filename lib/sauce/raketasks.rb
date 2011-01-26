@@ -17,17 +17,13 @@ if defined?(Spec::Rake::SpecTask)
     namespace :selenium do
       desc "Run the Selenium acceptance tests in spec/selenium using Sauce OnDemand"
       task :sauce => spec_prereq do
-        with_rails_server do
-          Rake::Task["spec:selenium:runtests"].invoke
-        end
+        Rake::Task["spec:selenium:runtests"].invoke
       end
 
       desc "Run the Selenium acceptance tests in spec/selenium using a local Selenium server"
       task :local => spec_prereq do
-        with_rails_server do
-          with_selenium_rc do
-            Rake::Task["spec:selenium:runtests"].invoke
-          end
+        with_selenium_rc do
+          Rake::Task["spec:selenium:runtests"].invoke
         end
       end
 
@@ -55,17 +51,13 @@ if defined?(RSpec::Core::RakeTask)
     namespace :selenium do
       desc "Run the Selenium acceptance tests in spec/selenium using Sauce OnDemand"
       task :sauce => spec_prereq do
-        with_rails_server do
-          Rake::Task["spec:selenium:runtests"].invoke
-        end
+        Rake::Task["spec:selenium:runtests"].invoke
       end
 
       desc "Run the Selenium acceptance tests in spec/selenium using a local Selenium server"
       task :local => spec_prereq do
-        with_rails_server do
-          with_selenium_rc do
-            Rake::Task["spec:selenium:runtests"].invoke
-          end
+        with_selenium_rc do
+          Rake::Task["spec:selenium:runtests"].invoke
         end
       end
 
@@ -84,17 +76,13 @@ namespace :test do
   namespace :selenium do
     desc "Run the Selenium acceptance tests in test/selenium using Sauce OnDemand"
     task :sauce do
-      with_rails_server do
-        Rake::Task["test:selenium:runtests"].invoke
-      end
+      Rake::Task["test:selenium:runtests"].invoke
     end
 
     desc "Run the Selenium acceptance tests in spec/selenium using a local Selenium server"
     task :local do
-      with_rails_server do
-        with_selenium_rc do
-          Rake::Task["test:selenium:runtests"].invoke
-        end
+      with_selenium_rc do
+        Rake::Task["test:selenium:runtests"].invoke
       end
     end
 

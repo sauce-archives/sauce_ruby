@@ -14,16 +14,19 @@ begin
 
         before :suite do
           config = Sauce::Config.new
-          if @@need_tunnel && config.application_host && !config.local?
-            @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
-            @@tunnel.wait_until_ready
+          if @@need_tunnel
+            if config.application_host && !config.local?
+              @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+              @@tunnel.wait_until_ready
+            end
+            @@server = Sauce::Utilities::RailsServer.new
+            @@server.start
           end
         end
 
         after :suite do
-          if defined? @@tunnel
-            @@tunnel.disconnect
-          end
+          @@tunnel.disconnect if defined? @@tunnel
+          @@server.stop if defined? @@server
         end
 
         def execute(*args)
@@ -102,11 +105,15 @@ begin
             @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
             @@tunnel.wait_until_ready
           end
+
+          if ::RSpec.configuration.settings[:files_to_run].any? {|file| file =~ /spec\/selenium\//}
+            @@server = Sauce::Utilities::RailsServer.start
+            @@server.start
+          end
         end
         ::RSpec.configuration.after :suite do
-          if defined? @@tunnel
-            @@tunnel.disconnect
-          end
+          @@tunnel.disconnect if defined? @@tunnel
+          @@server.stop if defined? @@server
         end
       end
     end
@@ -177,11 +184,12 @@ begin
             @sauce_tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
             @sauce_tunnel.wait_until_ready
           end
+          @server = Sauce::Utilities::RailsServer.new
+          @server.start
         end
         result = run_without_tunnel.bind(self).call(*args)
-        if defined? @sauce_tunnel
-          @sauce_tunnel.disconnect
-        end
+        @sauce_tunnel.disconnect if defined? @sauce_tunnel
+        @server.stop if defined? @server
         return result
       end
     end
@@ -206,11 +214,13 @@ begin
             @sauce_tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
             @sauce_tunnel.wait_until_ready
           end
+
+          @server = Sauce::Utilities::RailsServer.new
+          @server.start
         end
         result = run_without_tunnel.bind(self).call(*args)
-        if defined? @sauce_tunnel
-          @sauce_tunnel.disconnect
-        end
+        @sauce_tunnel.disconnect if defined? @sauce_tunnel
+        @server.stop if defined? @server
         return result
       end
     end

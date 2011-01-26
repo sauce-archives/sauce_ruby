@@ -47,24 +47,31 @@ module Sauce
       end
     end
 
-    def with_rails_server
-      STDERR.puts "Starting Rails server on port 3001..."
-      if File.exists?('script/server')
-        server = IO.popen("ruby script/server -e test --port 3001 --daemon")
-      elsif File.exists?('script/rails')
-        server = IO.popen("script/rails server -p 3001 -e test")
+    class RailsServer
+      include Sauce::Utilities
+      def start
+        STDERR.puts "Starting Rails server on port 3001..."
+        if File.exists?('script/server')
+          @server = ChildProcess.build("ruby", "script/server", "-e", "test", "--port", "3001")
+        elsif File.exists?('script/rails')
+          @server = ChildProcess.build("bundle", "exec", "rails", "server", "-e", "test", "--port", "3001")
+        end
+        @server.io.inherit!
+        @server.start
+
+        wait_for_server_on_port(3001)
+
+        at_exit do
+          @server.stop
+        end
+        STDERR.puts "Rails server running!"
       end
 
-      wait_for_server_on_port(3001)
-      STDERR.puts "Rails server running!"
-      begin
-        yield
-      ensure
+      def stop
         begin
-          pid = IO.read(File.join('tmp', 'pids', 'server.pid')).to_i
-          Process.kill("INT", pid)
+          @server.stop
         rescue
-          STDERR.puts "Rails server could not be killed. Is the pid in #{File.join('tmp', 'pids', 'server.pid')}?"
+          STDERR.puts "Rails server could not be killed. Did it fail to start?"
         end
       end
     end
