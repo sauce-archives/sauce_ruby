@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
     "LICENSE",
     "README.markdown",
     "Rakefile",
-    "VERSION",
     "bin/sauce",
     "examples/helper.rb",
     "examples/other_spec.rb",
