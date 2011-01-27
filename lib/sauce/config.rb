@@ -85,17 +85,20 @@ module Sauce
     end
 
     def load_options_from_heroku
-      buffer = IO.popen("heroku config --shell") { |out| out.read }
-      if $?.exitstatus == 0
-        env = {}
-        buffer.split("\n").each do |line|
-          key, value = line.split("=")
-          env[key] = value
+      @@herkou_environment ||= begin
+        buffer = IO.popen("heroku config --shell") { |out| out.read }
+        if $?.exitstatus == 0
+          env = {}
+          buffer.split("\n").each do |line|
+            key, value = line.split("=")
+            env[key] = value
+          end
+          extract_options_from_hash(env)
+        else
+          {}
         end
-        return extract_options_from_hash(env)
-      else
-        return {}
       end
+      return @@herkou_environment
     end
 
     def load_options_from_yaml
