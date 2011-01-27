@@ -85,10 +85,8 @@ module Sauce
     end
 
     def load_options_from_heroku
-      buffer = IO.popen("heroku config --shell") do |heroku|
-        buffer = heroku.read
-      end
-      if $? == 0
+      buffer = IO.popen("heroku config --shell") { |out| out.read }
+      if $?.exitstatus == 0
         env = {}
         buffer.split("\n").each do |line|
           key, value = line.split("=")
