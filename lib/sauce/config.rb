@@ -85,12 +85,17 @@ module Sauce
     end
 
     def load_options_from_heroku
-      begin
-        require 'heroku/command'
-        command = Heroku::Command::BaseWithApp.new([])
-        environment = command.heroku.config_vars(command.app)
-        return extract_options_from_hash(environment)
-      rescue LoadError
+      buffer = IO.popen("heroku config --shell") do |heroku|
+        buffer = heroku.read
+      end
+      if $? == 0
+        env = {}
+        buffer.split("\n").each do |line|
+          key, value = line.split("=")
+          env[key] = value
+        end
+        return extract_options_from_hash(env)
+      else
         return {}
       end
     end
@@ -135,7 +140,7 @@ module Sauce
 
       if env.include? 'SAUCE_BROWSERS'
         browsers = JSON.parse(env['SAUCE_BROWSERS'])
-        opts.browsers = browsers.map { |x| [x['os'], x['browser'], x['version']] }
+        opts[:browsers] = browsers.map { |x| [x['os'], x['browser'], x['version']] }
       end
 
       return opts.delete_if {|key, value| value.nil?}
