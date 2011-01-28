@@ -1,5 +1,7 @@
 module Sauce
   class Connect
+    TIMEOUT = 300
+
     attr_reader :status, :error
 
     def initialize(options={})
@@ -39,8 +41,13 @@ module Sauce
     end
 
     def wait_until_ready
-      while(!@ready)
+      start = Time.now
+      while !@ready and (Time.now-start) < CONNECT_TIMEOUT
         sleep 0.4
+      end
+
+      if !@ready
+        raise "Sauce Connect failed to connect after #{CONNECT_TIMEOUT} seconds"
       end
     end
 
