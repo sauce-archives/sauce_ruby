@@ -14,7 +14,7 @@ module Sauce
       options.delete(:tunnel_port)
       config = Sauce::Config.new(options)
       args = ['-u', config.username, '-k', config.access_key, '-s', host, '-p', port, '-d', config.domain, '-t', tunnel_port]
-      @pipe = IO.popen((["\"#{Sauce::Connect.find_sauce_connect}\""] + args).join(' '))
+      @pipe = IO.popen((["exec", "\"#{Sauce::Connect.find_sauce_connect}\""] + args).join(' '))
       at_exit do
         Process.kill("INT", @pipe.pid)
         while @ready
