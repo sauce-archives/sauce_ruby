@@ -17,6 +17,7 @@ class TestRails3 < Test::Unit::TestCase
   end
 
   def test_testunit
+    setup_rails2
     # Add some Sauce
     open("Gemfile", 'a') do |f|
       f.puts "gem 'sauce'"

@@ -52,4 +52,50 @@ class TestIntegrations < Test::Unit::TestCase
     end
 
   end
+
+  def with_rails_3_environment
+    @temp = File.join(Dir.tmpdir, "sauce_gem_integration_test_#{rand(100000)}")
+    Dir.mkdir(@temp)
+    Dir.chdir(@temp)
+    puts "testing in clean working dir #{@temp}"
+    # Make clean Rails project
+    system("gem install rails")
+    system("rails new rails3_testapp")
+    Dir.chdir("rails3_testapp")
+    system("bundle install")
+    system("rake db:migrate")
+    begin
+      yield
+    ensure
+      FileUtils.remove_dir(@temp)
+    end
+  end
+
+  def test_rails3_testunit
+    with_rails_3_environment do
+      # Add some Sauce
+      open("Gemfile", 'a') do |f|
+        f.puts "gem 'sauce'"
+      end
+      system("gem install $SAUCE_GEM")
+      system("bundle install")
+      system("rails generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
+
+      open("test/selenium/demo_test.rb", 'wb') do |file|
+        file.write(<<-EOF)
+          require "test_helper"
+
+          class DemoTest < Sauce::RailsTestCase
+            test "my app" do
+              page.open "/"
+              assert page.is_text_present("Welcome aboard")
+            end
+          end
+        EOF
+      end
+
+      assert system("rake test:selenium:sauce"), "Test::Unit suite failed in Sauce OnDemand"
+      assert system("rake test:selenium:local"), "Test::Unit suite failed with local Selenium"
+    end
+  end
 end
