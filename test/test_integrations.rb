@@ -36,7 +36,7 @@ class TestIntegrations < Test::Unit::TestCase
       rubie.gemset.create gemset_name
       begin
         rubie = RVM.environment("#{ruby_version}@#{gemset_name}")
-        output = rubie.ruby(test_file)
+        output = rubie.ruby("\"#{test_file}\"")
         unless output.successful?
           puts "==== #{test_file} with Ruby #{ruby_version} ===="
           puts "===== STDOUT ====="
