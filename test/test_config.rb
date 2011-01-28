@@ -18,7 +18,7 @@ class TestConfig < Test::Unit::TestCase
       assert_equal "{\"name\":\"Unnamed Ruby job\",\"access-key\":\"test_access\",\"os\":\"Linux\",\"username\":\"test_user\",\"browser-version\":\"3.\",\"browser\":\"firefox\"}", config.to_browser_string
     ensure
       Sauce::Config::ENVIRONMENT_VARIABLES.each do |key|
-        ENV[key] = preserved_env[key] if preserved_env[key]
+        ENV[key] = preserved_env[key]
       end
     end
   end
