@@ -42,12 +42,12 @@ module Sauce
 
     def wait_until_ready
       start = Time.now
-      while !@ready and (Time.now-start) < CONNECT_TIMEOUT
+      while !@ready and (Time.now-start) < TIMEOUT
         sleep 0.4
       end
 
       if !@ready
-        raise "Sauce Connect failed to connect after #{CONNECT_TIMEOUT} seconds"
+        raise "Sauce Connect failed to connect after #{TIMEOUT} seconds"
       end
     end
 
