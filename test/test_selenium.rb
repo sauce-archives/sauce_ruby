@@ -1,9 +1,7 @@
 require File.expand_path("../helper", __FILE__)
 
 class TestSelenium < Test::Unit::TestCase
-  def test_successful_connection_from_environment_variables
-    assert ENV['SAUCE_USERNAME'], "You haven't configured a Sauce OnDemand username. Please set $SAUCE_USERNAME"
-    assert ENV['SAUCE_ACCESS_KEY'], "You haven't configured a Sauce OnDemand access key. Please set $SAUCE_ACCESS_KEY"
+  def test_successful_connection_from_environment
     selenium = Sauce::Selenium.new(:job_name => "Sauce gem test suite: test_selenium.rb",
                                    :browser_url => "http://www.google.com/")
     selenium.start
