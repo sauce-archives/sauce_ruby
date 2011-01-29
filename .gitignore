@@ -22,3 +22,4 @@ pkg
 sauce_connect.log*
 account.yml
 *.gem
+Gemfile.lock
