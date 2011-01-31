@@ -107,7 +107,7 @@ begin
           end
 
           if ::RSpec.configuration.settings[:files_to_run].any? {|file| file =~ /spec\/selenium\//}
-            @@server = Sauce::Utilities::RailsServer.start
+            @@server = Sauce::Utilities::RailsServer.new
             @@server.start
           end
         end
