@@ -7,6 +7,8 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'sauce'
 
+include Sauce::Utilities
+
 Sauce.config do |config|
   config.browsers = [
     ["Windows 2003", "firefox", "3.6."],
