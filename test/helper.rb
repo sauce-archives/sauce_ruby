@@ -1,10 +1,13 @@
 require 'rubygems'
 require 'test/unit'
 require 'net/telnet'
+require 'fileutils'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'sauce'
+
+include Sauce::Utilities
 
 Sauce.config do |config|
   config.browsers = [
