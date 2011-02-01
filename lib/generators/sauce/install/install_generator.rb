@@ -5,15 +5,17 @@ module Sauce
 
       desc "Prep application for Sauce OnDemand Selenium tests"
 
-      #argument :username, :type => nil
-      #argument :api_key, :type => nil
+      argument :username, :type => :string, :required => false
+      argument :api_key, :type => :string, :required => false
 
       def copy_rake_tasks
         copy_file "sauce.rake", "lib/tasks/sauce.rake"
       end
 
       def configure_credentials
-        system("sauce config #{username} #{api_key}")
+        if username
+          system("sauce config #{username} #{api_key}")
+        end
       end
 
       def setup_spec
