@@ -80,7 +80,7 @@ class TestIntegrations < Test::Unit::TestCase
       open("Gemfile", 'a') do |f|
         f.puts "gem 'sauce'"
       end
-      run_in_environment(env, "gem install $SAUCE_GEM")
+      run_in_environment(env, "gem install \"$SAUCE_GEM\"")
       run_in_environment(env, "bundle install")
       run_in_environment(env, "rails generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
 
@@ -108,7 +108,7 @@ class TestIntegrations < Test::Unit::TestCase
         f.puts "gem 'sauce'"
         f.puts "gem 'rspec-rails'"
       end
-      run_in_environment(env, "gem install $SAUCE_GEM")
+      run_in_environment(env, "gem install \"$SAUCE_GEM\"")
       run_in_environment(env, "bundle install")
       run_in_environment(env, "rails generate rspec:install")
 
@@ -135,7 +135,7 @@ class TestIntegrations < Test::Unit::TestCase
 
   def recipe_rails2_testunit(env)
     with_rails_2_environment(env) do
-      run_in_environment(env, "gem install $SAUCE_GEM")
+      run_in_environment(env, "gem install \"$SAUCE_GEM\"")
       run_in_environment(env, "script/generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
 
       open("test/selenium/demo_test.rb", 'wb') do |file|
@@ -167,7 +167,7 @@ class TestIntegrations < Test::Unit::TestCase
       run_in_environment(env, "script/generate rspec")
 
       # Add some Sauce
-      run_in_environment(env, "gem install $SAUCE_GEM")
+      run_in_environment(env, "gem install \"$SAUCE_GEM\"")
       run_in_environment(env, "script/generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
 
       open("spec/selenium/demo_spec.rb", 'wb') do |file|
