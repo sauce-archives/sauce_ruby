@@ -97,6 +97,8 @@ module Sauce
         else
           {}
         end
+      rescue Errno::ENOENT
+        {} # not a Heroku environment
       end
       return @@herkou_environment
     end
