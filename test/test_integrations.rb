@@ -82,7 +82,7 @@ class TestIntegrations < Test::Unit::TestCase
       end
       run_in_environment(env, "gem install \"$SAUCE_GEM\"")
       run_in_environment(env, "bundle install")
-      run_in_environment(env, "rails generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
+      run_in_environment(env, "rails generate sauce:install #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
 
       open("test/selenium/demo_test.rb", 'wb') do |file|
         file.write(<<-EOF)
@@ -113,7 +113,7 @@ class TestIntegrations < Test::Unit::TestCase
       run_in_environment(env, "rails generate rspec:install")
 
       # Add some Sauce
-      run_in_environment(env, "rails generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
+      run_in_environment(env, "rails generate sauce:install #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
 
       open("spec/selenium/demo_spec.rb", 'wb') do |file|
         file.write(<<-EOF)
