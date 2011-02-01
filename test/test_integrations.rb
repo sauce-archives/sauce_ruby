@@ -98,7 +98,7 @@ class TestIntegrations < Test::Unit::TestCase
       end
 
       run_in_environment(env, "rake test:selenium:sauce")
-      run_in_environment(env, "rake test:selenium:local")
+      run_in_environment(env, "rake test:selenium:local") unless ENV['SAUCE_TEST_NO_LOCAL']
     end
   end
 
@@ -129,7 +129,7 @@ class TestIntegrations < Test::Unit::TestCase
       end
 
       run_in_environment(env, "rake spec:selenium:sauce")
-      run_in_environment(env, "rake spec:selenium:local")
+      run_in_environment(env, "rake spec:selenium:local") unless ENV['SAUCE_TEST_NO_LOCAL']
     end
   end
 
@@ -151,8 +151,8 @@ class TestIntegrations < Test::Unit::TestCase
         EOF
       end
 
-      run_in_environment(env, "rake spec:selenium:sauce")
-      run_in_environment(env, "rake spec:selenium:local")
+      run_in_environment(env, "rake test:selenium:sauce")
+      run_in_environment(env, "rake test:selenium:local") unless ENV['SAUCE_TEST_NO_LOCAL']
     end
   end
 
@@ -184,7 +184,7 @@ class TestIntegrations < Test::Unit::TestCase
       end
 
       run_in_environment(env, "rake spec:selenium:sauce")
-      run_in_environment(env, "rake spec:selenium:local")
+      run_in_environment(env, "rake spec:selenium:local") unless ENV['SAUCE_TEST_NO_LOCAL']
     end
   end
 
