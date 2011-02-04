@@ -30,6 +30,15 @@ module Sauce
         SAUCE_ACCESS_KEY SAUCE_OS SAUCE_BROWSER SAUCE_BROWSER_VERSION SAUCE_JOB_NAME
         SAUCE_FIREFOX_PROFILE_URL SAUCE_USER_EXTENSIONS_URL}
 
+    PLATFORMS = {
+      "Windows 2003" => "WINDOWS",
+      "Linux" => "LINUX"
+    }
+
+    BROWSERS = {
+      "iexplore" => "internet explorer"
+    }
+
     def initialize(opts={})
       @opts = {}
       if opts != false
@@ -62,6 +71,15 @@ module Sauce
         'browser-version' => @opts[:browser_version],
         'name' => @opts[:job_name]}
       return browser_options.to_json
+    end
+
+    def to_desired_capabilities
+      {
+        :browserName => BROWSERS[@opts[:browser]] || @opts[:browser],
+        :browserVersion => @opts[:browser_version],
+        :platform => PLATFORMS[@opts[:os]] || @opts[:os],
+        :name => @opts[:job_name]
+      }.update(@opts.reject {|k, v| [:browser, :browser_version, :os, :job_name].include? k})
     end
 
     def browsers
