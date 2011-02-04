@@ -66,18 +66,18 @@ module Sauce
       browser_options = {
         'username' => @opts[:username],
         'access-key' => @opts[:access_key],
-        'os' => @opts[:os],
-        'browser' => @opts[:browser],
-        'browser-version' => @opts[:browser_version],
+        'os' => os,
+        'browser' => browser,
+        'browser-version' => browser_version,
         'name' => @opts[:job_name]}
       return browser_options.to_json
     end
 
     def to_desired_capabilities
       {
-        :browserName => BROWSERS[@opts[:browser]] || @opts[:browser],
-        :browserVersion => @opts[:browser_version],
-        :platform => PLATFORMS[@opts[:os]] || @opts[:os],
+        :browserName => BROWSERS[browser] || browser,
+        :browserVersion => browser_version,
+        :platform => PLATFORMS[os] || os,
         :name => @opts[:job_name]
       }.update(@opts.reject {|k, v| [:browser, :browser_version, :os, :job_name].include? k})
     end
@@ -85,6 +85,30 @@ module Sauce
     def browsers
       return @opts[:browsers] if @opts.include? :browsers
       return [[os, browser, browser_version]]
+    end
+
+    def browser
+      if @opts[:browsers]
+        @opts[:browsers][0][1]
+      else
+        @opts[:browser]
+      end
+    end
+
+    def os
+      if @opts[:browsers]
+        @opts[:browsers][0][0]
+      else
+        @opts[:os]
+      end
+    end
+
+    def browser_version
+      if @opts[:browsers]
+        @opts[:browsers][0][2]
+      else
+        @opts[:browser_version]
+      end
     end
 
     def domain
