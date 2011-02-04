@@ -164,6 +164,28 @@ Note on Patches/Pull Requests
 *   Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 *   Send me a pull request. Bonus points for topic branches.
 
+Testing the Gem
+---------------
+
+The tests in test/ need a bit of setup to get running:
+
+if you're on Ubuntu:
+
+* sudo aptitude install expect
+
+For all platforms:
+
+* Install RVM: bash < <( curl http://rvm.beginrescueend.com/releases/rvm-install-head )
+* If you're in a headless environment, set SAUCE_TEST_NO_LOCAL=y in your environment
+* Set SAUCE_USERNAME and SAUCE_ACCESS_KEY in your environment to valid Sauce OnDemand credentials
+* bundle install
+* rake test
+
+If you want tests to go a bit faster, globally install the gems with native extensions:
+
+* rvm use 1.8.7@global
+* gem install ffi sqlite3 json
+
 Plans
 -----
 
