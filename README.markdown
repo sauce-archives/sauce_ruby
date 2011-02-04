@@ -171,7 +171,7 @@ The tests in test/ need a bit of setup to get running:
 
 if you're on Ubuntu:
 
-* sudo aptitude install expect
+* sudo aptitude install expect libsqlite3-dev
 
 For all platforms:
 
@@ -185,6 +185,9 @@ If you want tests to go a bit faster, globally install the gems with native exte
 
 * rvm use 1.8.7@global
 * gem install ffi sqlite3 json
+* rvm use 1.9.2@global
+* gem install ffi sqlite3 json
+* rvm use default
 
 Plans
 -----
