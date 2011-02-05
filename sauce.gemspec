@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sauce}
-  s.version = "0.16.1"
+  s.version = "0.16.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sean Grove", "Eric Allen", "Steven Hazel"]
@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
     "lib/generators/sauce/install/install_generator.rb",
     "lib/generators/sauce/install/templates/sauce.rake",
     "lib/sauce.rb",
+    "lib/sauce/capybara.rb",
     "lib/sauce/client.rb",
     "lib/sauce/config.rb",
     "lib/sauce/connect.rb",
@@ -55,7 +56,8 @@ Gem::Specification.new do |s|
     "test/helper.rb",
     "test/test_config.rb",
     "test/test_connect.rb",
-    "test/test_selenium.rb"
+    "test/test_selenium.rb",
+    "test/test_selenium2.rb"
   ]
   s.homepage = %q{http://github.com/saucelabs/sauce}
   s.require_paths = ["lib"]
