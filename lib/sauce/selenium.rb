@@ -20,6 +20,10 @@ module Sauce
       @driver.send(meth, *args)
     end
 
+    def session_id
+      @driver.send(:bridge).session_id
+    end
+
     def stop
       @driver.quit
     end
