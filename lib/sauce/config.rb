@@ -39,6 +39,10 @@ module Sauce
       "iexplore" => "internet explorer"
     }
 
+    SAUCE_OPTIONS = %w{record-video record-screenshots capture-html tags
+        sauce-advisor single-window user-extensions-url firefox-profile-url
+        max-duration idle-timeout build custom-data}
+
     def initialize(opts={})
       @opts = {}
       if opts != false
@@ -69,7 +73,13 @@ module Sauce
         'os' => os,
         'browser' => browser,
         'browser-version' => browser_version,
-        'name' => @opts[:job_name]}
+        'name' => @opts[:job_name] || @opts[:name]}
+
+      SAUCE_OPTIONS.each do |opt|
+        opt = opt.to_sym
+        browser_options[opt] = @opts[opt] if @opts.include? opt
+      end
+      p browser_options
       return browser_options.to_json
     end
 
