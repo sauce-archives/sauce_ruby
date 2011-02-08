@@ -79,7 +79,6 @@ module Sauce
         opt = opt.to_sym
         browser_options[opt] = @opts[opt] if @opts.include? opt
       end
-      p browser_options
       return browser_options.to_json
     end
 
