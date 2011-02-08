@@ -128,7 +128,7 @@ module Sauce
 
     def load_options_from_heroku
       @@herkou_environment ||= begin
-        buffer = IO.popen("heroku config --shell") { |out| out.read }
+        buffer = IO.popen("heroku config --shell 2>/dev/null") { |out| out.read }
         if $?.exitstatus == 0
           env = {}
           buffer.split("\n").each do |line|
