@@ -66,6 +66,8 @@ module Sauce
       elsif options.class == Hash
         id = options[:id]
       end
+
+      @@client ||= Sauce::Client.new
       
       #puts "GET-URL: #{@@client.url}jobs/#{id}"
       response = @@client["jobs/#{id}"].get

@@ -7,14 +7,12 @@ module Sauce
     class BadAccessError < StandardError; end #:nodoc
     class MisconfiguredError < StandardError; end #:nodoc
 
-    attr_accessor :username, :access_key, :client
+    attr_accessor :client
     attr_accessor :protocol, :host, :port, :api_path, :api_version, :ip, :api_url
     attr_accessor :tunnels, :jobs
 
-    def initialize(options)
-      @username   = options[:username]
-      @access_key = options[:access_key]
-      @ip         = options[:ip]
+    def initialize(options={})
+      config = Sauce::Config.new
 
       @protocol   = options[:protocol] || "http"
       @host       = options[:host] || "saucelabs.com"
@@ -22,24 +20,28 @@ module Sauce
       @api_path   = options[:api_path] || "rest"
       @api_version= options[:api_version] || 1
 
-      raise MisconfiguredError if @username.nil? or @access_key.nil?
-      @api_url = "#{@protocol}://#{@username}:#{@access_key}@#{@host}:#{@port}/#{@api_path}/v#{@api_version}/#{@username}/"
+      raise MisconfiguredError if config.username.nil? or config.access_key.nil?
+      @api_url = "#{@protocol}://#{config.username}:#{config.access_key}@#{@host}:#{@port}/#{@api_path}/v#{@api_version}/#{@username}/"
       @client = RestClient::Resource.new @api_url
 
       @tunnels = Sauce::Tunnel
       @tunnels.client = @client
       @tunnels.account = {
-        :username => @username,
-        :access_key => @access_key,
+        :username => config.username,
+        :access_key => config.access_key,
         :ip => @ip}
 
       @jobs = Sauce::Job
       @jobs.client = @client
       @jobs.account = {
-        :username => @username,
-        :access_key => @access_key,
+        :username => config.username,
+        :access_key => config.access_key,
         :ip => @ip
       }
+    end
+
+    def [](url)
+      @client[url]
     end
   end
 end
