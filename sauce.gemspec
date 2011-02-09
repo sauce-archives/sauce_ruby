@@ -11,12 +11,7 @@ Gem::Specification.new do |s|
   s.description = %q{A Ruby interface to Sauce Labs' services. Start/stop tunnels, retrieve Selenium logs, access video replays, etc.}
   s.email = %q{help@saucelabs.com}
   s.executables = ["sauce"]
-  s.extra_rdoc_files = [
-    "LICENSE",
-    "README.markdown"
-  ]
   s.files = [
-    ".document",
     "LICENSE",
     "README.markdown",
     "Rakefile",
@@ -73,7 +68,9 @@ Gem::Specification.new do |s|
     "test/helper.rb",
     "test/test_config.rb",
     "test/test_connect.rb",
-    "test/test_selenium.rb"
+    "test/test_selenium.rb",
+    "test/test_job.rb",
+    "test/test_selenium2.rb"
   ]
 
   if s.respond_to? :specification_version then
