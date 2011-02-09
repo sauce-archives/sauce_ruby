@@ -21,7 +21,7 @@ module Sauce
       @api_version= options[:api_version] || 1
 
       raise MisconfiguredError if config.username.nil? or config.access_key.nil?
-      @api_url = "#{@protocol}://#{config.username}:#{config.access_key}@#{@host}:#{@port}/#{@api_path}/v#{@api_version}/#{@username}/"
+      @api_url = "#{@protocol}://#{config.username}:#{config.access_key}@#{@host}:#{@port}/#{@api_path}/v#{@api_version}/#{config.username}/"
       @client = RestClient::Resource.new @api_url
 
       @tunnels = Sauce::Tunnel
