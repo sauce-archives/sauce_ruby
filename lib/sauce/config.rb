@@ -73,7 +73,7 @@ module Sauce
         'os' => os,
         'browser' => browser,
         'browser-version' => browser_version,
-        'name' => @opts[:job_name] || @opts[:name]}
+        'name' => @opts[:name] || @opts[:job_name]}
 
       SAUCE_OPTIONS.each do |opt|
         opt = opt.to_sym
