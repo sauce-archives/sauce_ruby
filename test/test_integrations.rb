@@ -36,7 +36,7 @@ class TestIntegrations < Test::Unit::TestCase
 
   def run_in_environment(env, command)
     result = env.run(command)
-    assert result, result.stderr
+    assert result.successful?, result.stderr
   end
 
   def in_tempdir
