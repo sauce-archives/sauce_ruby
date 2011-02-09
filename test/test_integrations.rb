@@ -160,7 +160,9 @@ class TestIntegrations < Test::Unit::TestCase
     with_rails_2_environment(env) do
 
       run_in_environment(env, "gem install rspec-rails -v '< 2'")
-      if RUBY_VERSION >= "1.9"
+      if env.environment_name =~ /^ruby-1.9.*/
+        # newer versions of hoe get angry
+        run_in_environment(env, "gem install hoe -v 1.5.1")
         # this is a strange dependency...
         run_in_environment(env, "gem install test-unit -v 1.2.3")
       end
@@ -183,7 +185,7 @@ class TestIntegrations < Test::Unit::TestCase
         EOF
       end
 
-      run_in_environment(env, "rake spec:selenium:sauce")
+      run_in_environment(env, "rake spec:selenium:sauce --trace")
       run_in_environment(env, "rake spec:selenium:local") unless ENV['SAUCE_TEST_NO_LOCAL']
     end
   end
