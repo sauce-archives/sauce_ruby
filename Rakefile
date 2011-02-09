@@ -51,3 +51,11 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+task :build do
+  system "gem build sauce.gemspec"
+end
+
+task :push => :build do
+  system "gem push `ls *.gem | sort | tail -n 1`"
+end
