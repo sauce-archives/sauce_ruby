@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sauce}
-  s.version = "0.16.2"
+  s.version = "0.17.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sean Grove", "Eric Allen", "Steven Hazel"]
-  s.date = %q{2011-02-04}
+  s.date = %q{2011-02-09}
   s.default_executable = %q{sauce}
   s.description = %q{A Ruby interface to Sauce Labs' services. Start/stop tunnels, retrieve Selenium logs, access video replays, etc.}
   s.email = %q{help@saucelabs.com}
@@ -55,6 +55,7 @@ Gem::Specification.new do |s|
     "support/simplejson/tool.py",
     "test/helper.rb",
     "test/test_config.rb",
+    "test/test_job.rb",
     "test/test_connect.rb",
     "test/test_selenium.rb",
     "test/test_selenium2.rb"
