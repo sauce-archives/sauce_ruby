@@ -63,5 +63,24 @@ module Sauce
     def self.find_sauce_connect
       File.join(File.dirname(File.dirname(File.expand_path(File.dirname(__FILE__)))), "support", "sauce_connect")
     end
+
+    # Global Sauce Connect-ness
+    @connection = nil
+
+    def self.connect!(*args)
+      @connection = self.new(*args)
+      @connection.wait_until_ready
+      at_exit do
+        @connection.disconnect
+      end
+    end
+
+    def self.ensure_connected(*args)
+      if @connection
+        @connection.wait_until_ready
+      else
+        connect!(*args)
+      end
+    end
   end
 end
