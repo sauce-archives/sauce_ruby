@@ -1,16 +1,16 @@
 #!/usr/bin/env sh
 
-if [[ ! -n $SAUCE_USERNAME ]]; then
+if [ ! -n $SAUCE_USERNAME ]; then
   echo "SAUCE_USERNAME not set. Please set it to your Sauce OnDemand username to run these tests"
   exit 1
 fi
 
-if [[ ! -n $SAUCE_ACCESS_KEY ]]; then
+if [ ! -n $SAUCE_ACCESS_KEY ]; then
   echo "SAUCE_ACCESS_KEY not set. Please set it to your Sauce OnDemand username to run these tests"
   exit 1
 fi
 
-if [[ -n $SAUCE_TEST_NO_LOCAL ]]; then
+if [ -n $SAUCE_TEST_NO_LOCAL ]; then
   echo "You have not set SAUCE_TEST_NO_LOCAL. Will run local Selenium tests against Firefox"
 fi
 
