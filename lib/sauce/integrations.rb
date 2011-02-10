@@ -19,8 +19,10 @@ begin
               @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
               @@tunnel.wait_until_ready
             end
-            @@server = Sauce::Utilities::RailsServer.new
-            @@server.start
+            if File.exists?('script/rails') # or some other canonical way to detect if rails?
+              @@server = Sauce::Utilities::RailsServer.new
+              @@server.start
+            end
           end
         end
 
