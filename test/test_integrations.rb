@@ -54,7 +54,7 @@ class TestIntegrations < Test::Unit::TestCase
 
   def with_rails_3_environment(env)
     in_tempdir do |temp|
-        run_in_environment(env, "gem install rails")
+        run_in_environment(env, "gem install rails --no-rdoc --no-ri")
         run_in_environment(env, "rails new rails3_testapp")
         Dir.chdir("rails3_testapp")
         run_in_environment(env, "bundle install")
@@ -65,8 +65,8 @@ class TestIntegrations < Test::Unit::TestCase
 
   def with_rails_2_environment(env)
     in_tempdir do |temp|
-      run_in_environment(env, "gem install rails -v 2.3.10")
-      run_in_environment(env, "gem install sqlite3")
+      run_in_environment(env, "gem install rails -v 2.3.10 --no-rdoc --no-ri")
+      run_in_environment(env, "gem install sqlite3 --no-rdoc --no-ri")
       run_in_environment(env, "rails rails2_testapp")
       Dir.chdir("rails2_testapp")
       run_in_environment(env, "rake db:migrate")
@@ -80,7 +80,7 @@ class TestIntegrations < Test::Unit::TestCase
       open("Gemfile", 'a') do |f|
         f.puts "gem 'sauce'"
       end
-      run_in_environment(env, "gem install \"$SAUCE_GEM\"")
+      run_in_environment(env, "gem install \"$SAUCE_GEM\" --no-rdoc --no-ri")
       run_in_environment(env, "bundle install")
       run_in_environment(env, "rails generate sauce:install #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
 
@@ -108,7 +108,7 @@ class TestIntegrations < Test::Unit::TestCase
         f.puts "gem 'sauce'"
         f.puts "gem 'rspec-rails'"
       end
-      run_in_environment(env, "gem install \"$SAUCE_GEM\"")
+      run_in_environment(env, "gem install \"$SAUCE_GEM\" --no-rdoc --no-ri")
       run_in_environment(env, "bundle install")
       run_in_environment(env, "rails generate rspec:install")
 
@@ -135,7 +135,7 @@ class TestIntegrations < Test::Unit::TestCase
 
   def recipe_rails2_testunit(env)
     with_rails_2_environment(env) do
-      run_in_environment(env, "gem install \"$SAUCE_GEM\"")
+      run_in_environment(env, "gem install \"$SAUCE_GEM\" --no-rdoc --no-ri")
       run_in_environment(env, "script/generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
 
       open("test/selenium/demo_test.rb", 'wb') do |file|
@@ -159,17 +159,17 @@ class TestIntegrations < Test::Unit::TestCase
   def recipe_rails2_rspec(env)
     with_rails_2_environment(env) do
 
-      run_in_environment(env, "gem install rspec-rails -v '< 2'")
+      run_in_environment(env, "gem install rspec-rails -v '< 2' --no-rdoc --no-ri")
       if env.environment_name =~ /^ruby-1.9.*/
         # newer versions of hoe get angry
-        run_in_environment(env, "gem install hoe -v 1.5.1")
+        run_in_environment(env, "gem install hoe -v 1.5.1 --no-rdoc --no-ri")
         # this is a strange dependency...
-        run_in_environment(env, "gem install test-unit -v 1.2.3")
+        run_in_environment(env, "gem install test-unit -v 1.2.3 --no-rdoc --no-ri")
       end
       run_in_environment(env, "script/generate rspec")
 
       # Add some Sauce
-      run_in_environment(env, "gem install \"$SAUCE_GEM\"")
+      run_in_environment(env, "gem install \"$SAUCE_GEM\" --no-rdoc --no-ri")
       run_in_environment(env, "script/generate sauce #{ENV['SAUCE_USERNAME']} #{ENV['SAUCE_ACCESS_KEY']}")
 
       open("spec/selenium/demo_spec.rb", 'wb') do |file|
