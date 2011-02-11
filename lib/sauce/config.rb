@@ -19,9 +19,9 @@ module Sauce
         :host => "saucelabs.com",
         :port => 4444,
         :browser_url => "http://saucelabs.com",
-        :os => "Linux",
+        :os => "Windows 2003",
         :browser => "firefox",
-        :browser_version => "3.",
+        :browser_version => "3.6.",
         :job_name => "Unnamed Ruby job",
         :local_application_port => "3001"
     }
