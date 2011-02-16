@@ -51,7 +51,7 @@ module Sauce
       include Sauce::Utilities
 
       def self.is_rails_app?
-        File.exists('script/server') || File.exists('script/rails')
+        File.exists?('script/server') || File.exists?('script/rails')
       end
 
       def start
