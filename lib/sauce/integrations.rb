@@ -142,15 +142,19 @@ module Sauce
       unless my_name =~ /^default_test/
         config = Sauce::Config.new
         if config.application_host && !config.local?
-          Sauce::Connect.ensure_connected(:host => config.application_host, :port => config.application_port || 80)
+          unless ENV['TEST_ENV_NUMBER'].to_i > 1
+            Sauce::Connect.ensure_connected(:host => config.application_host, :port => config.application_port || 80)
+          end
         end
 
         unless defined?(@@server)
-          if Sauce::Utilities::RailsServer.is_rails_app?
-            @@server = Sauce::Utilities::RailsServer.new
-            @@server.start
-            at_exit do
-              @@server.stop
+          unless ENV['TEST_ENV_NUMBER'].to_i > 1
+            if Sauce::Utilities::RailsServer.is_rails_app?
+              @@server = Sauce::Utilities::RailsServer.new
+              @@server.start
+              at_exit do
+                @@server.stop
+              end
             end
           end
         end
