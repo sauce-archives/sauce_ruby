@@ -49,6 +49,11 @@ module Sauce
 
     class RailsServer
       include Sauce::Utilities
+
+      def self.is_rails_app?
+        File.exists('script/server') || File.exists('script/rails')
+      end
+
       def start
         STDERR.puts "Starting Rails server on port 3001..."
         if File.exists?('script/server')

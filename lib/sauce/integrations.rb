@@ -19,8 +19,10 @@ begin
               @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
               @@tunnel.wait_until_ready
             end
-            @@server = Sauce::Utilities::RailsServer.new
-            @@server.start
+            if Sauce::Utilities::RailsServer.is_rails_app?
+              @@server = Sauce::Utilities::RailsServer.new
+              @@server.start
+            end
           end
         end
 
@@ -106,7 +108,8 @@ begin
             @@tunnel.wait_until_ready
           end
 
-          if ::RSpec.configuration.settings[:files_to_run].any? {|file| file =~ /spec\/selenium\//}
+          if ::RSpec.configuration.settings[:files_to_run].any? {|file| file =~ /spec\/selenium\//} &&
+            Sauce::Utilities::RailsServer.is_rails_app?
             @@server = Sauce::Utilities::RailsServer.new
             @@server.start
           end
@@ -143,10 +146,12 @@ module Sauce
         end
 
         unless defined?(@@server)
-          @@server = Sauce::Utilities::RailsServer.new
-          @@server.start
-          at_exit do
-            @@server.stop
+          if Sauce::Utilities::RailsServer.is_rails_app?
+            @@server = Sauce::Utilities::RailsServer.new
+            @@server.start
+            at_exit do
+              @@server.stop
+            end
           end
         end
 
