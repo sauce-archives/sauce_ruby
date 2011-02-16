@@ -69,6 +69,6 @@ class TestConfig < Test::Unit::TestCase
 
   def test_clears_config
     Sauce.config {|c|}
-    assert_not_equal [["Windows 2003", "firefox", "3.6."]], Sauce::Config.new.browsers
+    assert_equal [["Windows 2003", "firefox", "3.6."]], Sauce::Config.new.browsers
   end
 end
