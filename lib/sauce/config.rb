@@ -45,13 +45,16 @@ module Sauce
 
     def initialize(opts={})
       @opts = {}
+      @undefaulted_opts = {}
       if opts != false
         @opts.merge! DEFAULT_OPTIONS
-        @opts.merge! load_options_from_yaml
-        @opts.merge! load_options_from_environment
-        @opts.merge! load_options_from_heroku
-        @opts.merge! Sauce.get_config.opts rescue {}
-        @opts.merge! opts
+
+        @undefaulted_opts.merge! load_options_from_yaml
+        @undefaulted_opts.merge! load_options_from_environment
+        @undefaulted_opts.merge! load_options_from_heroku
+        @undefaulted_opts.merge! Sauce.get_config.opts rescue {}
+        @undefaulted_opts.merge! opts
+        @opts.merge! @undefaulted_opts
       end
     end
 
@@ -97,6 +100,9 @@ module Sauce
     end
 
     def browser
+      if @undefaulted_opts[:browser]
+        return @undefaulted_opts[:browser]
+      end
       if @opts[:browsers]
         @opts[:browsers][0][1]
       else
@@ -105,6 +111,9 @@ module Sauce
     end
 
     def os
+      if @undefaulted_opts[:os]
+        return @undefaulted_opts[:os]
+      end
       if @opts[:browsers]
         @opts[:browsers][0][0]
       else
@@ -113,6 +122,9 @@ module Sauce
     end
 
     def browser_version
+      if @undefaulted_opts[:browser_version]
+        return @undefaulted_opts[:browser_version]
+      end
       if @opts[:browsers]
         @opts[:browsers][0][2]
       else
