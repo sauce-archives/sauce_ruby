@@ -44,6 +44,14 @@ class TestConfig < Test::Unit::TestCase
     assert_equal [["A", "B", "C"]], config.browsers
   end
 
+  def test_default_to_first_item_in_browsers
+    Sauce.config {|c| c.browsers = [["OS_FOO", "BROWSER_FOO", "VERSION_FOO"]] }
+    config = Sauce::Config.new
+    assert_equal "OS_FOO", config.os
+    assert_equal "BROWSER_FOO", config.browser
+    assert_equal "VERSION_FOO", config.browser_version
+  end
+
   def test_boolean_flags
     config = Sauce::Config.new
     config.foo = true
@@ -65,6 +73,14 @@ class TestConfig < Test::Unit::TestCase
     assert_equal "A", Sauce::Config.new.os
     Sauce.config {|c|}
     assert_not_equal "A", Sauce::Config.new.os
+  end
+
+  def test_override
+    Sauce.config {|c| c.browsers = [["OS_FOO", "BROWSER_FOO", "VERSION_FOO"]] }
+    config = Sauce::Config.new(:os => "OS_BAR", :browser => "BROWSER_BAR", :browser_version => "VERSION_BAR")
+    assert_equal "OS_BAR", config.os
+    assert_equal "BROWSER_BAR", config.browser
+    assert_equal "VERSION_BAR", config.browser_version
   end
 
   def test_clears_config
