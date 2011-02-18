@@ -88,7 +88,7 @@ module Sauce
     def to_desired_capabilities
       {
         :browserName => BROWSERS[browser] || browser,
-        :browserVersion => browser_version,
+        :version => browser_version,
         :platform => PLATFORMS[os] || os,
         :name => @opts[:job_name]
       }.update(@opts.reject {|k, v| [:browser, :browser_version, :os, :job_name].include? k})
