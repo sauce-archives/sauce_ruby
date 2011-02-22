@@ -39,6 +39,14 @@ Capybara.register_driver :sauce do |app|
   Sauce::Capybara::Driver.new(app)
 end
 
+# Monkeypatch Capybara to not use :selenium driver
+require 'capybara/dsl'
+module Capybara
+  def self.javascript_driver
+    @javascript_driver || :sauce
+  end
+end
+
 # Switch Cucumber stories tagged with @selenium to use sauce
 begin
   Before("@selenium") do
