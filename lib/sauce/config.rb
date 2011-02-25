@@ -16,8 +16,8 @@ module Sauce
     attr_reader :opts
 
     DEFAULT_OPTIONS = {
-        :host => "saucelabs.com",
-        :port => 4444,
+        :host => "ondemand.saucelabs.com",
+        :port => 80,
         :browser_url => "http://saucelabs.com",
         :os => "Windows 2003",
         :browser => "firefox",
