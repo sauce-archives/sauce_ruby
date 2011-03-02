@@ -39,7 +39,7 @@ require 'sauce'
 Sauce.config do |conf|
     conf.browser_url = "http://#{rand(100000)}.test/"
     conf.browsers = [
-        ["Windows 2003", "firefox", "3."]
+        ["Windows 2003", "firefox", "3.6."]
     ]
     conf.application_host = "127.0.0.1"
     conf.application_port = "3001"
