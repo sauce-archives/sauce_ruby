@@ -17,6 +17,7 @@ module Sauce
       config = Sauce::Config.new(options)
       args = ['-u', config.username, '-k', config.access_key, '-s', host, '-p', port, '-d', config.domain, '-t', tunnel_port]
       @pipe = IO.popen((["exec", "\"#{Sauce::Connect.find_sauce_connect}\""] + args).join(' '))
+      @process_status = $?
       at_exit do
         Process.kill("INT", @pipe.pid)
         while @ready
@@ -34,7 +35,11 @@ module Sauce
           if line =~ /- (Problem.*)$/
             @error = $1
           end
-          puts line unless options[:quiet]
+          if line =~ /== Missing requirements ==/
+            @error = "Missing requirements"
+            options[:quiet] = false
+          end
+          $stderr.puts line unless options[:quiet]
         end
         @ready = false
       }
@@ -42,8 +47,12 @@ module Sauce
 
     def wait_until_ready
       start = Time.now
-      while !@ready and (Time.now-start) < TIMEOUT
+      while !@ready and (Time.now-start) < TIMEOUT and @error != "Missing requirements"
         sleep 0.4
+      end
+
+      if @error == "Missing requirements"
+        raise "Missing requirements"
       end
 
       if !@ready
