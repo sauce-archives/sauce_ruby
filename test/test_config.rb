@@ -31,7 +31,7 @@ class TestConfig < Test::Unit::TestCase
 
   def test_convenience_accessors
     config = Sauce::Config.new
-    assert_equal "saucelabs.com", config.host
+    assert_equal "ondemand.saucelabs.com", config.host
   end
 
   def test_gracefully_degrades_browsers_field
