@@ -6,7 +6,7 @@ class TestSauceTestCase < Sauce::TestCase
 
   def test_turning_off_trustAllSSLCertificates
     selenium.set_timeout("5000")
-    assert_raise Selenium::CommandError do
+    assert_raise Selenium::Client::CommandError do
       selenium.open("https://cacert.org")
     end
   end
