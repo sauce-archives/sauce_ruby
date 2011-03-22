@@ -165,8 +165,10 @@ module Sauce
               @browser = Sauce.cached_session(:host => "127.0.0.1", :port => 4444, :browser => "*" +
                                               browser, :url => "http://127.0.0.1:#{config.local_application_port}/")
             else
-              @browser = Sauce.cached_session({:os => os, :browser => browser, :browser_version => version,
-                                              :job_name => "#{Rails.root.split[1].to_s} test suite"})
+              options = self.class.sauce_config
+              options.merge!({:os => os, :browser => browser, :browser_version => version,
+                             :job_name => "#{Rails.root.split[1].to_s} test suite"})
+              @browser = Sauce.cached_session(options)
             end
             super(*args, &blk)
           else
@@ -176,10 +178,16 @@ module Sauce
                                                         :browser => "*" + browser,
                                                         :url => "http://127.0.0.1:#{config.local_application_port}/")
             else
-              @browser = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
+              options = self.class.sauce_config
+              options.merge!({:os => os, :browser => browser, :browser_version => version,
                                              :job_name => "#{my_name}"})
+              @browser = Sauce::Selenium.new(options)
             end
-            @browser.start
+            if self.class.selenium_flags
+              @browser.start_new_browser_session(self.class.selenium_flags)
+            else
+              @browser.start_new_browser_session
+            end
             super(*args, &blk)
             @browser.stop
           end
@@ -189,10 +197,31 @@ module Sauce
   end
 end
 
+module Sauce
+  module SeleniumForTestUnitClassMethods
+    def selenium_flags=(options)
+      @selenium_flags = options
+    end
+
+    def selenium_flags
+      return @selenium_flags
+    end
+
+    def sauce_config=(config)
+      @sauce_config = config
+    end
+
+    def sauce_config
+      @sauce_config || {}
+    end
+  end
+end
+
 if defined?(ActiveSupport::TestCase)
   module Sauce
     class RailsTestCase < ::ActiveSupport::TestCase
       include SeleniumForTestUnit
+      extend SeleniumForTestUnitClassMethods
 
       # Placeholder so test/unit ignores test cases without any tests.
       def default_test
@@ -206,6 +235,7 @@ begin
   module Sauce
     class TestCase < Test::Unit::TestCase
       include SeleniumForTestUnit
+      extend SeleniumForTestUnitClassMethods
 
       # Placeholder so test/unit ignores test cases without any tests.
       def default_test
