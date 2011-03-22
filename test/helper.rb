@@ -12,7 +12,7 @@ include Sauce::Utilities
 Sauce.config do |config|
   config.browsers = [
     ["Windows 2003", "firefox", "3.6."],
-    ["Windows 2003", "safariproxy", "5."]
+    ["Windows 2003", "iexplore", "8."]
   ]
   config.browser_url = "http://saucelabs.com"
 
