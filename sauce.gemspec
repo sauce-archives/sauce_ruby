@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sauce}
-  s.version = "0.18.1"
+  s.version = "0.18.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Allen", "Sean Grove", "Steven Hazel"]
-  s.date = %q{2011-03-23}
+  s.date = %q{2011-03-24}
   s.default_executable = %q{sauce}
   s.description = %q{A Ruby interface to Sauce Labs' services. Start/stop tunnels, retrieve Selenium logs, access video replays, etc.}
   s.email = %q{help@saucelabs.com}
@@ -80,7 +80,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<rest-client>, [">= 0"])
       s.add_runtime_dependency(%q<net-ssh>, [">= 0"])
       s.add_runtime_dependency(%q<net-ssh-gateway>, [">= 0"])
-      s.add_runtime_dependency(%q<selenium-webdriver>, [">= 0.1.2"])
+      s.add_runtime_dependency(%q<selenium-webdriver>, [">= 0.1.4"])
       s.add_runtime_dependency(%q<childprocess>, [">= 0.1.6"])
       s.add_runtime_dependency(%q<json>, [">= 1.2.0"])
       s.add_runtime_dependency(%q<cmdparse>, [">= 2.0.2"])
