@@ -32,6 +32,7 @@ module Sauce
 
     PLATFORMS = {
       "Windows 2003" => "WINDOWS",
+      "Windows 2008" => "VISTA",
       "Linux" => "LINUX"
     }
 

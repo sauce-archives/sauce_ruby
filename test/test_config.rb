@@ -87,4 +87,12 @@ class TestConfig < Test::Unit::TestCase
     Sauce.config {|c|}
     assert_equal [["Windows 2003", "firefox", "3.6."]], Sauce::Config.new.browsers
   end
+
+  def test_platforms
+    config = Sauce::Config.new(:os => "Windows 2003")
+    assert_equal "WINDOWS", config.to_desired_capabilities[:platform]
+
+    config = Sauce::Config.new(:os => "Windows 2008")
+    assert_equal "VISTA", config.to_desired_capabilities[:platform]
+  end
 end
