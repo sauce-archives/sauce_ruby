@@ -8,6 +8,14 @@ module Sauce
       super(opts.merge({:host => @config.host, :port => @config.port,
            :browser => @config.to_browser_string, :url => @config.browser_url}))
     end
+
+    def passed!
+      self.set_context "sauce:job-result=passed"
+    end
+
+    def failed!
+      self.set_context "sauce:job-result=failed"
+    end
   end
 
   class Selenium2

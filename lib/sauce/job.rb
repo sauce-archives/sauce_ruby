@@ -13,6 +13,7 @@ module Sauce
     attr_accessor :name, :browser, :browser_version, :os
     attr_accessor :creation_time, :start_time, :end_time
     attr_accessor :public, :video_url, :log_url, :tags
+    attr_accessor :passed
 
     # Get the class @@client.
     # TODO: Consider metaprogramming this away
@@ -114,7 +115,8 @@ module Sauce
         :video_url =>       @video_url,
         :log_url =>         @log_url,
         :public =>          @public,
-        :tags =>            @tags
+        :tags =>            @tags,
+        :passed =>          @passed
       }
 
       options[:except].each { |key| json.delete(key) } if options[:except]
@@ -150,6 +152,7 @@ module Sauce
       @log_url         = options["log_url"]
       @public          = options["public"]
       @tags            = options["tags"]
+      @passed          = options["passed"]
 
       raise NoIDError if @id.nil? or @id.empty?
     end
