@@ -15,6 +15,12 @@ module Sauce
       options.delete(:port)
       options.delete(:tunnel_port)
       config = Sauce::Config.new(options)
+      if config.username.nil?
+        raise ArgumentError, "Username required to launch Sauce Connect. Please set the environment variable $SAUCE_USERNAME"
+      end
+      if config.access_key.nil?
+        raise ArgumentError, "Access key required to launch Sauce Connect. Please set the environment variable $SAUCE_ACCESS_KEY"
+      end
       args = ['-u', config.username, '-k', config.access_key, '-s', host, '-p', port, '-d', config.domain, '-t', tunnel_port]
       @pipe = IO.popen((["exec", "\"#{Sauce::Connect.find_sauce_connect}\""] + args + ["2>&1"]).join(' '))
       @process_status = $?

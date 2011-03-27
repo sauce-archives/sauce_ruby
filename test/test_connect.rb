@@ -19,4 +19,26 @@ class TestConnect < Test::Unit::TestCase
     assert connect.error
     connect.disconnect
   end
+
+  def test_fails_fast_with_no_username
+    Sauce.config {|config|}
+    username = ENV['SAUCE_USERNAME']
+    access_key = ENV['SAUCE_ACCESS_KEY']
+
+    begin
+      ENV['SAUCE_USERNAME'] = nil
+      assert_raises ArgumentError do
+        connect = Sauce::Connect.new(:host => "saucelabs.com", :port => 80)
+      end
+
+      ENV['SAUCE_USERNAME'] = username
+      ENV['SAUCE_ACCESS_KEY'] = nil
+      assert_raises ArgumentError do
+        connect = Sauce::Connect.new(:host => "saucelabs.com", :port => 80)
+      end
+    ensure
+      ENV['SAUCE_USERNAME'] = username
+      ENV['SAUCE_ACCESS_KEY'] = access_key
+    end
+  end
 end
