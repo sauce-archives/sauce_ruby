@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sauce}
-  s.version = "0.19.0"
+  s.version = "0.19.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Allen", "Sean Grove", "Steven Hazel"]
-  s.date = %q{2011-03-25}
+  s.date = %q{2011-03-26}
   s.default_executable = %q{sauce}
   s.description = %q{A Ruby interface to Sauce Labs' services. Start/stop tunnels, retrieve Selenium logs, access video replays, etc.}
   s.email = %q{help@saucelabs.com}
