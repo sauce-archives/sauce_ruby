@@ -21,7 +21,7 @@ class TestConnect < Test::Unit::TestCase
   end
 
   def test_fails_fast_with_no_username
-    Sauce.config {|config|}
+    Sauce.config {|c| c.username = nil; c.access_key = nil}
     username = ENV['SAUCE_USERNAME']
     access_key = ENV['SAUCE_ACCESS_KEY']
 
