@@ -39,6 +39,7 @@ class TestConnect < Test::Unit::TestCase
     ensure
       ENV['SAUCE_USERNAME'] = username
       ENV['SAUCE_ACCESS_KEY'] = access_key
+      Sauce.config {|c|}
     end
   end
 end
