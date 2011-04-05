@@ -35,18 +35,29 @@ begin
           config = Sauce::Config.new
           description = [self.class.description, self.description].join(" ")
           config.browsers.each do |os, browser, version|
-            if config.local?
-              @selenium = ::Selenium::Client::Driver.new(:host => "127.0.0.1",
-                                                         :port => 4444,
-                                                         :browser => "*" + browser,
-                                                         :url => "http://127.0.0.1:#{config.local_application_port}/")
+            if config.single_session?
+              if config.local?
+                @selenium = Sauce.cached_session(:host => "127.0.0.1", :port => 4444, :browser => "*" +
+                                                browser, :url => "http://127.0.0.1:#{config.local_application_port}/")
+              else
+                @selenium = Sauce.cached_session({:os => os, :browser => browser, :browser_version => version,
+                               :job_name => self.class.description})
+              end
+              super(*args)
             else
-              @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
-                :job_name => "#{description}"})
+              if config.local?
+                @selenium = ::Selenium::Client::Driver.new(:host => "127.0.0.1",
+                                                           :port => 4444,
+                                                           :browser => "*" + browser,
+                                                           :url => "http://127.0.0.1:#{config.local_application_port}/")
+              else
+                @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
+                                                :job_name => "#{description}"})
+              end
+              @selenium.start
+              super(*args)
+              @selenium.stop
             end
-            @selenium.start
-            super(*args)
-            @selenium.stop
           end
         end
 
