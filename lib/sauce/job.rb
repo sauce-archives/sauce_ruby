@@ -1,8 +1,3 @@
-require 'net/telnet'
-require 'net/ssh'
-require 'net/ssh/gateway'
-require 'sauce/gateway_ext'
-
 module Sauce
   # Interact with a Sauce Labs selenium jobs as if it were a ruby object
   class Job
