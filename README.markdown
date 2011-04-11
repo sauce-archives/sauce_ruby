@@ -1,13 +1,12 @@
-Sauce OnDemand is a Selenium testing cloud service, developed by Sauce
-Labs Inc (saucelabs.com). This is the Ruby client adapter for Sauce
-OnDemand.
+Sauce OnDemand is a Selenium testing cloud service, developed by Sauce Labs Inc
+(saucelabs.com). This is the Ruby client adapter for Sauce OnDemand.
 
 Features
 --------
 
 *   Drop-in replacement for Selenium::Client::Driver that takes care of connecting to Sauce OnDemand
 *   RSpec, Test::Unit, and Rails integration for tests, including automatic setup of Sauce Connect
-*   ActiveRecord-like interface for tunnels and jobs: Find/create/destroy
+*   ActiveRecord-like interface for job metadata: Find/create/destroy
 
 Install
 -------
@@ -188,12 +187,6 @@ If you want tests to go a bit faster, globally install the gems with native exte
 * rvm use 1.9.2@global
 * gem install ffi sqlite3 json
 * rvm use default
-
-Plans
------
-
-*   Webrat integration
-*   Extend to automatic retrieval of jobs logs, videos, reverse tunnels
 
 Copyright
 ---------

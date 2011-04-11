@@ -9,7 +9,7 @@ module Sauce
 
     attr_accessor :client
     attr_accessor :protocol, :host, :port, :api_path, :api_version, :ip, :api_url
-    attr_accessor :tunnels, :jobs
+    attr_accessor :jobs
 
     def initialize(options={})
       config = Sauce::Config.new
@@ -23,13 +23,6 @@ module Sauce
       raise MisconfiguredError if config.username.nil? or config.access_key.nil?
       @api_url = "#{@protocol}://#{config.username}:#{config.access_key}@#{@host}:#{@port}/#{@api_path}/v#{@api_version}/#{config.username}/"
       @client = RestClient::Resource.new @api_url
-
-      @tunnels = Sauce::Tunnel
-      @tunnels.client = @client
-      @tunnels.account = {
-        :username => config.username,
-        :access_key => config.access_key,
-        :ip => @ip}
 
       @jobs = Sauce::Job
       @jobs.client = @client
