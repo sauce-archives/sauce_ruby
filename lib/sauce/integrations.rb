@@ -21,7 +21,7 @@ begin
             end
             if Sauce::Utilities::RailsServer.is_rails_app?
               @@server = Sauce::Utilities::RailsServer.new
-              @@server.start
+              @@server.start_new_browser_session(:captureNetworkTraffic => config.capture_traffic?)
             end
           end
         end
@@ -54,7 +54,7 @@ begin
                 @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
                                                 :job_name => "#{description}"})
               end
-              @selenium.start
+              @selenium.start_new_browser_session(:captureNetworkTraffic => config.capture_traffic?)
               super(*args)
               @selenium.stop
             end
@@ -95,7 +95,7 @@ begin
                 @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
                                                 :job_name => "#{description}"})
               end
-              @selenium.start
+              @selenium.start_new_browser_session(:captureNetworkTraffic => config.capture_traffic?)
               begin
                 the_test.run
               ensure
@@ -122,7 +122,7 @@ begin
           if ::RSpec.configuration.settings[:files_to_run].any? {|file| file =~ /spec\/selenium\//} &&
             Sauce::Utilities::RailsServer.is_rails_app?
             @@server = Sauce::Utilities::RailsServer.new
-            @@server.start
+            @@server.start_new_browser_session(:captureNetworkTraffic => config.capture_traffic?)
           end
         end
         ::RSpec.configuration.after :suite do
@@ -162,7 +162,7 @@ module Sauce
           unless ENV['TEST_ENV_NUMBER'].to_i > 1
             if Sauce::Utilities::RailsServer.is_rails_app?
               @@server = Sauce::Utilities::RailsServer.new
-              @@server.start
+              @@server.start_new_browser_session(:captureNetworkTraffic => config.capture_traffic?)
               at_exit do
                 @@server.stop
               end
