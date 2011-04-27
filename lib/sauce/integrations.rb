@@ -195,9 +195,9 @@ module Sauce
               @browser = Sauce::Selenium.new(options)
             end
             if self.class.selenium_flags
-              @browser.start_new_browser_session(self.class.selenium_flags)
+              @browser.start_new_browser_session(self.class.selenium_flags.merge(:captureNetworkTraffic => config.capture_traffic?))
             else
-              @browser.start_new_browser_session
+              @browser.start_new_browser_session(:captureNetworkTraffic => config.capture_traffic?)
             end
             super(*args, &blk)
             @browser.stop
