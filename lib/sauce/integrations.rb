@@ -162,7 +162,7 @@ module Sauce
           unless ENV['TEST_ENV_NUMBER'].to_i > 1
             if Sauce::Utilities::RailsServer.is_rails_app?
               @@server = Sauce::Utilities::RailsServer.new
-              @@server.start_new_browser_session(:captureNetworkTraffic => config.capture_traffic?)
+              @@server.start
               at_exit do
                 @@server.stop
               end
