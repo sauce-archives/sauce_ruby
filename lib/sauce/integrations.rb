@@ -21,7 +21,7 @@ begin
             end
             if Sauce::Utilities::RailsServer.is_rails_app?
               @@server = Sauce::Utilities::RailsServer.new
-              @@server.start_new_browser_session(:captureNetworkTraffic => config.capture_traffic?)
+              @@server.start
             end
           end
         end
@@ -122,7 +122,7 @@ begin
           if ::RSpec.configuration.settings[:files_to_run].any? {|file| file =~ /spec\/selenium\//} &&
             Sauce::Utilities::RailsServer.is_rails_app?
             @@server = Sauce::Utilities::RailsServer.new
-            @@server.start_new_browser_session(:captureNetworkTraffic => config.capture_traffic?)
+            @@server.start
           end
         end
         ::RSpec.configuration.after :suite do
