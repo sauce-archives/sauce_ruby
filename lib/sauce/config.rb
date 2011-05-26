@@ -81,8 +81,9 @@ module Sauce
         'name' => @opts[:name] || @opts[:job_name]}
 
       SAUCE_OPTIONS.each do |opt|
-        opt = opt.to_sym
-        browser_options[opt] = @opts[opt] if @opts.include? opt
+        [opt, opt.gsub("-", "_")].map(&:to_sym).each do |sym|
+          browser_options[opt] = @opts[sym] if @opts.include? sym
+        end
       end
       return browser_options.to_json
     end

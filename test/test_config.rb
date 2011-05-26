@@ -29,6 +29,20 @@ class TestConfig < Test::Unit::TestCase
     assert_equal "{\"name\":\"Unnamed Ruby job\",\"access-key\":\"test_access\",\"os\":\"Linux\",\"username\":\"test_user\",\"browser-version\":\"3.\",\"browser\":\"firefox\"}", config.to_browser_string
   end
 
+  def test_generates_optional_parameters
+    # dashes need to work for backward compatibility
+    config = Sauce::Config.new(:username => "test_user", :access_key => "test_access",
+                               :os => "Linux", :browser => "firefox", :browser_version => "3.",
+                               :"user-extensions-url" => "testing")
+    assert_equal "{\"name\":\"Unnamed Ruby job\",\"access-key\":\"test_access\",\"user-extensions-url\":\"testing\",\"os\":\"Linux\",\"username\":\"test_user\",\"browser-version\":\"3.\",\"browser\":\"firefox\"}", config.to_browser_string
+
+    # underscores are more natural
+    config = Sauce::Config.new(:username => "test_user", :access_key => "test_access",
+                               :os => "Linux", :browser => "firefox", :browser_version => "3.",
+                               :user_extensions_url => "testing")
+    assert_equal "{\"name\":\"Unnamed Ruby job\",\"access-key\":\"test_access\",\"user-extensions-url\":\"testing\",\"os\":\"Linux\",\"username\":\"test_user\",\"browser-version\":\"3.\",\"browser\":\"firefox\"}", config.to_browser_string
+  end
+
   def test_convenience_accessors
     config = Sauce::Config.new
     assert_equal "ondemand.saucelabs.com", config.host
