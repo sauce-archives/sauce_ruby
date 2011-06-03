@@ -2,7 +2,7 @@ require 'capybara'
 
 module Sauce
   module Capybara
-    class Driver < ::Capybara::Driver::Selenium
+    class Driver < ::Capybara::Selenium::Driver
       def browser
         unless @browser
           puts "[Connecting to Sauce OnDemand...]"
