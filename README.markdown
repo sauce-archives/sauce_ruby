@@ -25,7 +25,7 @@ configuration, which you can tweak inside the `Sauce.config` block if necessary.
 
 ### Example RSpec test for Rails
 
-Here's an example test for RSpec.  Drop something like this in spec/selenium/example.rb (it's important to the RSpec integration that test scripts be located in a directory called "selenium"):
+Here's an example test for RSpec.  Drop something like this in spec/selenium/example.rb.  (Because of the way RSpec categorizes tests, the "spec/selenium" directory tree is required for the integration to work properly):
 
     require "spec_helper"
     
@@ -64,7 +64,7 @@ First, configure with your account info:
 
 `sauce config USERNAME ACCESS_KEY`
 
-And here's an example test.  Drop something like this in spec/selenium/example.rb (it's important to the RSpec integration that test scripts be located in a directory called "selenium"):
+And here's an example test.  Drop something like this in spec/selenium/example.rb.  (Because of the way RSpec categorizes tests, the "spec/selenium" directory tree is required for the integration to work properly):
 
     #!/usr/bin/env ruby
     #
