@@ -72,31 +72,33 @@ if defined?(RSpec::Core::RakeTask)
   end
 end
 
-namespace :test do
-  namespace :selenium do
-    desc "Run the Selenium acceptance tests in test/selenium using Sauce OnDemand"
-    task :sauce do
-      Rake::Task["test:selenium:runtests"].invoke
-    end
-
-    desc "Run the Selenium acceptance tests in spec/selenium using a local Selenium server"
-    task :local do
-      with_selenium_rc do
+if defined?(Rake::TestTask)
+  namespace :test do
+    namespace :selenium do
+      desc "Run the Selenium acceptance tests in test/selenium using Sauce OnDemand"
+      task :sauce do
         Rake::Task["test:selenium:runtests"].invoke
       end
+
+      desc "Run the Selenium acceptance tests in spec/selenium using a local Selenium server"
+      task :local do
+        with_selenium_rc do
+          Rake::Task["test:selenium:runtests"].invoke
+        end
+      end
+
+      Rake::TestTask.new(:runtests) do |t|
+        t.libs << "test"
+        test_glob = ENV["SAUCE_TEST_GLOB"] || "test/selenium/**/*_test.rb"
+        t.pattern = test_glob
+        t.verbose = true
+      end
+      # Hide it from rake -T
+      Rake::Task['test:selenium:runtests'].instance_variable_set(:@full_comment, nil)
+      Rake::Task['test:selenium:runtests'].instance_variable_set(:@comment, nil)
+      Rake::Task['test:selenium:runtests'].enhance(["db:test:prepare"])
     end
 
-    Rake::TestTask.new(:runtests) do |t|
-      t.libs << "test"
-      test_glob = ENV["SAUCE_TEST_GLOB"] || "test/selenium/**/*_test.rb"
-      t.pattern = test_glob
-      t.verbose = true
-    end
-    # Hide it from rake -T
-    Rake::Task['test:selenium:runtests'].instance_variable_set(:@full_comment, nil)
-    Rake::Task['test:selenium:runtests'].instance_variable_set(:@comment, nil)
-    Rake::Task['test:selenium:runtests'].enhance(["db:test:prepare"])
+    task :selenium => "selenium:sauce"
   end
-
-  task :selenium => "selenium:sauce"
 end
