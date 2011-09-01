@@ -13,11 +13,11 @@ module Sauce
           @domain = "#{rand(10000)}.test"
           @sauce_tunnel = Sauce::Connect.new(:host => $uri.host || rack_server.host,
                                              :port => $uri.port || rack_server.port,
-                                             :domain => @domain,
+                                             :domain => $uri.host || @domain,
                                              :quiet => true)
           @sauce_tunnel.wait_until_ready
-          @browser = Sauce::Selenium2.new(:name => "Capybara test",
-                                          :browser_url => "http://#{@domain}")
+          @browser = Sauce::Selenium2.new(:name => "Capybara test.",
+                                          :browser_url => "http://#{$uri.host || @domain}")
           at_exit do
             @browser.quit
             @sauce_tunnel.disconnect
@@ -32,7 +32,7 @@ module Sauce
         if path =~ /^http/
           path
         else
-          "http://#{@domain}#{path}"
+          "http://#{$uri.host || @domain}#{path}"
         end
       end
     end
