@@ -111,15 +111,17 @@ begin
         ::RSpec.configuration.before :suite do
           need_tunnel = false
           config = Sauce::Config.new
+          files_to_run = ::Rspec.configuration.respond_to?(:files_to_run) ? ::Rspec.configuration.files_to_run :
+            ::RSpec.configuration.settings[:files_to_run]
           if config.application_host && !config.local?
-            need_tunnel = ::RSpec.configuration.settings[:files_to_run].any? {|file| file =~ /spec\/selenium\//}
+            need_tunnel = files_to_run.any? {|file| file =~ /spec\/selenium\//}
           end
           if need_tunnel
             @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
             @@tunnel.wait_until_ready
           end
 
-          if ::RSpec.configuration.settings[:files_to_run].any? {|file| file =~ /spec\/selenium\//} &&
+          if files_to_run.any? {|file| file =~ /spec\/selenium\//} &&
             Sauce::Utilities::RailsServer.is_rails_app?
             @@server = Sauce::Utilities::RailsServer.new
             @@server.start
