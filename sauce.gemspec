@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sauce}
-  s.version = "1.0.1"
+  s.version = "1.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Allen", "Sean Grove", "Steven Hazel"]
@@ -16,11 +16,6 @@ Gem::Specification.new do |s|
     "README.markdown",
     "Rakefile",
     "bin/sauce",
-    "examples/helper.rb",
-    "examples/other_spec.rb",
-    "examples/saucelabs_spec.rb",
-    "examples/test_saucelabs.rb",
-    "examples/test_saucelabs2.rb",
     "generators/sauce/sauce_generator.rb",
     "generators/sauce/templates/sauce.rake",
     "lib/generators/sauce/install/install_generator.rb",
@@ -37,21 +32,8 @@ Gem::Specification.new do |s|
     "lib/sauce/selenium.rb",
     "lib/sauce/utilities.rb",
     "sauce.gemspec",
-    "support/sauce_connect",
+    "support/Sauce-Connect.jar",
     "support/selenium-server.jar",
-    "support/simplejson/LICENSE.txt",
-    "support/simplejson/__init__.py",
-    "support/simplejson/decoder.py",
-    "support/simplejson/encoder.py",
-    "support/simplejson/ordered_dict.py",
-    "support/simplejson/scanner.py",
-    "support/simplejson/tool.py",
-    "test/helper.rb",
-    "test/test_config.rb",
-    "test/test_job.rb",
-    "test/test_connect.rb",
-    "test/test_selenium.rb",
-    "test/test_selenium2.rb"
   ]
   s.homepage = %q{http://github.com/saucelabs/sauce_ruby}
   s.require_paths = ["lib"]
