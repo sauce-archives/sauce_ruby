@@ -1,6 +1,6 @@
 module Sauce
   class Connect
-    TIMEOUT = 300
+    TIMEOUT = 90
 
     attr_reader :status, :error
 
@@ -53,7 +53,7 @@ module Sauce
     def wait_until_ready
       start = Time.now
       while !@ready and (Time.now-start) < TIMEOUT and @error != "Missing requirements"
-        sleep 0.4
+        sleep 0.5
       end
 
       if @error == "Missing requirements"
