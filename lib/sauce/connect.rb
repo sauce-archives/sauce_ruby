@@ -1,6 +1,6 @@
 module Sauce
   class Connect
-    TIMEOUT = 300
+    TIMEOUT = 90
 
     attr_reader :status, :error
 
@@ -21,8 +21,7 @@ module Sauce
       if config.access_key.nil?
         raise ArgumentError, "Access key required to launch Sauce Connect. Please set the environment variable $SAUCE_ACCESS_KEY"
       end
-      args = ['-u', config.username, '-k', config.access_key, '-s', host, '-p', port, '-d', config.domain, '-t', tunnel_port]
-      @pipe = IO.popen((["exec", "\"#{Sauce::Connect.find_sauce_connect}\""] + args + ["2>&1"]).join(' '))
+      @pipe = IO.popen("exec java -jar #{Sauce::Connect.find_sauce_connect} #{config.username} #{config.access_key} 2>&1")
       @process_status = $?
       at_exit do
         Process.kill("INT", @pipe.pid)
@@ -32,7 +31,7 @@ module Sauce
       end
       Thread.new {
         while( (line = @pipe.gets) )
-          if line =~ /Tunnel host is (.*) (\.\.|at)/
+          if line =~ /Tunnel remote VM is (.*) (\.\.|at)/
             @status = $1
           end
           if line =~/You may start your tests\./
@@ -54,7 +53,7 @@ module Sauce
     def wait_until_ready
       start = Time.now
       while !@ready and (Time.now-start) < TIMEOUT and @error != "Missing requirements"
-        sleep 0.4
+        sleep 0.5
       end
 
       if @error == "Missing requirements"
@@ -76,7 +75,7 @@ module Sauce
     end
 
     def self.find_sauce_connect
-      File.join(File.dirname(File.dirname(File.expand_path(File.dirname(__FILE__)))), "support", "sauce_connect")
+      File.expand_path(File.dirname(__FILE__) + '/../../support/Sauce-Connect.jar')
     end
 
     # Global Sauce Connect-ness
