@@ -53,6 +53,8 @@ Gem::Specification.new do |s|
     "test/test_selenium2.rb"
   ]
 
+  s.add_development_dependency('rake')
+
   if s.respond_to? :specification_version then
     s.specification_version = 3
 
