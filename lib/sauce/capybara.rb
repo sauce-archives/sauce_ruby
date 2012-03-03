@@ -1,10 +1,23 @@
 require 'capybara'
 require 'uri'
 
+require 'sauce/connect'
+
 $uri = URI.parse Capybara.app_host || ""
+$sauce_tunnel = nil
+
 
 module Sauce
   module Capybara
+    def connect_tunnel(options={})
+      unless $sauce_tunnel.nil?
+        return $sauce_tunnel
+      end
+      @sauce_tunnel = Sauce::Connect.new
+      $sauce_tunnel.wait_until_ready
+    end
+    module_function :connect_tunnel
+
     class Driver < ::Capybara::Selenium::Driver
       def browser
         unless @browser
