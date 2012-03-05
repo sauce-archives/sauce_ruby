@@ -32,7 +32,7 @@ module Sauce
           Sauce::Capybara.connect_tunnel(:quiet => true)
           @browser = Sauce::Selenium2.new(:browser_url => "http://#{$uri.host || @domain}")
           at_exit do
-            @browser.quit
+            @browser.quit if @browser
             $sauce_tunnel.disconnect
           end
         end
