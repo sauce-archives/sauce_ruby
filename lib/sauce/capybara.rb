@@ -30,7 +30,7 @@ module Sauce
         unless @browser
           config = Sauce::Config.new
           Sauce::Capybara.connect_tunnel(:quiet => true)
-          @browser = Sauce::Selenium2.new(:browser_url => "http://#{$uri.host || @domain}")
+          @browser = Sauce::Selenium2.new(:browser_url => "http://#{$uri.host}")
           at_exit do
             @browser.quit if @browser
             $sauce_tunnel.disconnect
@@ -45,7 +45,7 @@ module Sauce
         if path =~ /^http/
           path
         else
-          "http://#{$uri.host || @domain}#{path}"
+          "http://#{$uri.host}#{path}"
         end
       end
     end
