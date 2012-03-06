@@ -1,3 +1,5 @@
+require 'sauce/config'
+
 module Sauce
   class Connect
     TIMEOUT = 90

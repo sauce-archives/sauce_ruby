@@ -1,6 +1,7 @@
 require 'capybara'
 require 'uri'
 
+require 'sauce/config'
 require 'sauce/connect'
 
 $uri = URI.parse Capybara.app_host || ""
