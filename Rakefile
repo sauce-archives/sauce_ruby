@@ -1,7 +1,10 @@
 require 'rubygems'
+require 'bundler'
 require 'rake'
-
 require 'rake/testtask'
+
+Bundler::GemHelper.install_tasks
+
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
   test.pattern = 'test/**/test_*.rb'
@@ -48,10 +51,6 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title = "sauce #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
-end
-
-task :build do
-  system "gem build sauce.gemspec"
 end
 
 desc 'Release gem to rubygems.org'
