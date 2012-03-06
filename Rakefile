@@ -1,7 +1,10 @@
 require 'rubygems'
+require 'bundler'
 require 'rake'
-
 require 'rake/testtask'
+
+Bundler::GemHelper.install_tasks
+
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
   test.pattern = 'test/**/test_*.rb'
@@ -50,13 +53,12 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-task :build do
-  system "gem build sauce.gemspec"
-end
-
 desc 'Release gem to rubygems.org'
 task :release => :build do
-  system "gem push `ls *.gem | sort | tail -n 1`"
+  gems = Dir["pkg/*.gem"]
+  if gems
+    system("gem push #{gems[-1]}")
+  end
 end
 
 desc 'tag current version'

@@ -13,7 +13,7 @@ $LOAD_PATH.unshift(sauce_dir) unless $LOAD_PATH.include?(sauce_dir)
 # special case for sauce connect
 if ARGV.length > 0 && ARGV[0] == 'connect'
   require 'sauce/connect'
-  system ([Sauce::Connect.find_sauce_connect] + ARGV[1..100]).join(" ")
+  exec(Sauce::Connect.connect_command, *ARGV[1 .. -1])
 else
   require 'sauce'
 
