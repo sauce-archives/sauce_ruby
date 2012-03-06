@@ -55,7 +55,10 @@ end
 
 desc 'Release gem to rubygems.org'
 task :release => :build do
-  system "gem push `ls *.gem | sort | tail -n 1`"
+  gems = Dir["pkg/*.gem"]
+  if gems
+    system("gem push #{gems[-1]}")
+  end
 end
 
 desc 'tag current version'
