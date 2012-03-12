@@ -21,7 +21,7 @@ module Sauce
       if config.access_key.nil?
         raise ArgumentError, "Access key required to launch Sauce Connect. Please set the environment variable $SAUCE_ACCESS_KEY"
       end
-      @pipe = IO.popen("exec java -jar #{Sauce::Connect.find_sauce_connect} #{config.username} #{config.access_key} 2>&1")
+      @pipe = IO.popen("exec #{Sauce::Connect.connect_command} #{config.username} #{config.access_key} 2>&1")
       @process_status = $?
       at_exit do
         Process.kill("INT", @pipe.pid)
@@ -76,6 +76,10 @@ module Sauce
 
     def self.find_sauce_connect
       File.expand_path(File.dirname(__FILE__) + '/../../support/Sauce-Connect.jar')
+    end
+
+    def self.connect_command
+      "java -jar #{Sauce::Connect.find_sauce_connect}"
     end
 
     # Global Sauce Connect-ness
