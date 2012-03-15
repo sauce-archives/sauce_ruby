@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.email = %q{help@saucelabs.com}
   s.executables = ["sauce"]
   # Include pretty much everything in Git except the examples/ directory
-  s.files = `git ls-files`.split("\n").collect { |f| f unless f.include? 'examples' }
+  s.files = `git ls-files`.split("\n").collect { |f| f unless f.include? 'examples' }.compact
   s.homepage = %q{http://github.com/saucelabs/sauce_ruby}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.4.2}
