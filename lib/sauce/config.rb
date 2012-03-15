@@ -60,7 +60,16 @@ module Sauce
       end
     end
 
+    def [](key)
+      @opts[key]
+    end
+
+    def []=(key, value)
+      @opts[key] = value
+    end
+
     def method_missing(meth, *args)
+      warn "[DEPRECATED] This method is deprecated, please use the [] and []= accessors instead"
       if meth.to_s =~ /(.*)=$/
         @opts[$1.to_sym] = args[0]
         return args[0]
