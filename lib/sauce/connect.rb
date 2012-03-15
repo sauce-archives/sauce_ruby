@@ -1,3 +1,5 @@
+require 'sauce/config'
+
 module Sauce
   class Connect
     TIMEOUT = 90
@@ -8,20 +10,25 @@ module Sauce
       @ready = false
       @status = "uninitialized"
       @error = nil
+      @quiet = options[:quiet]
       host = options[:host] || '127.0.0.1'
       port = options[:port] || '3000'
       tunnel_port = options[:tunnel_port] || '80'
       options.delete(:host)
       options.delete(:port)
       options.delete(:tunnel_port)
-      config = Sauce::Config.new(options)
-      if config.username.nil?
+      @config = Sauce::Config.new(options)
+      if @config.username.nil?
         raise ArgumentError, "Username required to launch Sauce Connect. Please set the environment variable $SAUCE_USERNAME"
       end
-      if config.access_key.nil?
+      if @config.access_key.nil?
         raise ArgumentError, "Access key required to launch Sauce Connect. Please set the environment variable $SAUCE_ACCESS_KEY"
       end
-      @pipe = IO.popen("exec #{Sauce::Connect.connect_command} #{config.username} #{config.access_key} 2>&1")
+    end
+
+    def connect
+      puts "[Connecting to Sauce OnDemand...]"
+      @pipe = IO.popen("exec #{Sauce::Connect.connect_command} #{@config.username} #{@config.access_key} 2>&1")
       @process_status = $?
       at_exit do
         Process.kill("INT", @pipe.pid)
@@ -42,9 +49,9 @@ module Sauce
           end
           if line =~ /== Missing requirements ==/
             @error = "Missing requirements"
-            options[:quiet] = false
+            @quiet = false
           end
-          $stderr.puts line unless options[:quiet]
+          $stderr.puts line unless @quiet
         end
         @ready = false
       }

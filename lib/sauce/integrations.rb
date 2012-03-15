@@ -17,6 +17,7 @@ begin
           if @@need_tunnel
             if config.application_host && !config.local?
               @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+              @@tunnel.connect
               @@tunnel.wait_until_ready
             end
             if Sauce::Utilities::RailsServer.is_rails_app?
@@ -118,6 +119,7 @@ begin
           end
           if need_tunnel
             @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+            @@tunnel.connect
             @@tunnel.wait_until_ready
           end
 
