@@ -35,7 +35,7 @@ describe Sauce::Config do
   describe 'deprecate method_missing' do
     it 'should warn when accessing an old style method' do
       c.should_receive(:warn).with(anything)
-      c.username
+      c.capture_traffic
     end
   end
 end
