@@ -34,6 +34,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rake')
   s.add_development_dependency('bundler')
   s.add_development_dependency('rspec')
+  s.add_dependency('net-http-persistent')
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
