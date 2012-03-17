@@ -10,79 +10,90 @@ require 'highline/import'
 sauce_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(sauce_dir) unless $LOAD_PATH.include?(sauce_dir)
 
-# special case for sauce connect
-if ARGV.length > 0 && ARGV[0] == 'connect'
-  require 'sauce/connect'
-  exec(Sauce::Connect.connect_command, *ARGV[1 .. -1])
-else
   require 'sauce'
 
-  cmd = CmdParse::CommandParser.new(true, true)
-  cmd.program_name = "sauce "
-  cmd.program_version = [0, 1, 0]
+cmd = CmdParse::CommandParser.new(true, true)
+cmd.program_name = "sauce "
+cmd.program_version = [0, 1, 0]
 
-  cmd.add_command(CmdParse::HelpCommand.new)
+cmd.add_command(CmdParse::HelpCommand.new)
 
-  # configure
-  class ConfigureCommand < CmdParse::Command
-    def usage
-      "Usage: #{commandparser.program_name}configure USERNAME ACCESS_KEY"
-    end
+class ConnectCommand < CmdParse::Command
+  def usage
+    "Usage: #{commandparser.program_name}connect"
   end
-  configure = ConfigureCommand.new('configure', false)
-  configure.short_desc = "Configure Sauce OnDemand credentials"
-  configure.set_execution_block do |args|
-    if args.length < 2
-      puts configure.usage
-      exit 1
-    end
-    username = args[0]
-    access_key = args[1]
-    dir = File.join(File.expand_path("~"), ".sauce")
-    FileUtils.mkdir(dir) unless File.directory?(dir)
-
-    out = File.new(File.join(dir, "ondemand.yml"), 'w')
-    out.write(YAML.dump({"username" => username, "access_key" => access_key}))
-    out.close()
-  end
-  cmd.add_command(configure)
-
-  #create
-  create = CmdParse::Command.new('create', false)
-  create.short_desc = "Create a new Sauce OnDemand account"
-  create.set_execution_block do |args|
-    puts "Let's create a new account!"
-    username = ask("Username: ")
-    password = ask("Password: ") { |q| q.echo = "*" }
-    email = ask("Email: ")
-    name = ask("Full name: ")
-
-    body = {
-      :username => username,
-      :password => password,
-      :email => email,
-      :name => name,
-      :token => "c8eb3e2645005bcbbce7e2c208c6b7a71555d908"
-    }.to_json
-
-    begin
-      result = RestClient.post("http://saucelabs.com/rest/v1/users",
-                               body, :content_type => :json, :accept => :json)
-    rescue => e
-      begin
-        puts "ERROR: #{JSON.load(e.response)['errors']}"
-      rescue
-        puts "ERROR: #{e.response}"
-      end
-    else
-      result = JSON.load(result)
-
-      puts "Account #{username} created successfully."
-      puts "Your access key is: #{result['access_key']}"
-    end
-  end
-
-  cmd.add_command(create)
-
-  cmd.parse
 end
+connect = ConnectCommand.new('connect', false)
+connect.short_desc = 'Connect a Sauce Connect tunnel'
+connect.set_execution_block do |args|
+  require 'sauce/connect'
+  require 'sauce/config'
+  config = Sauce::Config.new
+  command = "#{Sauce::Connect.connect_command} #{config.username} #{config.access_key} #{ARGV[1 .. -1]}"
+  exec(command)
+end
+cmd.add_command(connect)
+
+
+# configure
+class ConfigureCommand < CmdParse::Command
+  def usage
+    "Usage: #{commandparser.program_name}configure USERNAME ACCESS_KEY"
+  end
+end
+configure = ConfigureCommand.new('configure', false)
+configure.short_desc = "Configure Sauce OnDemand credentials"
+configure.set_execution_block do |args|
+  if args.length < 2
+    puts configure.usage
+    exit 1
+  end
+  username = args[0]
+  access_key = args[1]
+  dir = File.join(File.expand_path("~"), ".sauce")
+  FileUtils.mkdir(dir) unless File.directory?(dir)
+
+  out = File.new(File.join(dir, "ondemand.yml"), 'w')
+  out.write(YAML.dump({"username" => username, "access_key" => access_key}))
+  out.close()
+end
+cmd.add_command(configure)
+
+#create
+create = CmdParse::Command.new('create', false)
+create.short_desc = "Create a new Sauce OnDemand account"
+create.set_execution_block do |args|
+  puts "Let's create a new account!"
+  username = ask("Username: ")
+  password = ask("Password: ") { |q| q.echo = "*" }
+  email = ask("Email: ")
+  name = ask("Full name: ")
+
+  body = {
+    :username => username,
+    :password => password,
+    :email => email,
+    :name => name,
+    :token => "c8eb3e2645005bcbbce7e2c208c6b7a71555d908"
+  }.to_json
+
+  begin
+    result = RestClient.post("http://saucelabs.com/rest/v1/users",
+                              body, :content_type => :json, :accept => :json)
+  rescue => e
+    begin
+      puts "ERROR: #{JSON.load(e.response)['errors']}"
+    rescue
+      puts "ERROR: #{e.response}"
+    end
+  else
+    result = JSON.load(result)
+
+    puts "Account #{username} created successfully."
+    puts "Your access key is: #{result['access_key']}"
+  end
+end
+
+cmd.add_command(create)
+
+cmd.parse
