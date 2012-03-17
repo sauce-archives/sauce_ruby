@@ -60,7 +60,16 @@ module Sauce
       end
     end
 
+    def [](key)
+      @opts[key]
+    end
+
+    def []=(key, value)
+      @opts[key] = value
+    end
+
     def method_missing(meth, *args)
+      warn "[DEPRECATED] This method (#{meth}) is deprecated, please use the [] and []= accessors instead"
       if meth.to_s =~ /(.*)=$/
         @opts[$1.to_sym] = args[0]
         return args[0]
@@ -142,6 +151,22 @@ module Sauce
 
     def local?
       return ENV['LOCAL_SELENIUM']
+    end
+
+    def username
+      @opts[:username]
+    end
+
+    def access_key
+      @opts[:access_key]
+    end
+
+    def host
+      @opts[:host]
+    end
+
+    def port
+      @opts[:port]
     end
 
     private
