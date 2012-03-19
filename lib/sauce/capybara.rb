@@ -3,6 +3,8 @@ require 'uri'
 
 require 'sauce/config'
 require 'sauce/connect'
+require 'sauce/selenium'
+
 
 $uri = URI.parse Capybara.app_host || ""
 $sauce_tunnel = nil
@@ -29,8 +31,10 @@ module Sauce
     class Driver < ::Capybara::Selenium::Driver
       def browser
         unless @browser
-          config = Sauce::Config.new
-          Sauce::Capybara.connect_tunnel(:quiet => true)
+          if Sauce.get_config[:start_tunnel]
+            Sauce::Capybara.connect_tunnel(:quiet => true)
+          end
+
           @browser = Sauce::Selenium2.new(:browser_url => "http://#{$uri.host}")
           at_exit do
             @browser.quit if @browser

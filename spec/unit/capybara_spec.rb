@@ -57,4 +57,25 @@ describe Sauce::Capybara do
       $sauce_tunnel = nil
     end
   end
+
+  describe Sauce::Capybara::Driver do
+    describe '#browser' do
+      before :each do
+        # Stub out the selenium driver startup
+        Sauce::Selenium2.stub(:new).and_return(nil)
+      end
+      context 'when tunneling is disabled' do
+        it 'should not call #connect_tunnel' do
+          Sauce::Capybara.should_receive(:connect_tunnel).never
+          Sauce.config do |c|
+            c[:start_tunnel] = false
+          end
+
+          driver = Sauce::Capybara::Driver.new(nil)
+          driver.browser
+        end
+      end
+    end
+
+  end
 end
