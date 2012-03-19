@@ -38,7 +38,7 @@ module Sauce
           @browser = Sauce::Selenium2.new(:browser_url => "http://#{$uri.host}")
           at_exit do
             @browser.quit if @browser
-            $sauce_tunnel.disconnect
+            $sauce_tunnel.disconnect if $sauce_tunnel
           end
         end
         @browser
