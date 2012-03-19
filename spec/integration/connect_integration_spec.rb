@@ -3,8 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe 'Sauce::Connect integration testing' do
   def make_connection
-    Sauce::Connect.new(:host => 'saucelabs.com',
-                      :port => 80)
+    Sauce::Connect.new({})
   end
 
   before :each do
@@ -14,20 +13,25 @@ describe 'Sauce::Connect integration testing' do
   end
 
   context 'assuming valid Sauce Labs authentication' do
-    let(:conn) { make_connection }
+    # Defining a nil in the let since the before block will run after the let.
+    # Running make_connection inside of a `let` block could end up with us
+    # using the previous test's Sauce.config. BAD NEWS
+    before :each do
+      @conn = make_connection
+    end
 
     it 'should have start with an uninitialized status' do
-      conn.status.should == 'uninitialized'
+      @conn.status.should == 'uninitialized'
     end
 
     it 'should have a "running" status if the tunnel is connected' do
-      conn.connect
-      conn.wait_until_ready
-      conn.status.should == 'running'
+      @conn.connect
+      @conn.wait_until_ready
+      @conn.status.should == 'running'
     end
 
     after :each do
-      conn.disconnect
+      @conn.disconnect if @conn
     end
   end
 
