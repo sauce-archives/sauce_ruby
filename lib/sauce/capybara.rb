@@ -6,9 +6,7 @@ require 'sauce/connect'
 require 'sauce/selenium'
 
 
-$uri = URI.parse Capybara.app_host || ""
 $sauce_tunnel = nil
-
 
 module Sauce
   module Capybara
@@ -16,11 +14,6 @@ module Sauce
       unless $sauce_tunnel.nil?
         return $sauce_tunnel
       end
-      uri = URI.parse(::Capybara.app_host || '')
-      options.merge!({:host => uri.host,
-                      :port => uri.port,
-                      :domain => uri.host})
-
       $sauce_tunnel = Sauce::Connect.new(options)
       $sauce_tunnel.connect
       $sauce_tunnel.wait_until_ready
@@ -35,7 +28,7 @@ module Sauce
             Sauce::Capybara.connect_tunnel(:quiet => true)
           end
 
-          @browser = Sauce::Selenium2.new(:browser_url => "http://#{$uri.host}")
+          @browser = Sauce::Selenium2.new(nil)
           at_exit do
             @browser.quit if @browser
             $sauce_tunnel.disconnect if $sauce_tunnel

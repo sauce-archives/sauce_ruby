@@ -31,28 +31,6 @@ describe Sauce::Capybara do
       Sauce::Capybara.connect_tunnel(:quiet => true)
     end
 
-    it "should pass Capybara.app_host's hostname as the host" do
-      Capybara.should_receive(:app_host).and_return('http://localhost:4567/')
-      Sauce::Connect.should_receive(:new).with(
-                    hash_including(:host => 'localhost')).and_return(connector)
-      Sauce::Capybara.connect_tunnel
-    end
-
-    it "should pass Capybara.app_host's port as the port" do
-      Capybara.should_receive(:app_host).and_return('http://localhost:4567/')
-      Sauce::Connect.should_receive(:new).with(
-                    hash_including(:port => 4567)).and_return(connector)
-      Sauce::Capybara.connect_tunnel
-    end
-
-    it "should pass Capybara.app_host's hostname as the domain" do
-      Capybara.should_receive(:app_host).and_return('http://localhost:4567/')
-      Sauce::Connect.should_receive(:new).with(
-                    hash_including(:domain => 'localhost')).and_return(connector)
-      Sauce::Capybara.connect_tunnel
-    end
-
-
     after :each do
       $sauce_tunnel = nil
     end
