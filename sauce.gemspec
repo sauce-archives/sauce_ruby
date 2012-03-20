@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
     "examples/test_saucelabs2.rb",
     "test/helper.rb",
     "test/test_config.rb",
-    "test/test_connect.rb",
     "test/test_selenium.rb",
     "test/test_job.rb",
     "test/test_selenium2.rb"
