@@ -1,5 +1,4 @@
 require 'capybara'
-require 'uri'
 
 require 'sauce/config'
 require 'sauce/connect'
@@ -28,23 +27,13 @@ module Sauce
             Sauce::Capybara.connect_tunnel(:quiet => true)
           end
 
-          @browser = Sauce::Selenium2.new(nil)
+          @browser = Sauce::Selenium2.new
           at_exit do
             @browser.quit if @browser
             $sauce_tunnel.disconnect if $sauce_tunnel
           end
         end
         @browser
-      end
-
-      private
-
-      def url(path)
-        if path =~ /^http/
-          path
-        else
-          "http://#{$uri.host}#{path}"
-        end
       end
     end
   end
