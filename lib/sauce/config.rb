@@ -69,8 +69,14 @@ module Sauce
       @opts[key] = value
     end
 
+    def silence_warnings
+      false
+    end
+
     def method_missing(meth, *args)
-      warn "[DEPRECATED] This method (#{meth}) is deprecated, please use the [] and []= accessors instead"
+      unless self.silence_warnings
+        warn "[DEPRECATED] This method (#{meth}) is deprecated, please use the [] and []= accessors instead"
+      end
       if meth.to_s =~ /(.*)=$/
         @opts[$1.to_sym] = args[0]
         return args[0]

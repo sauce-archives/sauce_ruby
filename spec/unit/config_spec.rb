@@ -1,13 +1,11 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Sauce::Config do
-  after :each do
-    # Reset to the defaults
-    Sauce.config do |config|
-    end
+  let(:c) do
+    config = Sauce::Config.new
+    config.stub(:silence_warnings).and_return(true)
+    config
   end
-
-  let(:c) { Sauce::Config.new }
 
   describe '#[]' do
     it "should return nil for options that don't exist" do
@@ -40,6 +38,7 @@ describe Sauce::Config do
 
   describe 'deprecate method_missing' do
     it 'should warn when accessing an old style method' do
+      c.stub(:silence_warnings).and_return(false)
       c.should_receive(:warn).with(anything)
       c.capture_traffic
     end
@@ -194,6 +193,11 @@ describe Sauce::Config do
     end
   end
 
+  after :each do
+    # Reset to the defaults
+    Sauce.config do |config|
+    end
+  end
 end
 
 describe Sauce do
