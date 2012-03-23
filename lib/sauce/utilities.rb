@@ -30,23 +30,6 @@ module Sauce
       end
     end
 
-    def with_selenium_rc
-      ENV['LOCAL_SELENIUM'] = "true"
-      STDERR.puts "Starting Selenium RC server on port 4444..."
-
-      jar_file = File.expand_path(File.dirname(__FILE__) + "/../../support/selenium-server.jar")
-      command = ["java", "-jar", jar_file, "-port", "4444"]
-      server = ChildProcess.build(*command)
-      server.start
-      wait_for_server_on_port(4444)
-      STDERR.puts "Selenium RC running!"
-      begin
-        yield
-      ensure
-        Net::HTTP.get("127.0.0.1", "/selenium-server/driver/?cmd=shutDownSeleniumServer", 4444)
-      end
-    end
-
     class RailsServer
       include Sauce::Utilities
 

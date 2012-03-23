@@ -20,13 +20,6 @@ if defined?(Spec::Rake::SpecTask)
         Rake::Task["spec:selenium:runtests"].invoke
       end
 
-      desc "Run the Selenium acceptance tests in spec/selenium using a local Selenium server"
-      task :local => spec_prereq do
-        with_selenium_rc do
-          Rake::Task["spec:selenium:runtests"].invoke
-        end
-      end
-
       desc "" # Hide it from rake -T
       Spec::Rake::SpecTask.new :runtests do |t|
         t.spec_opts = ['--options', "\"#{Rails.root.join('spec', 'spec.opts')}\""]
@@ -54,13 +47,6 @@ if defined?(RSpec::Core::RakeTask)
         Rake::Task["spec:selenium:runtests"].invoke
       end
 
-      desc "Run the Selenium acceptance tests in spec/selenium using a local Selenium server"
-      task :local => spec_prereq do
-        with_selenium_rc do
-          Rake::Task["spec:selenium:runtests"].invoke
-        end
-      end
-
       desc "" # Hide it from rake -T
       RSpec::Core::RakeTask.new :runtests do |t|
         spec_glob = ENV["SAUCE_SPEC_GLOB"] || "spec/selenium/**/*_spec.rb"
@@ -78,13 +64,6 @@ if defined?(Rake::TestTask)
       desc "Run the Selenium acceptance tests in test/selenium using Sauce OnDemand"
       task :sauce do
         Rake::Task["test:selenium:runtests"].invoke
-      end
-
-      desc "Run the Selenium acceptance tests in spec/selenium using a local Selenium server"
-      task :local do
-        with_selenium_rc do
-          Rake::Task["test:selenium:runtests"].invoke
-        end
       end
 
       Rake::TestTask.new(:runtests) do |t|
