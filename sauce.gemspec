@@ -17,19 +17,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.4.2}
   s.summary = %q{Ruby access to Sauce Labs' features}
-  s.test_files = [
-    "examples/helper.rb",
-    "examples/other_spec.rb",
-    "examples/saucelabs_spec.rb",
-    "examples/test_saucelabs.rb",
-    "examples/test_saucelabs2.rb",
-    "test/helper.rb",
-    "test/test_config.rb",
-    "test/test_selenium.rb",
-    "test/test_job.rb",
-    "test/test_selenium2.rb"
-  ]
-
+  s.test_files = Dir['test/*.rb']
   s.add_development_dependency('rake')
   s.add_development_dependency('bundler')
   s.add_development_dependency('rspec')
