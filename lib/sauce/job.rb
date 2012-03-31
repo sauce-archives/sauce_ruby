@@ -1,3 +1,5 @@
+require 'sauce/client'
+
 module Sauce
   # Interact with a Sauce Labs selenium jobs as if it were a ruby object
   class Job
