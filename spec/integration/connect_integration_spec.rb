@@ -59,6 +59,9 @@ describe 'Sauce::Connect integration testing' do
 
     end
 
+    after :each do
+      ENV['SAUCE_USERNAME'] = nil
+    end
   end
 
   context 'assuming the "fail" username' do

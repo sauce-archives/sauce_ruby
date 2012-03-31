@@ -2,6 +2,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Sauce::Selenium do
   before :each do
+    Sauce.config do |c|
+      # Vaporize the config again
+    end
+
     @client = Sauce::Selenium.new(:job_name => 'Sauce gem integration test',
                                   :browser_url => 'http://www.saucelabs.com')
   end
