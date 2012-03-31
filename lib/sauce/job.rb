@@ -15,7 +15,7 @@ module Sauce
     def self.client
       @@client
     end
-    
+
     # Set the class @@client.
     # TODO: Consider metaprogramming this away
     def self.client=(client)
@@ -64,7 +64,7 @@ module Sauce
       end
 
       @@client ||= Sauce::Client.new
-      
+
       #puts "GET-URL: #{@@client.url}jobs/#{id}"
       response = @@client["jobs/#{id}"].get
 
@@ -116,7 +116,7 @@ module Sauce
 
       options[:except].each { |key| json.delete(key) } if options[:except]
       json = json.select { |key,value| options[:only].include? key } if options[:only]
-      
+
       return json.to_json
     end
 
