@@ -21,6 +21,8 @@ module Sauce
   end
 
   class Selenium2
+    attr_reader :config, :driver
+
     def initialize(opts={})
       @config = Sauce::Config.new(opts)
       http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new
