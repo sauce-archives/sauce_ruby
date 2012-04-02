@@ -1,3 +1,5 @@
+require 'sauce/utilities'
+
 begin
   require 'spec'
   module Sauce
