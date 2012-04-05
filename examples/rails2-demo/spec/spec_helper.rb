@@ -61,4 +61,5 @@ Sauce.config do |conf|
     ]
     conf.application_host = "127.0.0.1"
     conf.application_port = "3001"
+    conf.browser_url = "http://#{conf.application_host}:#{conf.application_port}/"
 end
