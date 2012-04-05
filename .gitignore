@@ -25,3 +25,4 @@ account.yml
 Gemfile.lock
 .idea
 .rvmrc
+ondemand.yml
