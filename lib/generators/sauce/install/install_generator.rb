@@ -35,7 +35,6 @@ module Sauce
       private
 
       def generate_config
-        @random_id ||= rand(100000)
         return <<-CONFIG
 
 require 'sauce'
