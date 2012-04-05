@@ -220,4 +220,39 @@ describe Sauce do
       Sauce::Config.new.os.should_not == 'TEST_OS'
     end
   end
+
+  describe '#get_config' do
+    context 'when #config has never been called' do
+      # See: <https://github.com/saucelabs/sauce_ruby/issues/59>
+      before :each do
+        # This is kind of hack-ish, but the best way I can think to properly
+        # prevent this class variable from existing
+        Sauce.instance_variable_set(:@cfg, nil)
+      end
+
+      it 'should return a newly created Sauce::Config' do
+        dummy_config = double('Sauce::Config')
+        Sauce::Config.should_receive(:new).and_return(dummy_config)
+        Sauce.get_config.should_not be nil
+      end
+    end
+
+    context 'when config has been called' do
+      before :each do
+        Sauce.config do |c|
+          c[:some_setting] = true
+        end
+      end
+      it 'should return the same config with the same configuration' do
+        Sauce.get_config.should_not be nil
+        Sauce.get_config[:some_setting].should be true
+      end
+
+      after :each do
+        Sauce.config do |c|
+          # Clear out the configuration
+        end
+      end
+    end
+  end
 end

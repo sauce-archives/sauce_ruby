@@ -9,7 +9,7 @@ module Sauce
   end
 
   def self.get_config
-    @cfg
+    @cfg ||= Sauce::Config.new(false)
   end
 
   class Config
