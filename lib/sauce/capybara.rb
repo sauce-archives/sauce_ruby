@@ -50,11 +50,3 @@ module Capybara
     @javascript_driver || :sauce
   end
 end
-
-# Switch Cucumber stories tagged with @selenium to use sauce
-begin
-  Before("@selenium") do
-    Capybara.current_driver = :sauce
-  end
-rescue NoMethodError
-end

@@ -1,6 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-
 describe Sauce::Capybara do
   describe '#connect_tunnel' do
     before :each do
@@ -55,5 +54,55 @@ describe Sauce::Capybara do
       end
     end
 
+  end
+
+  describe '#install_hooks' do
+  end
+end
+
+describe Sauce::Capybara::Cucumber do
+  include Sauce::Capybara::Cucumber
+  describe '#use_sauce_driver' do
+    before :each do
+      ::Capybara.current_driver = :test
+    end
+
+    it 'should change Capybara.current_driver to :sauce' do
+      use_sauce_driver
+      ::Capybara.current_driver.should == :sauce
+    end
+  end
+
+  describe 'generating job names' do
+    context 'with a simple, standard scenario' do
+      let(:scenario) do
+        s = double('Cucumber::AST::Scenario')
+        s.stub(:name).and_return('This is a simple scenario')
+        s
+      end
+      let(:feature) do
+        f = double('Cucumber::AST::Feature')
+        f.stub(:short_name).and_return('A simple feature')
+        f
+      end
+
+      before :each do
+        scenario.stub(:feature).and_return(feature)
+      end
+
+      describe '#name_from_scenario' do
+        it 'should generated a useful name' do
+          expected = 'A simple feature - This is a simple scenario'
+          name_from_scenario(scenario).should == expected
+        end
+      end
+
+      describe 'jenkins_name_from_scenario' do
+        it 'should generate the dotted name the Jenkins plugin wants' do
+          expected = 'A simple feature.This is a simple scenario.This is a simple scenario'
+          jenkins_name_from_scenario(scenario).should == expected
+        end
+      end
+    end
   end
 end
