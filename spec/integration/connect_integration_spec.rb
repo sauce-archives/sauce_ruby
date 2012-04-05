@@ -38,8 +38,8 @@ describe 'Sauce::Connect integration testing' do
   context 'assuming an invalid/nonexistent username' do
     before :each do
       Sauce.config do |config|
-        config.username = nil
-        config.access_key = nil
+        config[:username] = nil
+        config[:access_key] = nil
       end
     end
 
