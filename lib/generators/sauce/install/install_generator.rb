@@ -41,7 +41,6 @@ module Sauce
 require 'sauce'
 
 Sauce.config do |conf|
-    conf.browser_url = "http://#{@random_id}.test/"
     conf.browsers = [
         ["Windows 2003", "firefox", "3.6."]
     ]
