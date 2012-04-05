@@ -72,7 +72,7 @@ describe 'Sauce::Connect integration testing' do
     it 'should set the error status' do
       start = Time.now
       conn.connect
-      while ((Time.now - start) < 20) && !conn.error
+      while ((Time.now - start) < 60) && !conn.error
         sleep 0.5
       end
 
