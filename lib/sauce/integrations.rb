@@ -114,7 +114,7 @@ begin
         ::RSpec.configuration.before :suite do
           need_tunnel = false
           config = Sauce::Config.new
-          files_to_run = ::Rspec.configuration.respond_to?(:files_to_run) ? ::Rspec.configuration.files_to_run :
+          files_to_run = ::RSpec.configuration.respond_to?(:files_to_run) ? ::RSpec.configuration.files_to_run :
             ::RSpec.configuration.settings[:files_to_run]
           if config.application_host && !config.local?
             need_tunnel = files_to_run.any? {|file| file =~ /spec\/selenium\//}
