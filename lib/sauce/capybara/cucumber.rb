@@ -4,6 +4,17 @@ require 'cucumber'
 module Sauce
   module Capybara
     module Cucumber
+      def retryable_exceptions
+        [::Selenium::WebDriver::Error::UnhandledError,
+          ::Selenium::WebDriver::Error::UnknownError]
+      end
+      module_function :retryable_exceptions
+
+      def max_retries
+        3
+      end
+      module_function :max_retries
+
       def use_sauce_driver
         ::Capybara.current_driver = :sauce
       end
@@ -57,7 +68,27 @@ module Sauce
           puts output.join(' ')
         end
 
+        retries = 0
+        begin
           block.call
+          if retryable_exceptions.include? scenario.exception.class
+            raise scenario.exception
+          end
+        rescue *retryable_exceptions => e
+          puts "Catching an UnhandledError coming out of Selenium::WebDriver!"
+          # This sucks, but we need to re-initialize the StepCollection and
+          # company underneath the Scenario in order for the second
+          # `block.call` above to work properly
+          scenario.instance_variable_set(:@steps, nil)
+          scenario.init
+          if retries < max_retries
+            retries = retries + 1
+            puts "Retrying (attempts left: #{max_retries - retries})"
+            retry
+          else
+            raise
+          end
+        end
 
         # Quit the driver to allow for the generation of a new session_id
         driver.browser.quit

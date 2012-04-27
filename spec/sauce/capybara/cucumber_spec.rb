@@ -81,7 +81,7 @@ module Sauce::Capybara
           # Using this gnarly global just because it's easier to just use a
           # global than try to fish the scenario results back out of the
           # Cucumber bits
-          $ran_scenario = false
+          $ran_scenario = nil
         end
 
         it 'should have executed the feature once' do
@@ -106,6 +106,28 @@ module Sauce::Capybara
           $ran_scenario.should be true
         end
 
+        it 'should retry if a Selenium UnhandledError is raised' do
+          $ran_scenario = 0
+          define_steps do
+            Given /^a scenario$/ do
+            end
+            When /^I raise no exceptions$/ do
+              $ran_scenario = $ran_scenario + 1
+              if $ran_scenario == 1
+                raise Selenium::WebDriver::Error::UnhandledError
+              end
+            end
+            # Set up and invoke our defined Around hook
+            Around('@selenium') do |scenario, block|
+              # We need to fully reference the module function here due to a
+              # change in scoping that will happen to this block courtesy of
+              # define_steps
+              Sauce::Capybara::Cucumber.around_hook(scenario, block)
+            end
+          end
+          run_defined_feature feature
+          $ran_scenario.should == 2
+        end
       end
     end
   end
