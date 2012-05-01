@@ -42,14 +42,14 @@ Here's how you run RSpec tests with Sauce OnDemand using rake:
 
 ### Example Test::Unit test for Rails
 
-Here's an example test for Test::Unit.  Drop something like this in test/selenium/example.rb:
+Here's an example test for Test::Unit.  Drop something like this in test/selenium/example\_test.rb:
 
     require "test_helper"
     
     class DemoTest < Sauce::RailsTestCase
       test "my app", do
         page.open "/"
-        page.is_text_present("Welcome Aboard").should be_true
+        assert page.is_text_present('Welcome aboard')
       end
     end
 
