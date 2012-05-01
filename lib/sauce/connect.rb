@@ -94,6 +94,7 @@ module Sauce
 
     def self.connect!(*args)
       @connection = self.new(*args)
+      @connection.connect
       @connection.wait_until_ready
       at_exit do
         @connection.disconnect
