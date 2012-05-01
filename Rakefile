@@ -17,6 +17,18 @@ namespace :spec do
   end
 end
 
+namespace :test do
+  namespace :rails3 do
+    desc "Run an integration test with the rails3-demo code (slow)"
+    task :testunit do |t|
+      unless File.exists? File.expand_path("~/.rvm/scripts/rvm")
+        abort("I don't think you have RVM installed, which means this test will fail")
+      end
+      sh "(cd examples/rails3-demo && ./run-test.sh)"
+    end
+  end
+end
+
 
 Rake::TestTask.new(:examples) do |test|
   test.libs << 'lib' << 'examples'
