@@ -66,6 +66,47 @@ module Sauce::Capybara
         Capybara.stub_chain(:current_session, :driver).and_return(driver)
       end
 
+      context 'with a scenario outline' do
+        before :each do
+          $ran_scenario = 0
+        end
+
+        let(:feature) do
+          """
+          Feature: A dummy feature with a table
+            @selenium
+            Scenario Outline: Mic check
+              Given a <Number>
+              When I raise no exceptions
+            Examples: Numbers
+              | Number |
+              |   1    |
+              |   2    |
+          """
+        end
+
+        it 'should have executed the scenario outline twice' do
+          define_steps do
+            Given /^a (\d+)$/ do |number|
+              $ran_scenario = $ran_scenario + 1
+            end
+            When /^I raise no exceptions$/ do
+            end
+            # Set up and invoke our defined Around hook
+            Around('@selenium') do |scenario, block|
+              # We need to fully reference the module function here due to a
+              # change in scoping that will happen to this block courtesy of
+              # define_steps
+              Sauce::Capybara::Cucumber.around_hook(scenario, block)
+            end
+          end
+
+          run_defined_feature feature
+          $ran_scenario.should == 2
+        end
+
+      end
+
       context 'with a correct scenario' do
         let(:feature) do
           """

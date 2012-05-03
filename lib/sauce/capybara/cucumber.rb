@@ -21,6 +21,12 @@ module Sauce
       module_function :use_sauce_driver
 
       def name_from_scenario(scenario)
+        # Special behavior to handle Scenario Outlines
+        if scenario.instance_of? ::Cucumber::Ast::OutlineTable::ExampleRow
+          table = scenario.instance_variable_get(:@table)
+          outline = table.instance_variable_get(:@scenario_outline)
+          return "#{outline.feature.file} - #{outline.title} - #{table.headers} -> #{scenario.name}"
+        end
         scenario, feature = _scenario_and_feature_name(scenario)
         return "#{feature} - #{scenario}"
       end
