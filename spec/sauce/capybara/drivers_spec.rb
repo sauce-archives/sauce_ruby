@@ -14,10 +14,19 @@ describe Sauce::Capybara::Drivers::RetryableDriver do
   end
 
   describe '#find' do
+    let(:selector) { '#lol' }
+
     it 'should route through handle_retry' do
-      selector = '#lol'
       subject.should_receive(:base_find).with(selector) # BLECH
       subject.find(selector)
+    end
+
+    it 'should retry 3 times and then raise' do
+      subject.should_receive(:base_find).with(selector).exactly(4).times.and_raise(Selenium::WebDriver::Error::UnknownError)
+
+      expect {
+        subject.find(selector)
+      }.to raise_error(Selenium::WebDriver::Error::UnknownError)
     end
   end
 

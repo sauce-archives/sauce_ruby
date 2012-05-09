@@ -6,9 +6,21 @@ module Sauce::Capybara
     class RetryableDriver < Sauce::Capybara::Driver
       RETRY_ON = [::Selenium::WebDriver::Error::UnhandledError,
                   ::Selenium::WebDriver::Error::UnknownError]
+      MAX_RETRIES = 3
 
       def handle_retry(method, *args)
-        send("base_#{method}".to_sym, *args)
+        retries = 0
+        begin
+          send("base_#{method}".to_sym, *args)
+        rescue *RETRY_ON => e
+          if retries < MAX_RETRIES
+            puts "Received an exception (#{e}), retrying"
+            retries = retries + 1
+            retry
+          else
+            raise
+          end
+        end
       end
 
       alias :base_find :find
