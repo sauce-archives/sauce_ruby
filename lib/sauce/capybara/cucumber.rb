@@ -40,10 +40,6 @@ module Sauce
       module_function :before_hook
 
       def around_hook(scenario, block)
-        # If we're running under Jenkins, we should dump the
-        # `SauceOnDemandSessionID` into the Console Output for the Sauce OnDemand
-        # Jenkins plugin.
-        # See: <https://github.com/saucelabs/sauce_ruby/issues/48>
         ::Capybara.current_driver = :sauce
         driver = ::Capybara.current_session.driver
         Sauce.config do |c|
@@ -53,6 +49,10 @@ module Sauce
         # JENKINS_SERVER_COOKIE seems to be as good as any sentinel value to
         # determine whether we're running under Jenkins or not.
         if ENV['JENKINS_SERVER_COOKIE']
+          # If we're running under Jenkins, we should dump the
+          # `SauceOnDemandSessionID` into the Console Output for the Sauce OnDemand
+          # Jenkins plugin.
+          # See: <https://github.com/saucelabs/sauce_ruby/issues/48>
           output = []
           output << "\nSauceOnDemandSessionID=#{driver.browser.session_id}"
           # The duplication in the scenario_name comes from the fact that the
