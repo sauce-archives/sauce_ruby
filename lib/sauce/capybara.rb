@@ -43,12 +43,23 @@ module Sauce
       alias :base_find :find
       alias :base_visit :visit
       alias :base_current_url :current_url
+      alias :base_reset! :reset!
+      alias :base_within_frame :within_frame
+      alias :base_within_window :within_window
+      alias :base_find_window :find_window
+      alias :base_body :body
+      alias :base_source :source
+      alias :base_execute_script :execute_script
+      alias :base_evaluate_script :evaluate_script
 
-      [:find, :visit, :current_url].each do |method|
+      [:find, :visit, :current_url, :reset!, :within_frame,
+       :within_window, :find_window, :body, :source,
+       :execute_script, :evaluate_script].each do |method|
         define_method(method) do |*args|
           handle_retry(method, *args)
         end
       end
+
       def browser
         unless @browser
           if Sauce.get_config[:start_tunnel]
