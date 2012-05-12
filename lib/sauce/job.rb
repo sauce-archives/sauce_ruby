@@ -10,7 +10,7 @@ module Sauce
     attr_accessor :name, :browser, :browser_version, :os
     attr_accessor :creation_time, :start_time, :end_time
     attr_accessor :public, :video_url, :log_url, :tags
-    attr_accessor :passed
+    attr_accessor :passed, :custom_data
 
     # Get the class @@client.
     # TODO: Consider metaprogramming this away
@@ -99,6 +99,7 @@ module Sauce
     def to_json(options={})
       json = {
         :id =>              @id,
+        :'custom-data' =>   @custom_data,
         :owner =>           @owner,
         :status =>          @status,
         :error =>           @error,
@@ -130,7 +131,6 @@ module Sauce
 
     # Sets all internal variables from a hash
     def build!(options)
-      #puts "\tBuild with: #{options.inspect}"
       # Massage JSON
       options.each { |key,value| options[key] = false if options[key] == "false" }
 
@@ -150,6 +150,7 @@ module Sauce
       @public          = options["public"]
       @tags            = options["tags"]
       @passed          = options["passed"]
+      @custom_data     = options['custom-data']
 
       raise NoIDError if @id.nil? or @id.empty?
     end

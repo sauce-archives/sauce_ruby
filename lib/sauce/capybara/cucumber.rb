@@ -1,5 +1,6 @@
 require 'capybara'
 require 'cucumber'
+require 'sauce/job'
 
 module Sauce
   module Capybara
@@ -42,6 +43,10 @@ module Sauce
       def around_hook(scenario, block)
         ::Capybara.current_driver = :sauce
         driver = ::Capybara.current_session.driver
+        # This session_id is the job ID used by Sauce Labs, we're pulling it
+        # off of the driver now to make sure we have it after `block.call`
+        session_id = driver.browser.session_id
+
         Sauce.config do |c|
           c[:name] = Sauce::Capybara::Cucumber.name_from_scenario(scenario)
         end
@@ -68,6 +73,14 @@ module Sauce
         # Quit the driver to allow for the generation of a new session_id
         driver.browser.quit
         driver.instance_variable_set(:@browser, nil)
+
+        custom_data = {:commit => ENV['GIT_COMMIT'] || ENV['SVN_COMMIT'],
+                       :node_name => ENV['NODE_NAME'],
+                       :job_name => ENV['JOB_NAME']}
+        job = Sauce::Job.new('id' => session_id,
+                             'passed' => !scenario.failed?,
+                             'custom-data' => custom_data)
+        job.save unless job.nil?
       end
       module_function :around_hook
     end

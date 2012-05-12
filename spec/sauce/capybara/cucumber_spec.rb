@@ -55,15 +55,18 @@ module Sauce::Capybara
     end
 
     context 'Around hook' do
+      let(:session_id) { 'deadbeef' }
       let(:driver) do
         driver = mock('Sauce::Selenium2 Driver')
         driver.stub_chain(:browser, :quit)
+        driver.stub_chain(:browser, :session_id).and_return(session_id)
         driver
       end
 
       before :each do
         # Need to create our nice mocked Capybara driver
         Capybara.stub_chain(:current_session, :driver).and_return(driver)
+        Sauce::Job.stub(:save)
       end
 
       context 'with a scenario outline' do
