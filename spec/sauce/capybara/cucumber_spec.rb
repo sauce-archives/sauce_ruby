@@ -66,7 +66,7 @@ module Sauce::Capybara
       before :each do
         # Need to create our nice mocked Capybara driver
         Capybara.stub_chain(:current_session, :driver).and_return(driver)
-        Sauce::Job.stub(:save)
+        Sauce::Job.stub(:new).and_return(nil)
       end
 
       context 'with a scenario outline' do

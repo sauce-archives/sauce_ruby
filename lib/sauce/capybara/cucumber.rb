@@ -40,26 +40,44 @@ module Sauce
       end
       module_function :before_hook
 
+      def using_jenkins?
+        # JENKINS_SERVER_COOKIE seems to be as good as any sentinel value to
+        # determine whether we're running under Jenkins or not.
+        ENV['JENKINS_SERVER_COOKIE']
+      end
+      module_function :using_jenkins?
+
       def around_hook(scenario, block)
         ::Capybara.current_driver = :sauce
         driver = ::Capybara.current_session.driver
         # This session_id is the job ID used by Sauce Labs, we're pulling it
         # off of the driver now to make sure we have it after `block.call`
         session_id = driver.browser.session_id
+        job_name = Sauce::Capybara::Cucumber.name_from_scenario(scenario)
+        custom_data = {}
+
+        if using_jenkins?
+          custom_data.merge!({:commit => ENV['GIT_COMMIT'] || ENV['SVN_COMMIT'],
+                       :jenkins_node => ENV['NODE_NAME'],
+                       :jenkins_job => ENV['JOB_NAME']})
+        end
+
+        job = Sauce::Job.new('id' => session_id,
+                             'name' => job_name,
+                             'custom-data' => custom_data)
+        job.save unless job.nil?
 
         Sauce.config do |c|
           c[:name] = Sauce::Capybara::Cucumber.name_from_scenario(scenario)
         end
 
-        # JENKINS_SERVER_COOKIE seems to be as good as any sentinel value to
-        # determine whether we're running under Jenkins or not.
-        if ENV['JENKINS_SERVER_COOKIE']
+        if using_jenkins?
           # If we're running under Jenkins, we should dump the
           # `SauceOnDemandSessionID` into the Console Output for the Sauce OnDemand
           # Jenkins plugin.
           # See: <https://github.com/saucelabs/sauce_ruby/issues/48>
           output = []
-          output << "\nSauceOnDemandSessionID=#{driver.browser.session_id}"
+          output << "\nSauceOnDemandSessionID=#{session_id}"
           # The duplication in the scenario_name comes from the fact that the
           # JUnit formatter seems to do the same, so in order to get the sauce
           # OnDemand plugin for Jenkins to co-operate, we need to double it up as
@@ -74,13 +92,10 @@ module Sauce
         driver.browser.quit
         driver.instance_variable_set(:@browser, nil)
 
-        custom_data = {:commit => ENV['GIT_COMMIT'] || ENV['SVN_COMMIT'],
-                       :node_name => ENV['NODE_NAME'],
-                       :job_name => ENV['JOB_NAME']}
-        job = Sauce::Job.new('id' => session_id,
-                             'passed' => !scenario.failed?,
-                             'custom-data' => custom_data)
-        job.save unless job.nil?
+        unless job.nil?
+          job.passed = !scenario.failed?
+          job.save
+        end
       end
       module_function :around_hook
     end

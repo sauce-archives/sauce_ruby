@@ -77,6 +77,7 @@ module Sauce
     # Creates an instance representing a job.
     def initialize(options)
       build!(options)
+      @client = Sauce::Client.new
     end
 
     # Retrieves the latest information on this job from the Sauce Labs' server
@@ -90,7 +91,7 @@ module Sauce
     # Save/update the current information for the job
     def save
       #puts "Saving job:\n -X PUT #{@@client['jobs']}/#{@id} -H 'Content-Type: application/json' -d '#{self.to_json}'"
-      response = @@client["jobs/#{@id}"].put(self.to_json,
+      response = @client["jobs/#{@id}"].put(self.to_json,
                                              {:content_type => :json,
                                                :accept => :json}).body
       JSON.parse(response)
