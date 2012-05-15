@@ -23,6 +23,12 @@ module Sauce
       module_function :name_from_scenario
 
       def jenkins_name_from_scenario(scenario)
+        # Special behavior to handle Scenario Outlines
+        if scenario.instance_of? ::Cucumber::Ast::OutlineTable::ExampleRow
+          table = scenario.instance_variable_get(:@table)
+          outline = table.instance_variable_get(:@scenario_outline)
+          return "#{outline.feature.short_name}.#{outline.title}.#{outline.title} (outline example: #{scenario.name})"
+        end
         scenario, feature = _scenario_and_feature_name(scenario)
         return "#{feature}.#{scenario}.#{scenario}"
       end
