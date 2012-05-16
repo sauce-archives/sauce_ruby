@@ -27,6 +27,13 @@ module Sauce
 
       def handle_retry(method, *args)
         retries = 0
+
+        # Disable retries only when we really really want to, this will remain
+        # an undocomented hack for the time being
+        if ENV['SAUCE_DISABLE_RETRY']
+          retries = MAX_RETRIES
+        end
+
         begin
           send("base_#{method}".to_sym, *args)
         rescue *RETRY_ON => e

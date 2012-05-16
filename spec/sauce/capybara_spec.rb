@@ -65,6 +65,24 @@ describe Sauce::Capybara do
       describe '#find' do
         let(:selector) { '#lol' }
 
+        context 'with an environment override' do
+          before :each do
+            ENV['SAUCE_DISABLE_RETRY'] = '1'
+          end
+
+          it 'should not retry and raise the error' do
+          subject.should_receive(:base_find).with(selector).and_raise(Selenium::WebDriver::Error::UnknownError)
+
+          expect {
+            subject.find(selector)
+          }.to raise_error(Selenium::WebDriver::Error::UnknownError)
+          end
+
+          after :each do
+            ENV['SAUCE_DISABLE_RETRY'] = nil
+          end
+        end
+
         it 'should route through handle_retry' do
           subject.should_receive(:base_find).with(selector) # BLECH
           subject.find(selector)
