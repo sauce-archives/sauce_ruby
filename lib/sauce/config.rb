@@ -182,23 +182,32 @@ module Sauce
       return extract_options_from_hash(ENV)
     end
 
+    # Heroku supports multiple apps per $PWD.  Specify $SAUCE_HEROKU_APP if
+    # needed otherwise this can still time out.
     def load_options_from_heroku
-      @@herkou_environment ||= begin
-        buffer = IO.popen("heroku config --shell 2>/dev/null") { |out| out.read }
-        if $?.exitstatus == 0
-          env = {}
-          buffer.split("\n").each do |line|
-            key, value = line.split("=")
-            env[key] = value
+      @@heroku_environment ||= begin
+        if File.exists?(File.expand_path('~/.heroku'))
+          heroku_app = ENV['SAUCE_HEROKU_APP']
+          cmd = "heroku config #{heroku_app ? "--app #{heroku_app}": ''}"
+          cmd += "--shell 2>/dev/null"
+          buffer = IO.popen(cmd) { |out| out.read }
+          if $?.exitstatus == 0
+            env = {}
+            buffer.split("\n").each do |line|
+              key, value = line.split("=")
+              env[key] = value
+            end
+            extract_options_from_hash(env)
+          else
+            {}
           end
-          extract_options_from_hash(env)
         else
           {}
         end
       rescue Errno::ENOENT
         {} # not a Heroku environment
       end
-      return @@herkou_environment
+      return @@heroku_environment
     end
 
     def load_options_from_yaml
