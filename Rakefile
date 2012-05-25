@@ -1,28 +1,34 @@
 require 'rubygems'
 require 'bundler'
-require 'rake'
 require 'rake/testtask'
+require 'rspec/core/rake_task'
 
 Bundler::GemHelper.install_tasks
 
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
+namespace :spec do
+  RSpec::Core::RakeTask.new(:unit) do |s|
+    s.pattern = 'spec/sauce/**_spec.rb'
+    s.rspec_opts = '-c'
+  end
+
+  RSpec::Core::RakeTask.new(:integration) do |s|
+    s.pattern = 'spec/integration/**_spec.rb'
+    s.rspec_opts = '-c'
+  end
 end
 
 namespace :test do
-  Rake::TestTask.new(:api) do |test|
-    test.libs << 'lib' << 'test'
-    test.pattern = 'test/api/test_*.rb'
-    test.verbose = true
-  end
-  Rake::TestTask.new(:integrations) do |test|
-    test.libs << 'lib' << 'test'
-    test.pattern = 'test/test_integrations.rb'
-    test.verbose = true
+  namespace :rails3 do
+    desc "Run an integration test with the rails3-demo code (slow)"
+    task :testunit do |t|
+      unless File.exists? File.expand_path("~/.rvm/scripts/rvm")
+        abort("I don't think you have RVM installed, which means this test will fail")
+      end
+      sh "(cd examples/rails3-demo && ./run-test.sh)"
+    end
   end
 end
+
 
 Rake::TestTask.new(:examples) do |test|
   test.libs << 'lib' << 'examples'
@@ -82,4 +88,4 @@ task :push do
   system "git push origin master --tags"
 end
 
-task :default => [:tag, :release, :push]
+#task :default => [:tag, :release, :push]
