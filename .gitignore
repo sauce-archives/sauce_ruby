@@ -26,3 +26,5 @@ Gemfile.lock
 .idea
 .rvmrc
 ondemand.yml
+*.sqlite3
+schema.rb
