@@ -17,13 +17,27 @@ namespace :spec do
   end
 end
 
+task :default => :'spec:unit'
+
+def ensure_rvm!
+  unless File.exists? File.expand_path("~/.rvm/scripts/rvm")
+    abort("I don't think you have RVM installed, which means this test will fail")
+  end
+end
+
 namespace :test do
+  namespace :rails2 do
+    desc "Run an integration test with the rails2-demo code (slow)"
+    task :testunit do |t|
+      ensure_rvm!
+      sh "(cd examples/rails2-demo && ./run-test.sh)"
+    end
+  end
+
   namespace :rails3 do
     desc "Run an integration test with the rails3-demo code (slow)"
     task :testunit do |t|
-      unless File.exists? File.expand_path("~/.rvm/scripts/rvm")
-        abort("I don't think you have RVM installed, which means this test will fail")
-      end
+      ensure_rvm!
       sh "(cd examples/rails3-demo && ./run-test.sh)"
     end
   end
