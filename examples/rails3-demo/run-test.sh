@@ -28,8 +28,8 @@ require "test_helper"
 
 class DemoTest < Sauce::RailsTestCase
   test "my app", do
-    page.open "/"
-    assert page.is_text_present("Welcome aboard")
+    s.get 'http://localhost:3001/'
+    assert s.page_source.include? 'Welcome aboard'
   end
 end
 EOF

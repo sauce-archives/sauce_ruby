@@ -17,7 +17,7 @@ begin
         before :suite do
           config = Sauce::Config.new
           if @@need_tunnel
-            if config.application_host && !config.local?
+            if config.application_host
               @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
               @@tunnel.connect
               @@tunnel.wait_until_ready
@@ -38,29 +38,11 @@ begin
           config = Sauce::Config.new
           description = [self.class.description, self.description].join(" ")
           config.browsers.each do |os, browser, version|
-            if config.single_session?
-              if config.local?
-                @selenium = Sauce.cached_session(:host => "127.0.0.1", :port => 4444, :browser => "*" +
-                                                browser, :url => "http://127.0.0.1:#{config.local_application_port}/")
-              else
-                @selenium = Sauce.cached_session({:os => os, :browser => browser, :browser_version => version,
-                               :job_name => self.class.description})
-              end
-              super(*args)
-            else
-              if config.local?
-                @selenium = ::Selenium::Client::Driver.new(:host => "127.0.0.1",
-                                                           :port => 4444,
-                                                           :browser => "*" + browser,
-                                                           :url => "http://127.0.0.1:#{config.local_application_port}/")
-              else
-                @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
-                                                :job_name => "#{description}"})
-              end
-              @selenium.start_new_browser_session(:captureNetworkTraffic => config.capture_traffic?)
-              super(*args)
-              @selenium.stop
-            end
+            @selenium = Sauce::Selenium2.new({:os => os, :browser => browser,
+                                              :browser_version => version,
+                                              :job_name => description})
+            super(*args)
+            @selenium.stop
           end
         end
 
@@ -89,16 +71,10 @@ begin
             config = Sauce::Config.new
             description = the_test.metadata[:full_description]
             config.browsers.each do |os, browser, version|
-              if config.local?
-                @selenium = ::Selenium::Client::Driver.new(:host => "127.0.0.1",
-                                                           :port => 4444,
-                                                           :browser => "*" + browser,
-                                                           :url => "http://127.0.0.1:#{config.local_application_port}/")
-              else
-                @selenium = Sauce::Selenium.new({:os => os, :browser => browser, :browser_version => version,
-                                                :job_name => "#{description}"})
-              end
-              @selenium.start_new_browser_session(:captureNetworkTraffic => config.capture_traffic?)
+              @selenium = Sauce::Selenium2.new({:os => os,
+                                                :browser => browser,
+                                                :browser_version => version,
+                                                :job_name => description})
               begin
                 the_test.run
               ensure
@@ -116,7 +92,7 @@ begin
           config = Sauce::Config.new
           files_to_run = ::RSpec.configuration.respond_to?(:files_to_run) ? ::RSpec.configuration.files_to_run :
             ::RSpec.configuration.settings[:files_to_run]
-          if config.application_host && !config.local?
+          if config.application_host
             need_tunnel = files_to_run.any? {|file| file =~ /spec\/selenium\//}
           end
           if need_tunnel
@@ -158,7 +134,7 @@ module Sauce
       end
       unless my_name =~ /^default_test/
         config = Sauce::Config.new
-        if config.application_host && !config.local?
+        if config.application_host
           unless ENV['TEST_ENV_NUMBER'].to_i > 1
             Sauce::Connect.ensure_connected(:host => config.application_host, :port => config.application_port || 80)
           end
@@ -177,37 +153,13 @@ module Sauce
         end
 
         config.browsers.each do |os, browser, version|
-          if config.single_session?
-            if config.local?
-              @browser = Sauce.cached_session(:host => "127.0.0.1", :port => 4444, :browser => "*" +
-                                              browser, :url => "http://127.0.0.1:#{config.local_application_port}/")
-            else
-              options = self.class.sauce_config
-              options.merge!({:os => os, :browser => browser, :browser_version => version,
-                             :job_name => "#{Rails.root.split[1].to_s} test suite"})
-              @browser = Sauce.cached_session(options)
-            end
-            super(*args, &blk)
-          else
-            if config.local?
-              @browser = ::Selenium::Client::Driver.new(:host => "127.0.0.1",
-                                                        :port => 4444,
-                                                        :browser => "*" + browser,
-                                                        :url => "http://127.0.0.1:#{config.local_application_port}/")
-            else
-              options = self.class.sauce_config
-              options.merge!({:os => os, :browser => browser, :browser_version => version,
-                                             :job_name => "#{my_name}"})
-              @browser = Sauce::Selenium.new(options)
-            end
-            if self.class.selenium_flags
-              @browser.start_new_browser_session(self.class.selenium_flags.merge(:captureNetworkTraffic => config.capture_traffic?))
-            else
-              @browser.start_new_browser_session(:captureNetworkTraffic => config.capture_traffic?)
-            end
-            super(*args, &blk)
-            @browser.stop
-          end
+          options = self.class.sauce_config
+          options.merge!({:os => os, :browser => browser,
+                          :browser_version => version,
+                          :job_name => my_name.to_s})
+          @browser = Sauce::Selenium2.new(options)
+          super(*args, &blk)
+          @browser.stop
         end
       end
     end
