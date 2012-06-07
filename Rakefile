@@ -6,14 +6,15 @@ require 'rspec/core/rake_task'
 Bundler::GemHelper.install_tasks
 
 namespace :spec do
+  rspec_options = '--color --format d --fail-fast --order random'
   RSpec::Core::RakeTask.new(:unit) do |s|
     s.pattern = 'spec/sauce/**_spec.rb'
-    s.rspec_opts = '-c'
+    s.rspec_opts = rspec_options
   end
 
   RSpec::Core::RakeTask.new(:integration) do |s|
     s.pattern = 'spec/integration/**_spec.rb'
-    s.rspec_opts = '-c'
+    s.rspec_opts = rspec_options
   end
 end
 
