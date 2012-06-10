@@ -1,20 +1,30 @@
-Sauce OnDemand is a Selenium testing cloud service, developed by Sauce Labs Inc
-(saucelabs.com). This is the Ruby client adapter for Sauce OnDemand.
+# Sauce OnDemand for Ruby
 
-Features
---------
+Sauce OnDemand is a Selenium-based browser testing service offered by [Sauce
+Labs](https://www.saucelabs.com).
 
-*   Drop-in replacement for Selenium::Client::Driver that takes care of connecting to Sauce OnDemand
-*   RSpec, Test::Unit, and Rails integration for tests, including automatic setup of Sauce Connect
-*   ActiveRecord-like interface for job metadata: Find/create/destroy
 
-Install
--------
+## Installation
 
-`gem install sauce`
+```bash
+    % gem install sauce
+```
 
-Rails Integration
--------
+
+## Suggested Toolchain
+
+
+The Sauce gem has been optimized to work most effectively with
+[Cucumber](https://www.cukes.info) and
+[Capybara](http://jnicklas.github.com/capybara/).
+
+You can read more about how to get started with [Cucumber and Capybara on this
+wiki
+page](https://github.com/saucelabs/sauce\_ruby/wiki/Cucumber-and-Capybara).
+
+
+
+## Legacy Rails Integration
 
 You can use either RSpec or Test::Unit with Rails and Sauce OnDemand.  To get started, run the generator:
 
@@ -28,11 +38,11 @@ configuration, which you can tweak inside the `Sauce.config` block if necessary.
 Here's an example test for RSpec.  Drop something like this in spec/selenium/example.rb.  (Because of the way RSpec categorizes tests, the "spec/selenium" directory tree is required for the integration to work properly):
 
     require "spec_helper"
-    
+
     describe "my app" do
       it "should have a home page" do
-        page.open "/"
-        page.is_text_present("Welcome Aboard").should be_true
+        s.get 'http://localhost:3001/'
+        assert s.page_source.include? 'Welcome aboard'
       end
     end
 
@@ -45,11 +55,11 @@ Here's how you run RSpec tests with Sauce OnDemand using rake:
 Here's an example test for Test::Unit.  Drop something like this in test/selenium/example\_test.rb:
 
     require "test_helper"
-    
+
     class DemoTest < Sauce::RailsTestCase
       test "my app", do
-        page.open "/"
-        assert page.is_text_present('Welcome aboard')
+        s.get 'http://localhost:3001/'
+        assert s.page_source.include? 'Welcome aboard'
       end
     end
 
@@ -57,138 +67,22 @@ Here's how you run Test::Unit tests with Sauce OnDemand using rake:
 
 `rake test:selenium:sauce`
 
-RSpec integration without Rails
--------------------------------
 
-First, configure with your account info:
+### Contributing to the Gem
 
-`sauce config USERNAME ACCESS_KEY`
+*  Fork the project.
+*  Make your feature addition or bug fix.
+*  Please add RSpec tests for your changes, as we don't create a new release of the gem unless all tests are passing.
+*  Commit
+*  Send a pull request. Bonus points for topic branches.
 
-And here's an example test.  Drop something like this in spec/selenium/example.rb.  (Because of the way RSpec categorizes tests, the "spec/selenium" directory tree is required for the integration to work properly):
 
-    #!/usr/bin/env ruby
-    #
-    # Sample RSpec test case using the Sauce gem
-    #
-    require "rubygems"
-    require "sauce"
-    
-    # This should go in your spec_helper.rb file if you have one
-    Sauce.config do |config|
-      config.browser_url = "http://saucelabs.com/"
-      config.browsers = [
-        ["Linux", "firefox", "3.6."]
-      ]
-    
-      # uncomment this if your server is not publicly accessible
-      #config.application_host = "localhost"
-      #config.application_port = "80"
-    end
-    
-    # If this goes in spec/selenium/foo_spec.rb, you can omit the :type parameter
-    describe "The Sauce Labs website", :type => :selenium do
-      it "should have a home page" do
-        page.open "/"
-        page.is_text_present("Sauce Labs").should be_true
-      end
-    
-      it "should have a pricing page" do
-        page.open "/"
-        page.click "link=Pricing"
-        page.wait_for_page_to_load 30000
-        page.is_text_present("Free Trial").should be_true
-      end
-    end
+### Testing the Gem
 
-Test::Unit integration without Rails
-------------------------------------
+Running the full test suite will require [RVM](http://rvm.beginrescueend.com)
 
-First, configure with your account info:
-
-`sauce config USERNAME ACCESS_KEY`
-
-And here's an example test:
-
-    #!/usr/bin/env ruby
-    #
-    # Sample Test:Unit test case using the Sauce gem
-    #
-    require "test/unit"
-    require "rubygems"
-    require "sauce"
-    
-    # This should go in your test_helper.rb file if you have one
-    Sauce.config do |config|
-      config.browser_url = "http://saucelabs.com/"
-      config.browsers = [
-        ["Linux", "firefox", "3.6."]
-      ]
-    
-      # uncomment this if your server is not publicly accessible
-      #config.application_host = "localhost"
-      #config.application_port = "80"
-    end
-    
-    class ExampleTest < Sauce::TestCase
-        def test_sauce
-            page.open "/"
-            assert page.title.include?("Sauce Labs")
-        end
-    end
-
-Direct use of the Selenium Client driver
-----------------------------------------
-
-First, configure with your account info:
-
-`sauce config USERNAME ACCESS_KEY`
-
-And here's an example test:
-
-    require 'rubygems'
-    require 'sauce'
-    selenium = Sauce::Selenium.new(:browser_url => "http://saucelabs.com",
-        :browser => "firefox", :browser_version => "3.", :os => "Windows 2003",
-        :job_name => "My first test!")
-    selenium.start
-    selenium.open "/"
-    selenium.stop
-
-Note on Patches/Pull Requests
------------------------------ 
-
-*   Fork the project.
-*   Make your feature addition or bug fix.
-*   Add tests for it. This is important so we don't break it in a future version unintentionally.
-*   Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-*   Send me a pull request. Bonus points for topic branches.
-
-Testing the Gem
----------------
-
-The tests in test/ need a bit of setup to get running:
-
-if you're on Ubuntu:
-
-* sudo aptitude install expect libsqlite3-dev
-
-For all platforms:
-
-* Install RVM: bash < <( curl http://rvm.beginrescueend.com/releases/rvm-install-head )
-* If you're in a headless environment, set SAUCE_TEST_NO_LOCAL=y in your environment
 * Set SAUCE_USERNAME and SAUCE_ACCESS_KEY in your environment to valid Sauce OnDemand credentials
 * bundle install
-* rake test
+* rake spec:unit # Will just run the unit tests
+* rake test      # Will run *all* the tests and can be slow
 
-If you want tests to go a bit faster, globally install the gems with native extensions:
-
-* rvm use 1.8.7@global
-* gem install ffi sqlite3 json
-* rvm use 1.9.2@global
-* gem install ffi sqlite3 json
-* rvm use default
-
-Copyright
----------
-
-Copyright (c) 2009-2011 Sauce Labs Inc. See LICENSE for details.
