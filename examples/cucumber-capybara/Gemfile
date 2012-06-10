@@ -3,4 +3,4 @@ source :gemcutter
 gem 'cucumber'
 gem 'rspec'
 gem 'capybara'
-gem 'sauce'
+gem 'sauce', :path => '../../'

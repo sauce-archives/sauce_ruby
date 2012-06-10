@@ -27,6 +27,13 @@ def ensure_rvm!
 end
 
 namespace :test do
+  namespace :cucumber do
+    desc "Run an integration test with the cucumber-capybara code (slow)"
+    task :capybara do |t|
+      ensure_rvm!
+      sh "(cd examples/cucumber-capybara/ && ./run-test.sh)"
+    end
+  end
   namespace :rails3 do
     desc "Run an integration test with the rails3-demo code (slow)"
     task :testunit do |t|
