@@ -43,6 +43,10 @@ namespace :test do
   end
 end
 
+desc "Run *all* tests, this will be slow!"
+task :test => [:'spec:unit', :'spec:integration',
+               :'test:cucumber:capybara', :'test:rails3:testunit']
+
 
 Rake::TestTask.new(:examples) do |test|
   test.libs << 'lib' << 'examples'
