@@ -7,6 +7,9 @@ describe Sauce::Config do
     config.stub(:silence_warnings).and_return(true)
     config
   end
+  before :each do
+    Sauce.clear_config
+  end
 
   describe '#[]' do
     it "should return nil for options that don't exist" do
@@ -193,35 +196,9 @@ describe Sauce::Config do
       c.browser_version.should == 'BROWSER_VERSION2'
     end
   end
-
-  after :each do
-    # Reset to the defaults
-    Sauce.config do |config|
-    end
-  end
 end
 
 describe Sauce do
-  describe '#config' do
-    it 'should reset defaults when the block does nothing' do
-      Sauce.config do |c|
-      end
-
-      Sauce::Config.new.browsers.should == [['Windows 2003', 'firefox', '3.6.']]
-    end
-    it 'should reset the values set if called multiple times' do
-      Sauce.config do |c|
-        c.os = 'TEST_OS'
-      end
-      Sauce::Config.new.os.should == 'TEST_OS'
-
-      Sauce.config do |c|
-      end
-
-      Sauce::Config.new.os.should_not == 'TEST_OS'
-    end
-  end
-
   describe '#get_config' do
     context 'when #config has never been called' do
       # See: <https://github.com/saucelabs/sauce_ruby/issues/59>
@@ -240,6 +217,7 @@ describe Sauce do
 
     context 'when config has been called' do
       before :each do
+        Sauce.clear_config
         Sauce.config do |c|
           c[:some_setting] = true
         end
@@ -248,12 +226,14 @@ describe Sauce do
         Sauce.get_config.should_not be nil
         Sauce.get_config[:some_setting].should be true
       end
+    end
+  end
 
-      after :each do
-        Sauce.config do |c|
-          # Clear out the configuration
-        end
-      end
+  describe '#clear_config' do
+    it 'should reset the config object' do
+      c = Sauce.get_config
+      Sauce.clear_config
+      c.should_not equal(Sauce.get_config)
     end
   end
 end

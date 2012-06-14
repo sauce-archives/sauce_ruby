@@ -4,12 +4,15 @@ require 'uri'
 
 module Sauce
   def self.config
-    @cfg = Sauce::Config.new(false)
-    yield @cfg
+    yield get_config
   end
 
   def self.get_config
     @cfg ||= Sauce::Config.new(false)
+  end
+
+  def self.clear_config
+    @cfg = nil
   end
 
   class Config
