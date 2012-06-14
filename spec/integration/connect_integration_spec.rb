@@ -7,9 +7,7 @@ describe 'Sauce::Connect integration testing' do
   end
 
   before :each do
-    # Making sure this gets re-initialized
-    Sauce.config do |config|
-    end
+    Sauce.clear_config
   end
 
   context 'assuming valid Sauce Labs authentication' do
