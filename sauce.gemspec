@@ -18,9 +18,6 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.4.2}
   s.summary = %q{Ruby access to Sauce Labs' features}
   s.test_files = Dir['test/*.rb']
-  s.add_development_dependency('rake')
-  s.add_development_dependency('bundler')
-  s.add_development_dependency('rspec', ['>= 2.9.0'])
   s.add_dependency('net-http-persistent')
 
   if s.respond_to? :specification_version then
