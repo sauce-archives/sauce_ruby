@@ -27,18 +27,12 @@ describe Jasmine::Config do
       # Stub out the creation of the Selenium2 driver itself
       Sauce::Selenium2.stub(:new)
       Sauce::Jasmine::Driver.stub(:new).and_return(driver)
-      subject.stub(:start_jasmine_server)
     end
 
     let(:driver) do
       driver = mock('Sauce::Jasmine::Driver')
       driver.stub(:connect)
       driver
-    end
-
-    it 'should invoke Jasmine\'s own start server method' do
-      subject.should_receive(:start_jasmine_server)
-      subject.start
     end
 
     it 'should create a Sauce::Jasmine::Driver' do
