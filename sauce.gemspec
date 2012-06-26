@@ -5,8 +5,8 @@ Gem::Specification.new do |s|
   s.version = '2.0.0'
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Eric Allen", "Sean Grove", "Steven Hazel", "R. Tyler Croy"]
-  s.date = %q{2011-04-11}
+  s.authors = ["Eric Allen", "Sean Grove", "Steven Hazel", "R. Tyler Croy", "Santiago Suarez Ordoñez"]
+  s.date = %q{2012-06-26}
   s.default_executable = %q{sauce}
   s.description = %q{A Ruby interface to Sauce OnDemand.}
   s.email = %q{help@saucelabs.com}
@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.files = `git ls-files`.split("\n").collect { |f| f unless f.include? 'examples' }.compact
   s.homepage = %q{http://github.com/saucelabs/sauce_ruby}
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.4.2}
+  s.rubygems_version = %q{2.0.0}
   s.summary = %q{Ruby access to Sauce Labs' features}
   s.test_files = Dir['test/*.rb']
   s.add_dependency('net-http-persistent')
@@ -53,4 +53,3 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<highline>, [">= 1.5.0"])
   end
 end
-
