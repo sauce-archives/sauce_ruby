@@ -5,7 +5,6 @@
 Sauce OnDemand is a Selenium-based browser testing service offered by [Sauce
 Labs](https://www.saucelabs.com).
 
-[![Build Status](https://buildhive.cloudbees.com/job/saucelabs/job/sauce_ruby/badge/icon)](https://buildhive.cloudbees.com/job/saucelabs/job/sauce_ruby/)
 
 ## Installation
 
