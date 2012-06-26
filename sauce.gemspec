@@ -1,22 +1,18 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{sauce}
+  s.name = 'sauce'
   s.version = '2.0.0'
-
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Allen", "Sean Grove", "Steven Hazel", "R. Tyler Croy", "Santiago Suarez Ordoñez"]
-  s.date = %q{2012-06-26}
-  s.default_executable = %q{sauce}
-  s.description = %q{A Ruby interface to Sauce OnDemand.}
-  s.email = %q{help@saucelabs.com}
-  s.executables = ["sauce"]
+  s.homepage = 'http://github.com/saucelabs/sauce_ruby'
+  s.email = 'help@saucelabs.com'
+  s.summary = "A Ruby helper for running tests in Sauce OnDemand"
+  s.description = "A Ruby helper for running tests in Sauce OnDemand, Sauce Labs' browsers in the cloud service"
   # Include pretty much everything in Git except the examples/ directory
   s.files = `git ls-files`.split("\n").collect { |f| f unless f.include? 'examples' }.compact
-  s.homepage = %q{http://github.com/saucelabs/sauce_ruby}
+  s.executables = ['sauce']
+  s.default_executable = 'sauce'
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{2.0.0}
-  s.summary = %q{Ruby access to Sauce Labs' features}
   s.test_files = Dir['test/*.rb']
   s.add_dependency('net-http-persistent')
 
