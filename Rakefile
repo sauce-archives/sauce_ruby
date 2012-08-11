@@ -75,13 +75,27 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-namespace :jasmine do
-  desc 'Build sauce-jasmine gem'
-  task :build do
-    sh '(cd gems/sauce-jasmine && rake build)'
+GEMS = ['sauce-jasmine', 'sauce-cucumber']
+
+def gem_kind(name)
+  name.split('-')[1]
+end
+
+GEMS.each do |gem|
+
+  namespace gem_kind(gem) do
+    desc "Build the #{gem} gem"
+    task :build do
+      sh "(cd gems/#{gem} && rake build)"
+    end
+
+    desc "Release the #{gem} gem"
+    task :release do
+      sh "(cd gems/#{gem} && rake release)"
+    end
   end
 end
 
-task :build => ['jasmine:build']
+task :build => GEMS.collect { |n| "#{gem_kind(n)}:build" }
 task :release => [:build]
 task :default => [:'spec:unit', :build]
