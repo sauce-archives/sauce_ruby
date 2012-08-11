@@ -15,13 +15,15 @@ Gem::Specification.new do |s|
   s.default_executable = 'sauce'
   s.require_paths = ["lib"]
   s.test_files = Dir['test/*.rb']
+
   s.add_dependency('net-http-persistent')
-  s.add_dependency(%q<rest-client>, [">= 0"])
-  s.add_dependency(%q<net-ssh>, [">= 0"])
-  s.add_dependency(%q<net-ssh-gateway>, [">= 0"])
-  s.add_dependency(%q<selenium-webdriver>, [">= 0.1.2"])
-  s.add_dependency(%q<childprocess>, [">= 0.1.6"])
-  s.add_dependency(%q<json>, [">= 1.2.0"])
-  s.add_dependency(%q<cmdparse>, [">= 2.0.2"])
-  s.add_dependency(%q<highline>, [">= 1.5.0"])
+  s.add_dependency('capybara')
+  s.add_dependency('rest-client', [">= 0"])
+  s.add_dependency('net-ssh', [">= 0"])
+  s.add_dependency('net-ssh-gateway', [">= 0"])
+  s.add_dependency('selenium-webdriver', [">= 0.1.2"])
+  s.add_dependency('childprocess', [">= 0.1.6"])
+  s.add_dependency('json', [">= 1.2.0"])
+  s.add_dependency('cmdparse', [">= 2.0.2"])
+  s.add_dependency('highline', [">= 1.5.0"])
 end
