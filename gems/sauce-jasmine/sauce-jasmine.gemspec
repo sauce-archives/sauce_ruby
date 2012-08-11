@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/sauce-jasmine/version', __FILE__)
+require File.expand_path(File.dirname(__FILE__) + '/../../lib/sauce/version')
 
 Gem::Specification.new do |gem|
   gem.authors       = ["R. Tyler Croy"]
   gem.email         = ["tyler@monkeypox.org"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = ''
+  gem.summary       = ''
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
@@ -13,5 +13,5 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "sauce-jasmine"
   gem.require_paths = ["lib"]
-  gem.version       = Sauce::Jasmine::VERSION
+  gem.version       = "#{Sauce::MAJOR_VERSION}.0"
 end
