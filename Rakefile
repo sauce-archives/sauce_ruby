@@ -75,6 +75,13 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
+namespace :jasmine do
+  desc 'Build sauce-jasmine gem'
+  task :build do
+    sh '(cd gems/sauce-jasmine && rake build)'
+  end
+end
+
+task :build => ['jasmine:build']
 task :release => [:build]
 task :default => [:'spec:unit', :build]
-
