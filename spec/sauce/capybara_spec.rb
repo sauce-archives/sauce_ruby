@@ -1,6 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require 'sauce/capybara'
-require 'sauce/capybara/cucumber'
 
 describe Sauce::Capybara do
   describe '#connect_tunnel' do
