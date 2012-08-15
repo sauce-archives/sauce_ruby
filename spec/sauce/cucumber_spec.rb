@@ -1,9 +1,8 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-require 'sauce/capybara'
-require 'sauce/capybara/cucumber'
+require 'spec_helper'
 
-# We need to pull in our local spec_helper.rb to test cucumbery things
-require File.dirname(__FILE__) + '/spec_helper'
+require 'sauce/cucumber'
+# We need to pull in the cucumber_helper to effectively test cucumbery things
+require 'cucumber_helper'
 
 module Sauce::Capybara
   describe Cucumber do

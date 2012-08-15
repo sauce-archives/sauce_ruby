@@ -18,8 +18,6 @@ namespace :spec do
   end
 end
 
-task :default => :'spec:unit'
-
 def ensure_rvm!
   unless File.exists? File.expand_path("~/.rvm/scripts/rvm")
     abort("I don't think you have RVM installed, which means this test will fail")
@@ -77,33 +75,27 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-desc 'Release gem to rubygems.org'
-task :release => :build do
-  gems = Dir["pkg/*.gem"]
-  if gems
-    system("gem push #{gems[-1]}")
-  end
+GEMS = ['sauce-jasmine', 'sauce-cucumber']
+
+def gem_kind(name)
+  name.split('-')[1]
 end
 
-desc 'tag current version'
-task :tag do
-  version = nil
-  File.open("sauce.gemspec").each do |line|
-    if line =~ /s.version = "(.*)"/
-      version = $1
+GEMS.each do |gem|
+
+  namespace gem_kind(gem) do
+    desc "Build the #{gem} gem"
+    task :build do
+      sh "(cd gems/#{gem} && rake build)"
+    end
+
+    desc "Release the #{gem} gem"
+    task :release do
+      sh "(cd gems/#{gem} && rake release)"
     end
   end
-
-  if version.nil?
-    raise "Couldn't find version"
-  end
-
-  system "git tag v#{version}"
 end
 
-desc 'push to github'
-task :push do
-  system "git push origin master --tags"
-end
-
-#task :default => [:tag, :release, :push]
+task :build => GEMS.collect { |n| "#{gem_kind(n)}:build" }
+task :release => [:build]
+task :default => [:'spec:unit', :build]
