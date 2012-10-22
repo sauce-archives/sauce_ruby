@@ -33,7 +33,8 @@ module Sauce
 
     ENVIRONMENT_VARIABLES = %w{SAUCE_HOST SAUCE_PORT SAUCE_BROWSER_URL SAUCE_USERNAME
         SAUCE_ACCESS_KEY SAUCE_OS SAUCE_BROWSER SAUCE_BROWSER_VERSION SAUCE_JOB_NAME
-        SAUCE_FIREFOX_PROFILE_URL SAUCE_USER_EXTENSIONS_URL}
+        SAUCE_FIREFOX_PROFILE_URL SAUCE_USER_EXTENSIONS_URL
+        SAUCE_ONDEMAND_BROWSERS}
 
     PLATFORMS = {
       "Windows 2003" => "WINDOWS",
@@ -249,6 +250,11 @@ module Sauce
 
       if env.include? 'URL'
         opts['SAUCE_BROWSER_URL'] = "http://#{env['URL']}/"
+      end
+
+      if env.include? 'SAUCE_ONDEMAND_BROWSERS'
+        browsers = JSON.parse(env['SAUCE_ONDEMAND_BROWSERS'])
+        opts[:browsers] = browsers.map { |x| [x['os'], x['browser'], x['browser-version']] }
       end
 
       if env.include? 'SAUCE_BROWSERS'

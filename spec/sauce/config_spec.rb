@@ -73,6 +73,19 @@ describe Sauce::Config do
       end
     end
 
+    it 'should create a browser string when running under the Jenkins plugin' do
+      browsers_string = "[{\"os\":\"LINUX\",\"browser\":\"opera\",\"url\":\"sauce-ondemand:?os=Linux&browser=opera&browser-version=12\",\"browser-version\":\"12\"}]"
+      browsers = JSON.parse(browsers_string)
+      ENV['SAUCE_ONDEMAND_BROWSERS'] = browsers_string
+
+      config = Sauce::Config.new
+      result = JSON.parse(config.to_browser_string)
+
+      result['os'].should == browsers.first['os']
+      result['browser'].should == browsers.first['browser']
+      result['browser-version'].should == browsers.first['browser-version']
+    end
+
     it 'should create a browser string from the environment' do
       ENV['SAUCE_USERNAME'] = "test_user"
       ENV['SAUCE_ACCESS_KEY'] = "test_access"
