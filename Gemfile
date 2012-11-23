@@ -12,5 +12,5 @@ group :test do
 end
 
 group :development do
-  gem 'ruby-debug'
+  gem 'debugger'
 end
