@@ -6,7 +6,7 @@ gemspec
 
 group :test do
   gem 'cucumber'
-  gem 'rspec', '~> 2.9'
+  gem 'rspec', '~> 2.12'
   gem 'capybara'
   gem 'jasmine'
 end
