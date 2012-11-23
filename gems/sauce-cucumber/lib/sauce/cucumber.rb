@@ -96,8 +96,7 @@ module Sauce
         block.call
 
         # Quit the driver to allow for the generation of a new session_id
-        driver.browser.quit
-        driver.instance_variable_set(:@browser, nil)
+        driver.finish!
 
         unless job.nil?
           job.passed = !scenario.failed?

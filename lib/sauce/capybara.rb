@@ -75,11 +75,16 @@ module Sauce
 
           @browser = Sauce::Selenium2.new
           at_exit do
-            @browser.quit if @browser
-            $sauce_tunnel.disconnect if $sauce_tunnel
+            finish!
           end
         end
         @browser
+      end
+
+      def finish!
+        @browser.quit if @browser
+        @browser = nil
+        $sauce_tunnel.disconnect if $sauce_tunnel
       end
     end
   end

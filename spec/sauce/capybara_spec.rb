@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 require 'sauce/capybara'
 
 describe Sauce::Capybara do
@@ -37,6 +37,28 @@ describe Sauce::Capybara do
   end
 
   describe Sauce::Capybara::Driver do
+    let(:app) { double('Mock App for Driver') }
+    let(:driver) { Sauce::Capybara::Driver.new(app) }
+
+    describe '#finish' do
+      let(:browser) { double('Sauce::Selenium2 mock') }
+
+      before :each do
+        driver.instance_variable_set(:@browser, browser)
+      end
+
+      it 'should quit the @browser' do
+        browser.should_receive(:quit)
+        driver.finish!
+      end
+
+      it 'should nil out @browser' do
+        browser.stub(:quit)
+        driver.finish!
+        expect(driver.instance_variable_get(:@browser)).to be_nil
+      end
+    end
+
     describe '#browser' do
       before :each do
         # Stub out the selenium driver startup
@@ -49,70 +71,62 @@ describe Sauce::Capybara do
             c[:start_tunnel] = false
           end
 
-          driver = Sauce::Capybara::Driver.new(nil)
           driver.browser
         end
       end
     end
-    context 'with a mock app' do
-      let(:app) { double('Mock App for Driver') }
 
-      subject do
-        Sauce::Capybara::Driver.new(app)
-      end
+    describe '#find' do
+      let(:selector) { '#lol' }
 
-      describe '#find' do
-        let(:selector) { '#lol' }
+      context 'with an environment override' do
+        before :each do
+          ENV['SAUCE_DISABLE_RETRY'] = '1'
+        end
 
-        context 'with an environment override' do
-          before :each do
-            ENV['SAUCE_DISABLE_RETRY'] = '1'
-          end
-
-          it 'should not retry and raise the error' do
-          subject.should_receive(:base_find).with(selector).and_raise(Selenium::WebDriver::Error::UnknownError)
+        it 'should not retry and raise the error' do
+          driver.should_receive(:base_find).with(selector).and_raise(Selenium::WebDriver::Error::UnknownError)
 
           expect {
-            subject.find(selector)
-          }.to raise_error(Selenium::WebDriver::Error::UnknownError)
-          end
-
-          after :each do
-            ENV['SAUCE_DISABLE_RETRY'] = nil
-          end
-        end
-
-        it 'should route through handle_retry' do
-          subject.should_receive(:base_find).with(selector) # BLECH
-          subject.find(selector)
-        end
-
-        it 'should retry 3 times and then raise' do
-          subject.should_receive(:base_find).with(selector).exactly(4).times.and_raise(Selenium::WebDriver::Error::UnknownError)
-
-          expect {
-            subject.find(selector)
+            driver.find(selector)
           }.to raise_error(Selenium::WebDriver::Error::UnknownError)
         end
-      end
 
-      describe '#visit' do
-        it 'should route through #handle_retry' do
-          path = '/lol'
-          subject.should_receive(:base_visit).with(path)
-          subject.visit(path)
+        after :each do
+          ENV['SAUCE_DISABLE_RETRY'] = nil
         end
       end
 
-      describe '#current_url' do
-        it 'should route through #handle_retry' do
-          url = 'http://lol'
-          subject.should_receive(:base_current_url).and_return(url)
-          subject.current_url.should == url
-        end
+      it 'should route through handle_retry' do
+        driver.should_receive(:base_find).with(selector) # BLECH
+        driver.find(selector)
       end
 
+      it 'should retry 3 times and then raise' do
+        driver.should_receive(:base_find).with(selector).exactly(4).times.and_raise(Selenium::WebDriver::Error::UnknownError)
+
+        expect {
+          driver.find(selector)
+        }.to raise_error(Selenium::WebDriver::Error::UnknownError)
+      end
     end
+
+    describe '#visit' do
+      it 'should route through #handle_retry' do
+        path = '/lol'
+        driver.should_receive(:base_visit).with(path)
+        driver.visit(path)
+      end
+    end
+
+    describe '#current_url' do
+      it 'should route through #handle_retry' do
+        url = 'http://lol'
+        driver.should_receive(:base_current_url).and_return(url)
+        driver.current_url.should == url
+      end
+    end
+
   end
 
   describe '#install_hooks' do
