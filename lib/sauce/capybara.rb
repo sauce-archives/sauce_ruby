@@ -25,7 +25,7 @@ module Sauce
                   ::Selenium::WebDriver::Error::UnknownError]
       MAX_RETRIES = 3
 
-      def handle_retry(method, *args)
+      def handle_retry(method, *args, &block)
         retries = 0
 
         # Disable retries only when we really really want to, this will remain
@@ -35,7 +35,7 @@ module Sauce
         end
 
         begin
-          send("base_#{method}".to_sym, *args)
+          send("base_#{method}".to_sym, *args, &block)
         rescue *RETRY_ON => e
           if retries < MAX_RETRIES
             puts "Received an exception (#{e}), retrying"
@@ -62,8 +62,8 @@ module Sauce
       [:find, :visit, :current_url, :reset!, :within_frame,
        :within_window, :find_window, :body, :source,
        :execute_script, :evaluate_script].each do |method|
-        define_method(method) do |*args|
-          handle_retry(method, *args)
+        define_method(method) do |*args, &block|
+          handle_retry(method, *args, &block)
         end
       end
 

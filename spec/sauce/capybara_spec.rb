@@ -127,6 +127,15 @@ describe Sauce::Capybara do
       end
     end
 
+    describe '#within_frame' do
+      it 'should route through #handle_retry and yield block' do
+        driver.should_receive(:base_within_frame).and_yield
+        driver.within_frame do
+          "lol"
+        end
+      end
+    end
+
   end
 
   describe '#install_hooks' do
