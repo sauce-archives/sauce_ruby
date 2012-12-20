@@ -155,6 +155,16 @@ describe Sauce::Config do
   end
 
   describe '#to_desired_capabilities' do
+    context 'with custom sauce options' do
+      context 'max-duration' do
+        subject do
+          Sauce::Config.new(:'max-duration' => 600).to_desired_capabilities
+        end
+
+        it { should have_key :'max-duration' }
+      end
+    end
+
     context 'platforms' do
       it 'should refer to Windows 2003 as WINDOWS' do
         config = Sauce::Config.new(:os => "Windows 2003")
