@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-
 require 'rubygems'
 require 'cmdparse'
 require 'yaml'
@@ -26,7 +25,12 @@ end
 connect = ConnectCommand.new('connect', false)
 connect.short_desc = 'Connect a Sauce Connect tunnel'
 connect.set_execution_block do |args|
-  require 'sauce/connect'
+  begin
+    require 'sauce/connect'
+  rescue LoadError
+    puts "Please install the sauce-connect gem (`gem install sauce-connect`) in order to use Sauce Connect"
+    exit 1
+  end
   require 'sauce/config'
   config = Sauce::Config.new
   command = "#{Sauce::Connect.connect_command} #{config.username} #{config.access_key} #{ARGV[1 .. -1]}"

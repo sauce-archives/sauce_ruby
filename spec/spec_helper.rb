@@ -1,6 +1,8 @@
-$:.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
-$:.unshift File.expand_path(File.dirname(__FILE__) + '/../gems/sauce-jasmine/lib')
-$:.unshift File.expand_path(File.dirname(__FILE__) + '/../gems/sauce-cucumber/lib')
+$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
+
+['sauce-jasmine', 'sauce-cucumber', 'sauce-connect'].each do |gem|
+  $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../gems/#{gem}/lib"))
+end
 
 require 'sauce'
 

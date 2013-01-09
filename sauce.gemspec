@@ -10,11 +10,11 @@ Gem::Specification.new do |s|
   s.summary = "A Ruby helper for running tests in Sauce OnDemand"
   s.description = "A Ruby helper for running tests in Sauce OnDemand, Sauce Labs' browsers in the cloud service"
   # Include pretty much everything in Git except the examples/ directory
-  s.files = `git ls-files`.split("\n").collect { |f| f unless f.include? 'examples' }.compact
+  s.files = Dir['lib/**/*.rb']
   s.executables = ['sauce']
   s.default_executable = 'sauce'
   s.require_paths = ["lib"]
-  s.test_files = Dir['test/*.rb']
+  s.test_files = Dir['spec/**/*.rb']
 
   s.add_dependency('net-http-persistent')
   s.add_dependency('capybara', '~> 1.0')

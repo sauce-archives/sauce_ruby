@@ -1,4 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
+require 'sauce/connect'
+
 
 
 describe 'Sauce::Connect integration testing' do

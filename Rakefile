@@ -76,7 +76,7 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-GEMS = ['sauce-jasmine', 'sauce-cucumber']
+GEMS = ['sauce-jasmine', 'sauce-cucumber', 'sauce-connect']
 
 def gem_kind(name)
   name.split('-')[1]

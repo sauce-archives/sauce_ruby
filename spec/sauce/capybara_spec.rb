@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'sauce/capybara'
+require 'sauce/connect'
 
 describe Sauce::Capybara do
   describe '#connect_tunnel' do
