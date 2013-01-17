@@ -54,8 +54,7 @@ module Sauce
       alias :base_within_frame :within_frame
       alias :base_within_window :within_window
       alias :base_find_window :find_window
-      alias :base_body :body
-      alias :base_source :source
+      alias :base_html :html
       alias :base_execute_script :execute_script
       alias :base_evaluate_script :evaluate_script
 
