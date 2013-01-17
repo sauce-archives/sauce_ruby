@@ -11,11 +11,12 @@ When /^I visit "([^"]*)"$/ do |aUrl|
 end
 
 Then /^I should (not )?be delighted$/ do |inverse|
-  expected = 'http://saucelabs.com/'
+  expected = %r{http(s)?://saucelabs.com/}
   unless inverse
-    current_url.should == expected
+    expected.match(current_url).should be_true
   else
-    current_url.should_not == expected
+    expected.match(current_url).should_not be_true
   end
 end
 
+                                 

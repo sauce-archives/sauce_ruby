@@ -2,6 +2,6 @@ source :gemcutter
 
 gem 'cucumber'
 gem 'rspec'
-gem 'capybara'
+gem 'capybara', "~> 2.0.0"
 gem 'sauce', :path => '../../'
 gem 'sauce-cucumber', :path => '../../gems/sauce-cucumber'
