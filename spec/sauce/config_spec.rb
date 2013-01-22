@@ -103,6 +103,25 @@ describe Sauce::Config do
                               'browser' => 'firefox'}
     end
 
+    it 'should create a browser string from the environment set by the jenkins plugin' do
+      ENV['SAUCE_USER_NAME'] = 'test_user'
+      ENV['SAUCE_API_KEY'] = 'test_access'
+      ENV['SAUCE_OS'] = 'Linux'
+      ENV['SAUCE_BROWSER'] = 'firefox'
+      ENV['SAUCE_BROWSER_VERSION'] = '3.'
+      ENV['JOB_NAME'] = 'Named Ruby Job'
+
+      config = Sauce::Config.new
+      browser_data = JSON.parse(config.to_browser_string)
+      browser_data.should == {'name' => 'Named Ruby Job',
+                              'access-key' => 'test_access',
+                              'os' => 'Linux',
+                              'username' => 'test_user',
+                              'browser-version' => '3.',
+                              'browser' => 'firefox'}
+
+    end
+
     it 'should create a browser string from parameters' do
       config = Sauce::Config.new(:username => 'test_user',
                                  :access_key => 'test_access',

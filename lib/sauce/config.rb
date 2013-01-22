@@ -34,7 +34,7 @@ module Sauce
     ENVIRONMENT_VARIABLES = %w{SAUCE_HOST SAUCE_PORT SAUCE_BROWSER_URL SAUCE_USERNAME
         SAUCE_ACCESS_KEY SAUCE_OS SAUCE_BROWSER SAUCE_BROWSER_VERSION SAUCE_JOB_NAME
         SAUCE_FIREFOX_PROFILE_URL SAUCE_USER_EXTENSIONS_URL
-        SAUCE_ONDEMAND_BROWSERS}
+        SAUCE_ONDEMAND_BROWSERS SAUCE_USERNAME SAUCE_API_KEY}
 
     PLATFORMS = {
       "Windows 2003" => "WINDOWS",
@@ -237,13 +237,13 @@ module Sauce
       opts[:port] = env['SAUCE_PORT']
       opts[:browser_url] = env['SAUCE_BROWSER_URL']
 
-      opts[:username] = env['SAUCE_USERNAME']
-      opts[:access_key] = env['SAUCE_ACCESS_KEY']
+      opts[:username] = env['SAUCE_USERNAME'] || env['SAUCE_USER_NAME']
+      opts[:access_key] = env['SAUCE_ACCESS_KEY'] || env['SAUCE_API_KEY']
 
       opts[:os] = env['SAUCE_OS']
       opts[:browser] = env['SAUCE_BROWSER']
       opts[:browser_version] = env['SAUCE_BROWSER_VERSION']
-      opts[:job_name] = env['SAUCE_JOB_NAME']
+      opts[:job_name] = env['SAUCE_JOB_NAME'] || env['JOB_NAME']
 
       opts[:firefox_profile_url] = env['SAUCE_FIREFOX_PROFILE_URL']
       opts[:user_extensions_url] = env['SAUCE_USER_EXTENSIONS_URL']
