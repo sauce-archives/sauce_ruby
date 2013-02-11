@@ -35,8 +35,26 @@ And then read more how to get started with [Cucumber and Capybara on this
 wiki
 page](https://github.com/saucelabs/sauce\_ruby/wiki/Cucumber-and-Capybara).
 
+## Running on against a list of browsers
+To run against a list of browsers, you need to configure them:
 
+```Sauce.config do |c|
+     c.browsers = [
+       ["windows","firefox","18"],
+       ["windows","opera","11"]
+     ]
+   end
+```
 
+Then, depending on your test framework:
+
+### RSpec 2
+Place your specs in the ```spec/selenium``` folder
+
+### RSpec 1
+Give your tests a :type of :selenium, eg ```describe Aioli, :type => :selenium do```
+
+Tests will be run against each combination, sequentially and automagically.
 
 ## Contributing to the Gem
 
