@@ -1,6 +1,6 @@
 # Sauce for Ruby
 
-[![Build Status](https://buildhive.cloudbees.com/job/saucelabs/job/sauce_ruby/badge/icon)](https://buildhive.cloudbees.com/job/saucelabs/job/sauce_ruby/)
+[![Build Status](https://travis-ci.org/sauce-labs/sauce_ruby.png)](https://travis-ci.org/sauce-labs/sauce_ruby)
 
 Sauce is a Selenium-based browser testing service offered by [Sauce
 Labs](https://www.saucelabs.com).
