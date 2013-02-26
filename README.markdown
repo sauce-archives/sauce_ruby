@@ -38,12 +38,13 @@ page](https://github.com/saucelabs/sauce\_ruby/wiki/Cucumber-and-Capybara).
 ## Running on against a list of browsers
 To run against a list of browsers, you need to configure them:
 
-```Sauce.config do |c|
-     c.browsers = [
-       ["windows","firefox","18"],
-       ["windows","opera","11"]
-     ]
-   end
+```ruby
+Sauce.config do |c|
+  c.browsers = [
+    ["windows","firefox","18"],
+    ["windows","opera","11"]
+  ]
+end
 ```
 
 Then, depending on your test framework:
@@ -80,6 +81,6 @@ Running the full test suite will require [RVM](http://rvm.beginrescueend.com)
 * Invoke `bundle install` to install the gems necessary to work with the Sauce
   gem
 * Running `rake spec:unit` will run the [RSpec](https://github.com/rspec/rspec) unit tests
-* If you'd like to run the *entire* test suit, `rake test` will run all the
+* If you'd like to run the *entire* test suit, ```rake test``` will run all the
   integration tests, but requires the Sauce credentials to be set up properly
   as these tests will run actual jobs on Sauce.
