@@ -104,12 +104,12 @@ describe Sauce::Config do
     end
 
     it 'should create a browser string from the environment set by the jenkins plugin' do
-      ENV['SAUCE_USER_NAME'] = 'test_user'
-      ENV['SAUCE_API_KEY'] = 'test_access'
+      ENV['SAUCE_USERNAME'] = 'test_user'
+      ENV['SAUCE_ACCESS_KEY'] = 'test_access'
       ENV['SAUCE_OS'] = 'Linux'
       ENV['SAUCE_BROWSER'] = 'firefox'
       ENV['SAUCE_BROWSER_VERSION'] = '3.'
-      ENV['JOB_NAME'] = 'Named Ruby Job'
+      ENV['SAUCE_JOB_NAME'] = 'Named Ruby Job'
 
       config = Sauce::Config.new
       browser_data = JSON.parse(config.to_browser_string)
@@ -241,6 +241,12 @@ describe Sauce::Config do
 end
 
 describe Sauce do
+
+  # Ensure any doubles are removed to stop other tests choking
+  after :all do
+    Sauce.clear_config
+  end
+
   describe '#get_config' do
     context 'when #config has never been called' do
       # See: <https://github.com/sauce-labs/sauce_ruby/issues/59>
@@ -248,10 +254,6 @@ describe Sauce do
         # This is kind of hack-ish, but the best way I can think to properly
         # prevent this class variable from existing
         Sauce.instance_variable_set(:@cfg, nil)
-      end
-
-      after :all do
-
       end
 
       it 'should return a newly created Sauce::Config' do
