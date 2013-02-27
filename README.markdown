@@ -2,12 +2,12 @@
 
 [![Build Status](https://travis-ci.org/sauce-labs/sauce_ruby.png)](https://travis-ci.org/sauce-labs/sauce_ruby)
 
-Sauce is a Selenium-based browser testing service offered by [Sauce
-Labs](https://www.saucelabs.com).
+This is the Ruby client adapter for testing with [Sauce
+Labs](https://www.saucelabs.com), a Selenium-based browser testing service.
 
 
 There is more information on **[the
-wiki](https://github.com/saucelabs/sauce_ruby/wiki)**, so be sure to look there
+wiki](https://github.com/sauce-labs/sauce_ruby/wiki)**, so be sure to look there
 for information too!
 
 
