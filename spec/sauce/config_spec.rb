@@ -231,6 +231,10 @@ describe Sauce do
         Sauce.instance_variable_set(:@cfg, nil)
       end
 
+      after :all do
+
+      end
+
       it 'should return a newly created Sauce::Config' do
         dummy_config = double('Sauce::Config')
         Sauce::Config.should_receive(:new).and_return(dummy_config)
