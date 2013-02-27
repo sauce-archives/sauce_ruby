@@ -33,7 +33,7 @@ To get started with Sauce and Cucumber, install the appropriate gem:
 
 And then read more how to get started with [Cucumber and Capybara on this
 wiki
-page](https://github.com/saucelabs/sauce\_ruby/wiki/Cucumber-and-Capybara).
+page](https://github.com/sauce-labs/sauce_ruby/wiki/Cucumber-and-Capybara).
 
 ## Running on against a list of browsers
 To run against a list of browsers, you need to configure them:
