@@ -241,6 +241,12 @@ describe Sauce::Config do
 end
 
 describe Sauce do
+
+  # Ensure any doubles are removed to stop other tests choking
+  after :all do
+    Sauce.clear_config
+  end
+
   describe '#get_config' do
     context 'when #config has never been called' do
       # See: <https://github.com/sauce-labs/sauce_ruby/issues/59>
@@ -248,10 +254,6 @@ describe Sauce do
         # This is kind of hack-ish, but the best way I can think to properly
         # prevent this class variable from existing
         Sauce.instance_variable_set(:@cfg, nil)
-      end
-
-      after :all do
-
       end
 
       it 'should return a newly created Sauce::Config' do
