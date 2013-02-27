@@ -1,6 +1,6 @@
 # Sauce for Ruby
 
-[![Build Status](https://buildhive.cloudbees.com/job/saucelabs/job/sauce_ruby/badge/icon)](https://buildhive.cloudbees.com/job/saucelabs/job/sauce_ruby/)
+[![Build Status](https://travis-ci.org/sauce-labs/sauce_ruby.png)](https://travis-ci.org/sauce-labs/sauce_ruby)
 
 Sauce is a Selenium-based browser testing service offered by [Sauce
 Labs](https://www.saucelabs.com).
@@ -35,8 +35,27 @@ And then read more how to get started with [Cucumber and Capybara on this
 wiki
 page](https://github.com/saucelabs/sauce\_ruby/wiki/Cucumber-and-Capybara).
 
+## Running on against a list of browsers
+To run against a list of browsers, you need to configure them:
 
+```ruby
+Sauce.config do |c|
+  c.browsers = [
+    ["windows","firefox","18"],
+    ["windows","opera","11"]
+  ]
+end
+```
 
+Then, depending on your test framework:
+
+### RSpec 2
+Place your specs in the ```spec/selenium``` folder
+
+### RSpec 1
+Give your tests a :type of :selenium, eg ```describe Aioli, :type => :selenium do```
+
+Tests will be run against each combination, sequentially and automagically.
 
 ## Contributing to the Gem
 
@@ -62,6 +81,6 @@ Running the full test suite will require [RVM](http://rvm.beginrescueend.com)
 * Invoke `bundle install` to install the gems necessary to work with the Sauce
   gem
 * Running `rake spec:unit` will run the [RSpec](https://github.com/rspec/rspec) unit tests
-* If you'd like to run the *entire* test suit, `rake test` will run all the
+* If you'd like to run the *entire* test suit, ```rake test``` will run all the
   integration tests, but requires the Sauce credentials to be set up properly
   as these tests will run actual jobs on Sauce.
