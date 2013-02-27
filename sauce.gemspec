@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name = 'sauce'
   s.version = "#{Sauce::MAJOR_VERSION}.2"
   s.authors = ["Eric Allen", "Sean Grove", "Steven Hazel", "R. Tyler Croy", "Santiago Suarez Ordoñez"]
-  s.homepage = 'http://github.com/saucelabs/sauce_ruby'
+  s.homepage = 'http://github.com/sauce-labs/sauce_ruby'
   s.email = 'help@saucelabs.com'
   s.summary = "A Ruby helper for running tests in Sauce OnDemand"
   s.description = "A Ruby helper for running tests in Sauce OnDemand, Sauce Labs' browsers in the cloud service"

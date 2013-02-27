@@ -82,7 +82,7 @@ module Sauce
           # If we're running under Jenkins, we should dump the
           # `SauceOnDemandSessionID` into the Console Output for the Sauce OnDemand
           # Jenkins plugin.
-          # See: <https://github.com/saucelabs/sauce_ruby/issues/48>
+          # See: <https://github.com/sauce-labs/sauce_ruby/issues/48>
           output = []
           output << "\nSauceOnDemandSessionID=#{session_id}"
           # The duplication in the scenario_name comes from the fact that the

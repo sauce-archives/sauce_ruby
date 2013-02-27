@@ -243,7 +243,7 @@ end
 describe Sauce do
   describe '#get_config' do
     context 'when #config has never been called' do
-      # See: <https://github.com/saucelabs/sauce_ruby/issues/59>
+      # See: <https://github.com/sauce-labs/sauce_ruby/issues/59>
       before :each do
         # This is kind of hack-ish, but the best way I can think to properly
         # prevent this class variable from existing
