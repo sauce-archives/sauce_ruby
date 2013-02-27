@@ -38,6 +38,11 @@ describe Sauce::Capybara do
   end
 
   describe Sauce::Capybara::Driver do
+
+    before :all do
+      rspec_reset
+    end
+
     let(:app) { double('Mock App for Driver') }
     let(:driver) { Sauce::Capybara::Driver.new(app) }
 
@@ -61,6 +66,8 @@ describe Sauce::Capybara do
     end
 
     describe '#browser' do
+      let(:driver) { Sauce::Capybara::Driver.new(app) }
+
       before :each do
         # Stub out the selenium driver startup
         Sauce::Selenium2.stub(:new).and_return(nil)
