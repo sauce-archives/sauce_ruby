@@ -1,3 +1,4 @@
+
 # -*- encoding: utf-8 -*-
 require File.expand_path('../lib/sauce/version', __FILE__)
 
@@ -7,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors = ["Dylan Lacey", "Steven Hazel", "R. Tyler Croy", "Santiago Suarez Ordoñez", "Eric Allen", "Sean Grove"]
   s.homepage = 'http://github.com/sauce-labs/sauce_ruby'
   s.email = 'help@saucelabs.com'
-  s.summary = "A Ruby helper for running tests in Sauce OnDemand"
-  s.description = "A Ruby helper for running tests in Sauce OnDemand, Sauce Labs' browsers in the cloud service"
+  s.summary = "A Ruby helper for running tests in Sauce Labs"
+  s.description = "A Ruby helper for running tests in Sauce Labs' browser testing cloud service"
   # Include pretty much everything in Git except the examples/ directory
   s.files = Dir['lib/**/*.rb']
   s.executables = ['sauce']
