@@ -38,6 +38,7 @@ describe Sauce::Capybara do
   end
 
   describe Sauce::Capybara::Driver do
+
     let(:app) { double('Mock App for Driver') }
     let(:driver) { Sauce::Capybara::Driver.new(app) }
 
@@ -61,6 +62,8 @@ describe Sauce::Capybara do
     end
 
     describe '#browser' do
+      let(:driver) { Sauce::Capybara::Driver.new(app) }
+
       before :each do
         # Stub out the selenium driver startup
         Sauce::Selenium2.stub(:new).and_return(nil)
@@ -68,9 +71,7 @@ describe Sauce::Capybara do
       context 'when tunneling is disabled' do
         it 'should not call #connect_tunnel' do
           Sauce::Capybara.should_receive(:connect_tunnel).never
-          Sauce.config do |c|
-            c[:start_tunnel] = false
-          end
+          Sauce.stub(:get_config) {{:start_tunnel => false}}
 
           driver.browser
         end
