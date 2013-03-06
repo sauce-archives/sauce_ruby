@@ -42,6 +42,18 @@ describe Sauce::Capybara do
     let(:app) { double('Mock App for Driver') }
     let(:driver) { Sauce::Capybara::Driver.new(app) }
 
+    describe "#body", :capy_version => 1 do
+      it "should exist" do
+        driver.should respond_to :body
+      end
+    end
+
+    describe "#source", :capy_version => 1 do
+      it "should exist" do
+        driver.should respond_to :source
+      end
+    end
+
     describe '#finish' do
       let(:browser) { double('Sauce::Selenium2 mock') }
 

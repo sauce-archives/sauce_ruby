@@ -4,6 +4,8 @@ gem 'rake'
 
 gemspec
 
+gem 'capybara', '~> 1.0.0'
+
 group :test do
   gem 'cucumber'
   gem 'rspec', '~> 2.12'

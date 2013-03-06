@@ -60,13 +60,13 @@ module Sauce
       alias :base_within_frame :within_frame
       alias :base_within_window :within_window
       alias :base_find_window :find_window
-      alias :base_body :body
-      alias :base_source :source
+      #alias :base_body :body
+      #alias :base_source :source
       alias :base_execute_script :execute_script
       alias :base_evaluate_script :evaluate_script
 
       [:find, :visit, :current_url, :reset!, :within_frame,
-       :within_window, :find_window, :body, :source,
+       :within_window, :find_window, :source,
        :execute_script, :evaluate_script].each do |method|
         define_method(method) do |*args, &block|
           handle_retry(method, *args, &block)

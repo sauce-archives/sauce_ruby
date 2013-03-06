@@ -1,0 +1,3 @@
+gemfile:
+  - Gemfile
+  - Gemfile.capybara-1.x
