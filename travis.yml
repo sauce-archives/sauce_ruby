@@ -1,3 +1,5 @@
+rvm:
+  - 1.9.3
 gemfile:
   - Gemfile
   - Gemfile.capybara-1.x
