@@ -1,5 +1,5 @@
 rvm:
   - 1.9.3
 gemfile:
-  - Gemfile
+  - gemfiles/standard.gemfile
   - gemfiles/capybara-1.x.gemfile
