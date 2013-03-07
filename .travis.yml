@@ -3,5 +3,5 @@ script: "bundle exec rake"
 rvm:
   - 1.9.3
 gemfile:
-  - gemfiles/standard.gemfile
+  - Gemfile
   - gemfiles/capybara-1.x.gemfile
