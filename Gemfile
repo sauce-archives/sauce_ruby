@@ -1,8 +1,9 @@
 source :gemcutter
 
-gem 'rake'
-
 gemspec
+
+gem 'rake'
+gem 'capybara', "~> 1.0.0"
 
 group :test do
   gem 'cucumber'
