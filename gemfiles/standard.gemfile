@@ -1,6 +1,6 @@
 source :gemcutter
 
-gemspec
+gemspec, :path => "../"
 
 gem 'rake'
 gem 'capybara', '~> 2.0.0'
