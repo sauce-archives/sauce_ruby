@@ -42,15 +42,31 @@ describe Sauce::Capybara do
     let(:app) { double('Mock App for Driver') }
     let(:driver) { Sauce::Capybara::Driver.new(app) }
 
-    describe "#body", :capy_version => 1 do
-      it "should exist" do
-        driver.should respond_to :body
+    describe "#body" do
+      context "With Capybara 1.x", :capybara_version => 1 do
+        it "should not exist in version 2" do
+          driver.should respond_to :body
+        end
+      end
+
+      context "With Capybara 2.x", :capybara_version => 2 do
+        it "should not exist" do
+          driver.should_not respond_to :body
+        end
       end
     end
 
-    describe "#source", :capy_version => 1 do
-      it "should exist" do
-        driver.should respond_to :source
+    describe "#source" do
+      context "With Capybara 1", :capybara_version => 1  do
+        it "should exist" do
+          driver.should respond_to :source
+        end
+      end
+
+      context "with Capybara 2.x", :capybara_version => 2 do
+        it "should not exist" do
+          driver.should_not respond_to :source
+        end
       end
     end
 
