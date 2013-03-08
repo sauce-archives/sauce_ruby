@@ -3,7 +3,7 @@ source :gemcutter
 gemspec
 
 gem 'rake'
-gem 'capybara', "~> 1.0.0"
+gem 'capybara', "~> 2.0.0"
 
 group :test do
   gem 'cucumber'
