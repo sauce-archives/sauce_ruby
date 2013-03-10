@@ -26,7 +26,7 @@ module Jasmine
     end
 
     def start
-      @client = Sauce::Jasmine::Driver.new(browser, "#{jasmine_host}:#{jasmine_port}/")
+      @client = ::Sauce::Jasmine::Driver.new(browser, "#{jasmine_host}:#{jasmine_port}/")
       @client.connect
     end
   end
