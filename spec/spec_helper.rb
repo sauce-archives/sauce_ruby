@@ -5,4 +5,12 @@ $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
 end
 
 require 'sauce'
+require 'capybara'
 
+RSpec.configure do |c|
+  if Gem::Version.new(Capybara::VERSION) < Gem::Version.new(2)
+    c.filter_run_excluding :capybara_version => 2
+  else
+    c.filter_run_excluding :capybara_version => 1
+  end
+end

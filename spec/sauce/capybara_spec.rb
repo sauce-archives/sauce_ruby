@@ -42,6 +42,48 @@ describe Sauce::Capybara do
     let(:app) { double('Mock App for Driver') }
     let(:driver) { Sauce::Capybara::Driver.new(app) }
 
+    describe "#body" do
+      context "With Capybara 1.x", :capybara_version => 1 do
+        it "should not exist in version 2" do
+          driver.should respond_to :base_body
+        end
+      end
+
+      context "With Capybara 2.x", :capybara_version => 2 do
+        it "should not exist" do
+          driver.should_not respond_to :base_body
+        end
+      end
+    end
+
+    describe "#source" do
+      context "With Capybara 1", :capybara_version => 1  do
+        it "should exist" do
+          driver.should respond_to :base_source
+        end
+      end
+
+      context "with Capybara 2.x", :capybara_version => 2 do
+        it "should not exist" do
+          driver.should_not respond_to :base_source
+        end
+      end
+    end
+
+    describe "#html" do
+      context "With Capybara 1.x", :capybara_version => 1 do
+        it "should not exist" do
+          driver.should_not respond_to :base_html
+        end
+      end
+
+      context "With Capybara 2.x", :capybara_version => 2 do
+        it "should exist" do
+          driver.should respond_to :base_html
+        end
+      end
+    end
+
     describe '#finish' do
       let(:browser) { double('Sauce::Selenium2 mock') }
 
