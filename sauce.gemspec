@@ -18,7 +18,6 @@ Gem::Specification.new do |s|
   s.test_files = Dir['spec/**/*.rb']
 
   s.add_dependency('net-http-persistent')
-  s.add_dependency('capybara', '~> 1.1.0')
   s.add_dependency('rest-client', [">= 0"])
   s.add_dependency('net-ssh', [">= 0"])
   s.add_dependency('net-ssh-gateway', [">= 0"])

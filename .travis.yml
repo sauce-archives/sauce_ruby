@@ -1,0 +1,7 @@
+script: "bundle exec rake"
+
+rvm:
+  - 1.9.3
+gemfile:
+  - Gemfile
+  - gemfiles/capybara-1.x.gemfile
