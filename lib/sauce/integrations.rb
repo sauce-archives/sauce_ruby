@@ -55,10 +55,12 @@ begin
   end
 rescue LoadError
   # User doesn't have RSpec 1.x installed
+rescue => e
+  STDERR.puts "Exception occured: #{e.to_s}"
 end
 
 begin
-  require 'rspec'
+  require 'rspec/core'
   module Sauce
     module RSpec
       module SeleniumExampleGroup
@@ -116,6 +118,8 @@ begin
   end
 rescue LoadError, TypeError
   # User doesn't have RSpec 2.x installed
+rescue => e
+  STDERR.puts "Exception caught: #{e.to_s}"
 end
 
 module Sauce
@@ -213,4 +217,6 @@ begin
   end
 rescue LoadError
   # User doesn't have Test::Unit installed
+rescue => e
+  STDERR.puts "Exception caught: #{e.to_s}"
 end
