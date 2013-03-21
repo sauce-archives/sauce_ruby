@@ -1,1 +1,1 @@
-rvm use 1.9.2@saucelabs-rails3-demo --create
+rvm use 1.9.3@saucelabs-rails3-demo --create
