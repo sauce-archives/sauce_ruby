@@ -4,14 +4,14 @@ Given /^I am browsing the web$/ do
 end
 
 When /^I visit "([^"]*)"$/ do |aUrl|
-  unless aUrl.start_with? 'http'
-    aUrl = "http://#{aUrl}"
+  unless aUrl.start_with? 'https'
+    aUrl = "https://#{aUrl}"
   end
   visit aUrl
 end
 
 Then /^I should (not )?be delighted$/ do |inverse|
-  expected = 'http://saucelabs.com/'
+  expected = 'https://saucelabs.com/'
   unless inverse
     current_url.should == expected
   else

@@ -82,7 +82,7 @@ module Sauce
     end
 
     def self.find_sauce_connect
-      File.expand_path(File.dirname(__FILE__) + '/../../../../support/Sauce-Connect.jar')
+      File.expand_path(File.dirname(__FILE__) + '/../../support/Sauce-Connect.jar')
     end
 
     def self.connect_command

@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.summary       = ""
   gem.homepage      = ""
 
-  gem.files         = Dir['lib/**/*.rb'] + ['../../support/Sauce-Connect.jar']
+  gem.files         = Dir['lib/**/*.rb'] + ['support/Sauce-Connect.jar']
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
