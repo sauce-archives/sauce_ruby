@@ -46,7 +46,7 @@ class ConfigureCommand < CmdParse::Command
   end
 end
 configure = ConfigureCommand.new('configure', false)
-configure.short_desc = "Configure Sauce OnDemand credentials"
+configure.short_desc = "Configure Sauce Labs credentials"
 configure.set_execution_block do |args|
   if args.length < 2
     puts configure.usage
@@ -65,7 +65,7 @@ cmd.add_command(configure)
 
 #create
 create = CmdParse::Command.new('create', false)
-create.short_desc = "Create a new Sauce OnDemand account"
+create.short_desc = "Create a new Sauce Labs account"
 create.set_execution_block do |args|
   puts "Let's create a new account!"
   username = ask("Username: ")

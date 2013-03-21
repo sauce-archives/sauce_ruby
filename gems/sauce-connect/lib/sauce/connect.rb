@@ -27,8 +27,8 @@ module Sauce
     end
 
     def connect
-      puts "[Connecting to Sauce OnDemand...]"
-      @pipe = IO.popen("exec #{Sauce::Connect.connect_command} #{@config.username} #{@config.access_key} 2>&1")
+      puts "[Connecting to Sauce Labs...]"
+      @pipe = IO.popen("exec #{Sauce::Connect.connect_command} #{@config.username} #{@config.access_key} -f sauce_connect.ready 2>&1")
       @process_status = $?
       at_exit do
         Process.kill("INT", @pipe.pid)
