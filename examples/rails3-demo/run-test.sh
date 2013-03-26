@@ -27,7 +27,7 @@ cat > test/selenium/simple_test.rb <<EOF
 require "test_helper"
 
 class DemoTest < Sauce::RailsTestCase
-  test "my app", do
+  test "my app" do
     s.get 'http://localhost:3001/'
     assert s.page_source.include? 'Welcome aboard'
   end
