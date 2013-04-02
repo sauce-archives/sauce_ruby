@@ -77,10 +77,13 @@ begin
                                                 :browser => browser,
                                                 :browser_version => version,
                                                 :job_name => description})
+              Sauce.driver_pool[Thread.current.object_id] = @selenium
+
               begin
                 the_test.run
               ensure
                 @selenium.stop
+                Sauce.driver_pool.delete Thread.current.object_id
               end
             end
           end
