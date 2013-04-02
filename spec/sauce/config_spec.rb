@@ -57,11 +57,11 @@ describe Sauce::Config do
   describe '#os' do
     it 'should return the value set in the config block' do
       Sauce.config do |config|
-        config.os = 'TEST_OS'
+        config[:os] = 'TEST_OS'
       end
 
       c = Sauce::Config.new
-      c.os.should == 'TEST_OS'
+      c[:os].should == 'TEST_OS'
     end
   end
 
@@ -206,7 +206,7 @@ describe Sauce::Config do
     describe 'browsers=' do
       it 'should default the config to the first item' do
         Sauce.config do |config|
-          config.browsers = [['TEST_OS', 'TEST_BROWSER', 'TEST_BROWSER_VERSION']]
+          config[:browsers] = [['TEST_OS', 'TEST_BROWSER', 'TEST_BROWSER_VERSION']]
         end
 
         c = Sauce::Config.new
@@ -228,7 +228,7 @@ describe Sauce::Config do
 
     it 'should allow overrides as constructor options' do
       Sauce.config do |config|
-        config.browsers = [['OS1', 'BROWSER1', 'BROWSER_VERSION1']]
+        config[:browsers] = [['OS1', 'BROWSER1', 'BROWSER_VERSION1']]
       end
 
       c = Sauce::Config.new(:os => 'OS2', :browser => 'BROWSER2',
