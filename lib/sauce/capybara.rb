@@ -85,21 +85,40 @@ module Sauce
       end
 
       def browser
-        unless @browser
-          if Sauce.get_config[:start_tunnel]
-            Sauce::Capybara.connect_tunnel(:quiet => true)
-          end
+        unless existing_browser?
+          unless @browser = rspec_browser
+            if Sauce.get_config[:start_tunnel]
+              Sauce::Capybara.connect_tunnel(:quiet => true)
+            end
 
-          @browser = Sauce::Selenium2.new
-          at_exit do
-            finish!
+            @browser = Sauce::Selenium2.new
+            at_exit do
+              finish!
+            end
           end
         end
         @browser
       end
 
+      def rspec_browser
+        if browser = Sauce.driver_pool[Thread.current.object_id]
+          @using_rspec_browser = true
+        else
+          @using_rspec_browser = false
+        end
+        browser
+      end
+
+      def existing_browser?
+        if @using_rspec_browser
+          @browser == Sauce.driver_pool[Thread.current.object_id]
+        else
+          @browser
+        end
+      end
+
       def finish!
-        @browser.quit if @browser
+        @browser.quit if existing_browser?
         @browser = nil
         $sauce_tunnel.disconnect if $sauce_tunnel
       end

@@ -103,6 +103,72 @@ describe Sauce::Capybara do
       end
     end
 
+    describe '#rspec_browser' do
+      let(:driver) { Sauce::Capybara::Driver.new(app) }
+
+      before :each do
+        Sauce::Selenium2.stub(:new).and_return(nil)
+      end
+
+      context "with no rspec driver" do
+
+        before :each do
+          Sauce.stub(:driver_pool).and_return({})
+        end
+
+        it "should return nil" do
+          driver.rspec_browser.should be nil
+        end
+
+        it "should set the rspec_driver flag to false" do
+          driver.rspec_browser
+          driver.instance_variable_get(:@using_rspec_browser).should be_false
+        end
+
+      end
+
+      context "with an rspec driver" do
+        let(:mock_driver) {Object.new}
+        before :each do
+          Sauce.stub(:driver_pool).and_return({Thread.current.object_id => mock_driver})
+        end
+
+        it "should return the driver" do
+          driver.rspec_browser.should be mock_driver
+        end
+
+        it "should set the rspec_driver flag to true" do
+          driver.rspec_browser
+          driver.instance_variable_get(:@using_rspec_browser).should be_true
+        end
+      end
+
+      context "called after a driver_pool change" do
+
+        context "with no driver present" do
+          let(:mock_driver) {Object.new}
+
+          before (:each) do
+            Sauce.stub(:driver_pool).and_return(
+                {Thread.current.object_id => mock_driver},
+                {Thread.current.object_id => nil}
+            )
+          end
+
+          it "should return nil" do
+            driver.rspec_browser.should eq mock_driver
+            driver.rspec_browser.should be nil
+          end
+
+          it "should set rspec_browser flag false" do
+            driver.rspec_browser
+            driver.rspec_browser
+            driver.instance_variable_get(:@using_rspec_browser).should be_false
+          end
+        end
+      end
+    end
+
     describe '#browser' do
       let(:driver) { Sauce::Capybara::Driver.new(app) }
 
@@ -110,6 +176,18 @@ describe Sauce::Capybara do
         # Stub out the selenium driver startup
         Sauce::Selenium2.stub(:new).and_return(nil)
       end
+
+      context "when there is a driver in the driver pool" do
+        let(:mock_browser) {Object.new}
+        before :each do
+          Sauce.driver_pool[Thread.current.object_id] = mock_browser
+        end
+
+        it "should use the driver_pools browser" do
+          driver.browser.should eq mock_browser
+        end
+      end
+
       context 'when tunneling is disabled' do
         it 'should not call #connect_tunnel' do
           Sauce::Capybara.should_receive(:connect_tunnel).never
