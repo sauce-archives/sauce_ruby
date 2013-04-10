@@ -181,10 +181,18 @@ module Sauce
       @opts[:port]
     end
 
+    def tools
+      @tools ||= []
+    end
+
+    def add_tool(tool)
+      tools << tool
+    end
+
     private
 
     def client_version
-      "Ruby: #{RUBY_ENGINE} #{RUBY_VERSION} (#{RUBY_PLATFORM}) Sauce gem: #{Sauce.version}"
+      "Ruby: #{RUBY_ENGINE} #{RUBY_VERSION} (#{RUBY_PLATFORM}) Sauce gem: #{Sauce.version} Tools: #{tools.to_s}"
     end
 
     def load_options_from_environment

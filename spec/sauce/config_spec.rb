@@ -216,7 +216,16 @@ describe Sauce::Config do
       end
 
       it "should include a bracketed array of tools in use" do
+        config.to_desired_capabilities[:client_version].should include config.tools.to_s
+      end
+    end
 
+    describe "#config.add_tool" do
+      let(:config) {Sauce::Config.new()}
+
+      it "should add a tool to the list" do
+        config.add_tool :rspec
+        config.tools.should include :rspec
       end
     end
   end
