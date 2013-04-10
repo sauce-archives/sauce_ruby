@@ -113,7 +113,8 @@ module Sauce
         :browserName => BROWSERS[browser] || browser,
         :version => browser_version,
         :platform => PLATFORMS[os] || os,
-        :name => @opts[:job_name]
+        :name => @opts[:job_name],
+        :client_version => client_version
       }.update(@opts.reject {|k, v| [:browser, :browser_version, :os, :job_name].include? k})
     end
 
@@ -181,6 +182,10 @@ module Sauce
     end
 
     private
+
+    def client_version
+      "Ruby: #{RUBY_ENGINE} #{RUBY_VERSION} (#{RUBY_PLATFORM}) Sauce gem: #{Sauce.version}"
+    end
 
     def load_options_from_environment
       return extract_options_from_hash(ENV)

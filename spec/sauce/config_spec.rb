@@ -195,6 +195,30 @@ describe Sauce::Config do
         config.to_desired_capabilities[:platform].should == 'VISTA'
       end
     end
+
+    context 'client_version' do
+      let(:config) {Sauce::Config.new()}
+
+      it 'should include the Ruby engine' do
+        config.to_desired_capabilities[:client_version].should include RUBY_ENGINE
+      end
+
+      it "should include the ruby platform" do
+        config.to_desired_capabilities[:client_version].should include RUBY_PLATFORM
+      end
+
+      it "should include the ruby version" do
+        config.to_desired_capabilities[:client_version].should include RUBY_VERSION
+      end
+
+      it "should include the gem version" do
+        config.to_desired_capabilities[:client_version].should include Sauce.version
+      end
+
+      it "should include a bracketed array of tools in use" do
+
+      end
+    end
   end
 
   context 'configuring Sauce' do
