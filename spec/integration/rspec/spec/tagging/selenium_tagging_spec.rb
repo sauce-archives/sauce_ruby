@@ -7,22 +7,21 @@ Sauce.config do |c|
       ["Windows 2008", "iexplore", "9"],
       ["Linux", "opera", 12]
   ]
-
   c[:application_host] = "localhost"
 end
 
-describe "Specs in the Selenium Directory" do
+describe "Specs with the @sauce tag", :sauce => true do
 
   before :all do
-    $EXECUTIONS = 0
+    $TAGGED_EXECUTIONS = 0
   end
 
   after :all do
-    $EXECUTIONS.should be 2
+    $TAGGED_EXECUTIONS.should eq 2
   end
 
   it "should get run on every defined browser" do
-    $EXECUTIONS += 1
+    $TAGGED_EXECUTIONS += 1
   end
 
   it "should be using Sauce Connect" do
@@ -30,17 +29,16 @@ describe "Specs in the Selenium Directory" do
   end
 end
 
-describe "Specs in the Selenium Directory with the sauce tag", :sauce => true do
-
+describe "Specs without the @sauce tag" do
   before :all do
-    $EXECUTIONS = 0
+    $UNTAGGED_EXECUTIONS = 0
   end
 
   after :all do
-    $EXECUTIONS.should be 2
+    $UNTAGGED_EXECUTIONS.should eq 1
   end
 
-  it "should get run on every defined browser" do
-    $EXECUTIONS += 1
+  it "should only run once" do
+    $UNTAGGED_EXECUTIONS += 1
   end
 end
