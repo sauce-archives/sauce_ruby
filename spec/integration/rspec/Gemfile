@@ -5,3 +5,4 @@ gem "rspec"
 gem "capybara", "~> 1.1.2"
 gem "rack-test"
 gem 'sauce', :path => '../../../'
+gem 'sauce-connect'
