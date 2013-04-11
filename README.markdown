@@ -1,5 +1,5 @@
 # Sauce for Ruby
-
+ 
 [![Build Status](https://travis-ci.org/sauce-labs/sauce_ruby.png)](https://travis-ci.org/sauce-labs/sauce_ruby)
 
 This is the Ruby client adapter for testing with [Sauce
