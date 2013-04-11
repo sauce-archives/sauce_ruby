@@ -1,4 +1,4 @@
 
 module Sauce
-  MAJOR_VERSION = '2.3'
+  MAJOR_VERSION = '2.4'
 end
