@@ -122,6 +122,11 @@ module Sauce
         @browser = nil
         $sauce_tunnel.disconnect if $sauce_tunnel
       end
+
+      def render(path)
+        browser.save_screenshot path
+      end
+        
     end
   end
 end
