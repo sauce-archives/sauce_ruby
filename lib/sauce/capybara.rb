@@ -58,7 +58,7 @@ module Sauce
       alias :base_evaluate_script :evaluate_script
       alias :base_execute_script :execute_script
       alias :base_find_css :find_css
-      alias :base_ :find_xpath
+      alias :base_find_xpath :find_xpath
       alias :base_html :html
       alias :base_invalid_element_errors :invalid_element_errors
       alias :base_needs_server? :needs_server?
