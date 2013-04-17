@@ -1,4 +1,3 @@
-
 module Sauce
   MAJOR_VERSION = '2.3'
   PATCH_VERSION = '7'

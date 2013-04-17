@@ -67,7 +67,8 @@ describe 'Sauce::Connect integration testing' do
   context 'assuming the "fail" username' do
     let(:conn) { Sauce::Connect.new(:host => 'saucelabs.com',
                                     :port => 80,
-                                    :username => 'fail') }
+                                    :username => 'fail',
+                                    :access_key => 'edededdedededeee') }
 
     it 'should set the error status' do
       start = Time.now

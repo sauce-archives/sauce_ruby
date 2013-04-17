@@ -92,6 +92,23 @@ begin
         ::RSpec.configuration.include(self, :example_group => {
               :file_path => Regexp.compile('spec[\\\/]selenium')
             })
+        ::RSpec.configuration.include(self, :sauce => true)
+
+        ::RSpec.configuration.before(:suite, sauce: true) do
+
+          config = Sauce::Config.new
+          if config[:application_host]
+            @@tunnel ||= Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+            @@tunnel.connect
+            @@tunnel.wait_until_ready
+          end
+
+          if Sauce::Utilities::RailsServer.is_rails_app?
+            @@server = Sauce::Utilities::RailsServer.new
+            @@server.start
+          end
+        end
+
         ::RSpec.configuration.before :suite do
           need_tunnel = false
           config = Sauce::Config.new
@@ -101,7 +118,7 @@ begin
             need_tunnel = files_to_run.any? {|file| file =~ /spec\/selenium\//}
           end
           if need_tunnel
-            @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+            @@tunnel ||= Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
             @@tunnel.connect
             @@tunnel.wait_until_ready
           end

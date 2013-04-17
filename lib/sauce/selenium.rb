@@ -5,6 +5,22 @@ require "selenium/webdriver"
 
 require 'selenium/webdriver/remote/http/persistent'
 
+module Selenium
+  module WebDriver
+    class Proxy
+      class << self
+        alias :existing_json_create :json_create
+
+        def json_create(data)
+          dup = data.dup.delete_if {|k,v| v.nil?}
+          dup.delete_if {|k,v| k == "autodetect" && v == false}
+          existing_json_create(dup)
+        end
+      end
+    end
+  end
+end
+
 
 module Sauce
   class Selenium2
@@ -27,6 +43,10 @@ module Sauce
 
     def session_id
       @driver.send(:bridge).session_id
+    end
+
+    def current_url
+      @driver.current_url
     end
 
     def stop
