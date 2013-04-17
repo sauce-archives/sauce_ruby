@@ -62,7 +62,7 @@ module Sauce
       alias :base_html :html
       alias :base_invalid_element_errors :invalid_element_errors
       alias :base_needs_server? :needs_server?
-      alias :base_rest! :reset!
+      alias :base_reset! :reset!
       alias :base_response_headers :response_headers
       alias :base_save_screenshot :save_screenshot
       alias :base_status_code :status_code
