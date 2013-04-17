@@ -53,15 +53,23 @@ module Sauce
         end
       end
 
-      alias :base_find :find
-      alias :base_visit :visit
       alias :base_current_url :current_url
-      alias :base_reset! :reset!
+      alias :base_current_url :current_url
+      alias :base_evaluate_script :evaluate_script
+      alias :base_execute_script :execute_script
+      alias :base_find_css :find_css
+      alias :base_ :find_xpath
+      alias :base_html :html
+      alias :base_invalid_element_errors :invalid_element_errors
+      alias :base_needs_server? :needs_server?
+      alias :base_rest! :reset!
+      alias :base_response_headers :response_headers
+      alias :base_save_screenshot :save_screenshot
+      alias :base_status_code :status_code
+      alias :base_visit :visit
+      alias :base_wait? :wait?
       alias :base_within_frame :within_frame
       alias :base_within_window :within_window
-      alias :base_find_window :find_window
-      alias :base_execute_script :execute_script
-      alias :base_evaluate_script :evaluate_script
 
       @methods_to_retry = [ :find, :visit, :current_url, :reset!,
         :within_frame, :within_window, :find_window, :source,
