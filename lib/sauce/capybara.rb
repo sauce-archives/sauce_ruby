@@ -71,9 +71,11 @@ module Sauce
       alias :base_within_frame :within_frame
       alias :base_within_window :within_window
 
-      @methods_to_retry = [ :find, :visit, :current_url, :reset!,
-        :within_frame, :within_window, :find_window, :source,
-        :execute_script, :evaluate_script
+      @methods_to_retry = [ :current_url, :current_url, :evaluate_script, 
+        :execute_script, :find_css, :find_xpath, :html, 
+        :invalid_element_errors, :needs_server?, :reset!, 
+        :response_headers, :save_screenshot, :status_code, 
+        :visit, :wait?, :within_frame, :within_window
       ]
 
       if Gem::Version.new(::Capybara::VERSION) < Gem::Version.new(2)
