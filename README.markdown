@@ -1,6 +1,7 @@
 # Sauce for Ruby
  
 [![Build Status](https://travis-ci.org/sauce-labs/sauce_ruby.png)](https://travis-ci.org/sauce-labs/sauce_ruby)
+[![Dependency Status](https://gemnasium.com/sauce-labs/sauce_ruby.png)](https://gemnasium.com/sauce-labs/sauce_ruby)
 
 This is the Ruby client adapter for testing with [Sauce
 Labs](https://www.saucelabs.com), a Selenium-based browser testing service.

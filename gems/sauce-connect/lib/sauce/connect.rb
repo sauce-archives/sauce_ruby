@@ -51,6 +51,10 @@ module Sauce
             @error = "Missing requirements"
             @quiet = false
           end
+          if line =~/Invalid API_KEY provided/
+            @error = "Invalid API_KEY provided"
+            @quiet = false
+          end
           $stderr.puts line unless @quiet
         end
         @ready = false
