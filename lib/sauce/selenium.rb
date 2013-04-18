@@ -45,6 +45,10 @@ module Sauce
       @driver.send(:bridge).session_id
     end
 
+    def current_url
+      @driver.current_url
+    end
+
     def stop
       @driver.quit
     end
