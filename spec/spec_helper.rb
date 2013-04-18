@@ -8,9 +8,11 @@ require 'sauce'
 require 'capybara'
 
 RSpec.configure do |c|
-  if Gem::Version.new(Capybara::VERSION) < Gem::Version.new(2)
-    c.filter_run_excluding :capybara_version => 2
-  else
-    c.filter_run_excluding :capybara_version => 1
-  end
+  c.filter_run_excluding :capybara_version => lambda { |capybara_version_range|
+    actual_version = Gem::Version.new Capybara::VERSION
+    lower_bound = Gem::Version.new capybara_version_range[0]
+    upper_bound = Gem::Version.new capybara_version_range[1]
+
+    !actual_version.between?(lower_bound, upper_bound)
+  }
 end

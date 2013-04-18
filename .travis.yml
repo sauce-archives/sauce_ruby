@@ -5,3 +5,4 @@ rvm:
 gemfile:
   - Gemfile
   - gemfiles/capybara-1.x.gemfile
+  - gemfiles/capybara-2.0.x.gemfile

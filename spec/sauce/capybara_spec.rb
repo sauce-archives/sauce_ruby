@@ -43,13 +43,13 @@ describe Sauce::Capybara do
     let(:driver) { Sauce::Capybara::Driver.new(app) }
 
     describe "#body" do
-      context "With Capybara 1.x", :capybara_version => 1 do
+      context "With Capybara 1.x", :capybara_version => [1, "1.9.9"] do
         it "should not exist in version 2" do
           driver.should respond_to :base_body
         end
       end
 
-      context "With Capybara 2.x", :capybara_version => 2 do
+      context "With Capybara 2.x", :capybara_version => [2, "2.9.9"] do
         it "should not exist" do
           driver.should_not respond_to :base_body
         end
@@ -57,13 +57,13 @@ describe Sauce::Capybara do
     end
 
     describe "#source" do
-      context "With Capybara 1", :capybara_version => 1  do
+      context "With Capybara 1", :capybara_version => [1, "1.9.9"]  do
         it "should exist" do
           driver.should respond_to :base_source
         end
       end
 
-      context "with Capybara 2.x", :capybara_version => 2 do
+      context "with Capybara 2.x", :capybara_version => [2, "2.9.9"] do
         it "should not exist" do
           driver.should_not respond_to :base_source
         end
@@ -71,13 +71,13 @@ describe Sauce::Capybara do
     end
 
     describe "#html" do
-      context "With Capybara 1.x", :capybara_version => 1 do
+      context "With Capybara 1.x", :capybara_version => [1, "1.9.9"] do
         it "should not exist" do
           driver.should_not respond_to :base_html
         end
       end
 
-      context "With Capybara 2.x", :capybara_version => 2 do
+      context "With Capybara 2.x", :capybara_version => [2, "2.9.9"] do
         it "should exist" do
           driver.should respond_to :base_html
         end
@@ -201,35 +201,96 @@ describe Sauce::Capybara do
     describe '#find' do
       let(:selector) { '#lol' }
 
-      context 'with an environment override' do
-        before :each do
-          ENV['SAUCE_DISABLE_RETRY'] = '1'
+      context "with Capybara < 2.1", :capybara_version => [2, "2.0.9"] do
+
+        it "should exist" do
+          driver.respond_to?(:find).should be_true
         end
 
-        it 'should not retry and raise the error' do
-          driver.should_receive(:base_find).with(selector).and_raise(Selenium::WebDriver::Error::UnknownError)
+        context 'with an environment override' do
+          before :each do
+            ENV['SAUCE_DISABLE_RETRY'] = '1'
+          end
+
+          it 'should not retry and raise the error' do
+            driver.should_receive(:base_find).with(selector).and_raise(Selenium::WebDriver::Error::UnknownError)
+
+            expect {
+              driver.find(selector)
+            }.to raise_error(Selenium::WebDriver::Error::UnknownError)
+          end
+
+          after :each do
+            ENV['SAUCE_DISABLE_RETRY'] = nil
+          end
+        end
+
+        it 'should route through handle_retry' do
+          driver.should_receive(:base_find).with(selector) # BLECH
+          driver.find(selector)
+        end
+
+        it 'should retry 3 times and then raise' do
+          driver.should_receive(:base_find).with(selector).exactly(4).times.and_raise(Selenium::WebDriver::Error::UnknownError)
 
           expect {
             driver.find(selector)
           }.to raise_error(Selenium::WebDriver::Error::UnknownError)
         end
+      end
 
-        after :each do
-          ENV['SAUCE_DISABLE_RETRY'] = nil
+      context "with Capybara => 2.1", :capybara_version => ["2.1", "2.9.9"] do
+        it "should not be aliased" do
+          driver.respond_to?(:base_find).should be_false
+        end
+
+        it "should not be retried" do
+          Sauce::Capybara::Driver.instance_variable_get(:@methods_to_retry).should_not include :find
+        end
+      end
+    end
+
+    describe "#find_css" do
+      context "with Capybara < 2.1", :capybara_version => [0, "2.0.9"] do
+        it "should not be aliased" do
+          driver.respond_to?(:base_find_css).should be_false
+        end
+
+        it "should not be retried" do
+          Sauce::Capybara::Driver.instance_variable_get(:@methods_to_retry).should_not include :find_css
         end
       end
 
-      it 'should route through handle_retry' do
-        driver.should_receive(:base_find).with(selector) # BLECH
-        driver.find(selector)
+      context "with Capybara >= 2.1", :capybara_version => ["2.1", "2.9.9"] do
+        it "should be aliased" do
+          driver.respond_to?(:base_find_css).should be_true
+        end
+
+        it "should be retried" do
+          Sauce::Capybara::Driver.instance_variable_get(:@methods_to_retry).should include :find_css
+        end
+      end
+    end
+
+    describe "#find_xpath" do
+      context "with Capybara < 2.1",  :capybara_version => [0, "2.0.9"] do
+        it "should not be aliased" do
+          driver.respond_to?(:base_find_xpath).should be_false
+        end
+
+        it "should not be retried" do
+          Sauce::Capybara::Driver.instance_variable_get(:@methods_to_retry).should_not include :find_xpath
+        end
       end
 
-      it 'should retry 3 times and then raise' do
-        driver.should_receive(:base_find).with(selector).exactly(4).times.and_raise(Selenium::WebDriver::Error::UnknownError)
+      context "with Capybara >= 2.1", :capybara_version => ["2.1", "2.9.9"] do
+        it "should be aliased" do
+          driver.respond_to?(:base_find_xpath).should be_true
+        end
 
-        expect {
-          driver.find(selector)
-        }.to raise_error(Selenium::WebDriver::Error::UnknownError)
+        it "should be retried" do
+          Sauce::Capybara::Driver.instance_variable_get(:@methods_to_retry).should include :find_xpath
+        end
       end
     end
 
