@@ -186,7 +186,7 @@ module Sauce
     end
 
     def add_tool(tool)
-      tools << tool
+      tools << tool unless tools.include? tool
     end
 
     private

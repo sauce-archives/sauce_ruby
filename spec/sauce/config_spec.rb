@@ -227,6 +227,20 @@ describe Sauce::Config do
         config.add_tool :rspec
         config.tools.should include :rspec
       end
+
+      it "should not nuke existing tools" do
+        config.add_tool :rspec
+        config.add_tool :testunit
+        config.tools.should include :rspec
+        config.tools.should include :testunit
+      end
+
+      it "should only add tools once" do
+        config.add_tool :rspec
+        config.add_tool :testunit
+        config.add_tool :rspec
+        config.tools.should eq [:rspec, :testunit]
+      end
     end
   end
 
