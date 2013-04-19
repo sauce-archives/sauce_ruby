@@ -182,11 +182,18 @@ module Sauce
     end
 
     def tools
-      @tools ||= []
+      tools = []
+      tools << "Rspec" if is_defined? ::RSpec
+      tools << "Capybara" if is_defined? ::Capybara
+      tools << "Cucumber" if is_defined? ::Cucumber
+      tools << "Test::Unit" if is_defined? ::Test::Unit
+      tools
     end
 
-    def add_tool(tool)
-      tools << tool unless tools.include? tool
+    # Only here to be stubbed for testing.  Gross.
+    def is_defined? (mod)
+      puts "being stubbed no #{mod}"
+      defined? mod
     end
 
     private
