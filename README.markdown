@@ -51,7 +51,7 @@ end
 Then, depending on your test framework:
 
 ### RSpec 2
-Place your specs in the ```spec/selenium``` folder
+Place your specs in the ```spec/selenium``` folder, or tag the example group with ```:sauce => true```
 
 ### RSpec 1
 Give your tests a :type of :selenium, eg ```describe Aioli, :type => :selenium do```
