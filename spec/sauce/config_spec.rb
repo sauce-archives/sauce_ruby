@@ -232,32 +232,32 @@ describe Sauce::Config do
       end
 
       it "should include capybara" do
-        config.stub(:is_defined?).with(::Capybara) {true}
+        config.stub(:is_defined?).with("Capybara") {true}
         config.tools.should include "Capybara"
       end
 
       it "should not include capybara when absent" do
-        config.stub(:is_defined?).with(::Capybara) {false}
+        config.stub(:is_defined?).with("Capybara") {false}
         config.tools.should_not include "Capybara"
       end
 
       it "should not include cucumber when not present" do
-        config.stub(:is_defined?).with(::Cucumber) {false}
+        config.stub(:is_defined?).with("Cucumber") {false}
         config.tools.should_not include "Cucumber"
       end
 
       it "should include cucumber when present" do
-        config.stub(:is_defined?).with(::Cucumber) {true}
+        config.stub(:is_defined?).with("Cucumber") {true}
         config.tools.should include "Cucumber"
       end
 
       it "should include test::unit if present" do
-        config.stub(:is_defined?).with(::Test::Unit) {true}
+        config.stub(:is_defined?).with("Test","Unit") {true}
         config.tools.should include "Test::Unit"
       end
 
       it "should not include test::unit if absent" do
-        config.stub(:is_defined?).with(::Test::Unit) {false}
+        config.stub(:is_defined?).with("Test", "Unit") {false}
         config.tools.should_not include "Test::Unit"
       end
     end
