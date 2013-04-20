@@ -113,7 +113,8 @@ module Sauce
         :browserName => BROWSERS[browser] || browser,
         :version => browser_version,
         :platform => PLATFORMS[os] || os,
-        :name => @opts[:job_name]
+        :name => @opts[:job_name],
+        :client_version => client_version
       }.update(@opts.reject {|k, v| [:browser, :browser_version, :os, :job_name].include? k})
     end
 
@@ -180,7 +181,30 @@ module Sauce
       @opts[:port]
     end
 
+    def tools
+      tools = []
+      tools << "Rspec" if is_defined? "RSpec"
+      tools << "Capybara" if is_defined? "Capybara"
+      tools << "Cucumber" if is_defined? "Cucumber"
+      tools << "Test::Unit" if is_defined?("Test", "Unit")
+      tools
+    end
+
+    # Only here to be stubbed for testing.  Gross.
+    def is_defined? (top_mod, sub_mod = nil)
+      return_value = Object.const_defined? top_mod
+      unless !return_value || sub_mod.nil?
+        return_value = Object.const_get(top_mod).const_defined? sub_mod
+      end
+
+      return_value
+    end
+
     private
+
+    def client_version
+      "Ruby: #{RUBY_ENGINE} #{RUBY_VERSION} (#{RUBY_PLATFORM}) Sauce gem: #{Sauce.version} Tools: #{tools.to_s}"
+    end
 
     def load_options_from_environment
       return extract_options_from_hash(ENV)
