@@ -53,7 +53,6 @@ module Sauce
         end
       end
 
-      alias :base_find :find
       alias :base_visit :visit
       alias :base_current_url :current_url
       alias :base_reset! :reset!
@@ -63,10 +62,19 @@ module Sauce
       alias :base_execute_script :execute_script
       alias :base_evaluate_script :evaluate_script
 
-      @methods_to_retry = [ :find, :visit, :current_url, :reset!,
+      @methods_to_retry = [:visit, :current_url, :reset!,
         :within_frame, :within_window, :find_window, :source,
         :execute_script, :evaluate_script
       ]
+
+      if method_defined? :find
+        alias :base_find :find
+        @methods_to_retry += [:find]
+      else
+        alias :base_find_css :find_css
+        alias :base_find_xpath :find_xpath
+        @methods_to_retry += [:find_css, :find_xpath]
+      end
 
       if Gem::Version.new(::Capybara::VERSION) < Gem::Version.new(2)
         alias :base_body :body
@@ -122,6 +130,11 @@ module Sauce
         @browser = nil
         $sauce_tunnel.disconnect if $sauce_tunnel
       end
+
+      def render(path)
+        browser.save_screenshot path
+      end
+        
     end
   end
 end

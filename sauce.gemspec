@@ -4,7 +4,7 @@ require File.expand_path('../lib/sauce/version', __FILE__)
 
 Gem::Specification.new do |s|
   s.name = 'sauce'
-  s.version = "#{Sauce::MAJOR_VERSION}.2"
+  s.version = "#{Sauce.version}"
   s.authors = ["Dylan Lacey", "Steven Hazel", "R. Tyler Croy", "Santiago Suarez Ordoñez", "Eric Allen", "Sean Grove"]
   s.homepage = 'http://github.com/sauce-labs/sauce_ruby'
   s.email = 'help@saucelabs.com'
@@ -16,6 +16,8 @@ Gem::Specification.new do |s|
   s.default_executable = 'sauce'
   s.require_paths = ["lib"]
   s.test_files = Dir['spec/**/*.rb']
+
+  s.add_development_dependency("capybara", ["~>2.1.0"])
 
   s.add_dependency('net-http-persistent')
   s.add_dependency('rest-client', [">= 0"])
