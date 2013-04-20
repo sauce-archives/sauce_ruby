@@ -183,17 +183,21 @@ module Sauce
 
     def tools
       tools = []
-      tools << "Rspec" if is_defined? ::RSpec
-      tools << "Capybara" if is_defined? ::Capybara
-      tools << "Cucumber" if is_defined? ::Cucumber
-      tools << "Test::Unit" if is_defined? ::Test::Unit
+      tools << "Rspec" if is_defined? "RSpec"
+      tools << "Capybara" if is_defined? "Capybara"
+      tools << "Cucumber" if is_defined? "Cucumber"
+      tools << "Test::Unit" if is_defined?("Test", "Unit")
       tools
     end
 
     # Only here to be stubbed for testing.  Gross.
-    def is_defined? (mod)
-      puts "being stubbed no #{mod}"
-      defined? mod
+    def is_defined? (top_mod, sub_mod = nil)
+      return_value = Object.const_defined? top_mod
+      unless !return_value || sub_mod.nil?
+        return_value = Object.const_get(top_mod).const_defined? sub_mod
+      end
+
+      return_value
     end
 
     private

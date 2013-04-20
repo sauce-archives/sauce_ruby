@@ -53,8 +53,6 @@ module Sauce
         end
       end
 
-      puts "Capybara.version #{::Capybara::VERSION}"
-
       alias :base_visit :visit
       alias :base_current_url :current_url
       alias :base_reset! :reset!
