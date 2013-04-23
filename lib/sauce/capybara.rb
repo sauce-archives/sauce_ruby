@@ -2,6 +2,7 @@ require 'capybara'
 
 require 'sauce/config'
 require 'sauce/selenium'
+require 'sauce/version'
 
 
 $sauce_tunnel = nil
