@@ -36,6 +36,14 @@ And then read more how to get started with [Cucumber and Capybara on this
 wiki
 page](https://github.com/sauce-labs/sauce_ruby/wiki/Cucumber-and-Capybara).
 
+## With Capybara && Sauce::Connect
+Capybara on a random port.  Sauce::Connect expects a port from a specific range.  So, you need to pick one of :
+
+```bash
+80, 443, 888, 2000, 2001, 2020, 2222, 3000, 3001, 3030, 3333, 4000, 4001, 4040, 4502, 4503, 5000, 5001, 5050, 5555, 6000, 6001, 6060, 6666, 7000, 7070, 7777, 8000, 8001, 8003, 8031, 8080, 8081, 8888, 9000, 9001, 9080, 9090, 9999, 49221
+```
+Then set Capybara to do that with ```Capybara.server_port = the_chosen_port```
+
 ## Running on against a list of browsers
 To run against a list of browsers, you need to configure them:
 
