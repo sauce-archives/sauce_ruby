@@ -2,21 +2,14 @@ require 'jasmine'
 require 'rspec/core/rake_task'
 
 namespace :jasmine do
-  def run_jasmine_server
-    ENV['JASMINE_PORT'] = '3001'
-    Jasmine::Config.new.start_jasmine_server
-  end
-
   desc "Execute Jasmine tests in a Chrome browser on Sauce Labs"
   task :sauce do
-    run_jasmine_server
     Rake::Task['jasmine:sauce:chrome'].execute
   end
 
   namespace :sauce do
     desc "Execute Jasmine tests in Chrome, Firefox and Internet Explorer on Sauce Labs"
     task :all do
-      run_jasmine_server
       threads = []
       [:firefox, :chrome, :iexplore].each do |browser|
         t = Thread.new do
