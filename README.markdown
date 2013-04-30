@@ -44,8 +44,8 @@ Capybara on a random port.  Sauce::Connect expects a port from a specific range.
 ```
 Then set Capybara to do that with ```Capybara.server_port = the_chosen_port```
 
-## Running on against a list of browsers
-To run against a list of browsers, you need to configure them:
+## The Browsers Array
+When setting up the gem, you can pass a list of browsers:
 
 ```ruby
 Sauce.config do |c|
@@ -64,7 +64,11 @@ Place your specs in the ```spec/selenium``` folder, or tag the example group wit
 ### RSpec 1
 Give your tests a :type of :selenium, eg ```describe Aioli, :type => :selenium do```
 
-Tests will be run against each combination, sequentially and automagically.
+Tests will be run against each combination, sequentially and automagically.  
+
+**If you don't place your tests in these locations, only the first browser in the array will run**.
+
+Work is continuing in magic browser delights for other tools.  (PSST:  If you have ideas, please let us know!)
 
 ## Contributing to the Gem
 
