@@ -182,8 +182,10 @@ module Sauce
                           :browser_version => version,
                           :job_name => my_name.to_s})
           @browser = Sauce::Selenium2.new(options)
+          Sauce.driver_pool[Thread.current.object_id] = @browser
           super(*args, &blk)
           @browser.stop
+          Sauce.driver_pool.delete Thread.current.object_id
         end
       end
     end
