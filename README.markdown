@@ -18,26 +18,39 @@ for information too!
     % gem install sauce
 ```
 
-
-## Suggested Toolchain
-
-
-The Sauce gem has been optimized to work most effectively with
-[Cucumber](https://www.cukes.info) and
-[Capybara](http://jnicklas.github.com/capybara/).
-
-To get started with Sauce and Cucumber, install the appropriate gem:
-
-```bash
-    % gem install sauce-cucumber
+## With RSpec 1 & 2
+In your spec_helper.rb:
+```ruby
+require "sauce"
 ```
 
-And then read more how to get started with [Cucumber and Capybara on this
-wiki
-page](https://github.com/sauce-labs/sauce_ruby/wiki/Cucumber-and-Capybara).
+You can run tests against several browsers in series, see "Multiple Browsers", below.
 
-## With Capybara && Sauce::Connect
-Capybara on a random port.  Sauce::Connect expects a port from a specific range.  So, you need to pick one of :
+## With Test::Unit && Mini::Test
+In your test_helper.rb:
+```ruby
+require "sauce"
+```
+
+## With Capybara
+In your test setup file (test or spec helper, most likely):
+```ruby
+require "capybara"
+require "capybara/sauce"
+```
+
+### Run all tests against Sauce
+```ruby
+Capybara.default_driver = :sauce
+```
+
+### Run only Javascript tests against Sauce
+```ruby
+Capybara.javascript_driver = :sauce
+```
+
+### Sauce::Connect
+Capybara runs a server on a random port.  Sauce::Connect expects a port from a specific range.  So, you need to pick one of :
 
 ```bash
 80, 443, 888, 2000, 2001, 2020, 2222, 3000, 3001, 3030, 3333, 4000, 4001, 4040, 4502, 4503, 5000, 5001, 5050, 5555, 6000, 6001, 6060, 6666, 7000, 7070, 7777, 8000, 8001, 8003, 8031, 8080, 8081, 8888, 9000, 9001, 9080, 9090, 9999, 49221
@@ -69,6 +82,23 @@ Tests will be run against each combination, sequentially and automagically.
 **If you don't place your tests in these locations, only the first browser in the array will run**.
 
 Work is continuing in magic browser delights for other tools.  (PSST:  If you have ideas, please let us know!)
+
+## Suggested Toolchain
+
+
+The Sauce gem has been optimized to work most effectively with
+[Cucumber](https://www.cukes.info) and
+[Capybara](http://jnicklas.github.com/capybara/).
+
+To get started with Sauce and Cucumber, install the appropriate gem:
+
+```bash
+    % gem install sauce-cucumber
+```
+
+And then read more how to get started with [Cucumber and Capybara on this
+wiki
+page](https://github.com/sauce-labs/sauce_ruby/wiki/Cucumber-and-Capybara).
 
 ## Contributing to the Gem
 
