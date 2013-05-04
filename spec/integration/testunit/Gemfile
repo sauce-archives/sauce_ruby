@@ -1,0 +1,8 @@
+source "https://www.rubygems.org"
+
+gem "rake"
+gem "mocha", :require => false
+gem "capybara", "~> 1.1.2"
+gem "rack-test"
+gem 'sauce', :path => '../../../'
+gem 'sauce-connect'
