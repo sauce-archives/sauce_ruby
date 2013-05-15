@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xe
 
 RAKE="bundle exec rake"
 
