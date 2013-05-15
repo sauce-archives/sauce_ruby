@@ -127,7 +127,7 @@ module Sauce
       if @undefaulted_opts[:browser]
         return @undefaulted_opts[:browser]
       end
-      if @opts[:browsers]
+      if !ENV["TEST_ENV_NUMBER"] && @opts[:browsers]
         @opts[:browsers][0][1]
       else
         @opts[:browser]
@@ -138,7 +138,7 @@ module Sauce
       if @undefaulted_opts[:os]
         return @undefaulted_opts[:os]
       end
-      if @opts[:browsers]
+      if !ENV["TEST_ENV_NUMBER"] && @opts[:browsers]
         @opts[:browsers][0][0]
       else
         @opts[:os]
@@ -149,7 +149,7 @@ module Sauce
       if @undefaulted_opts[:browser_version]
         return @undefaulted_opts[:browser_version]
       end
-      if @opts[:browsers]
+      if !ENV["TEST_ENV_NUMBER"] && @opts[:browsers]
         @opts[:browsers][0][2]
       else
         @opts[:browser_version]

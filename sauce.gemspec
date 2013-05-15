@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.summary = "A Ruby helper for running tests in Sauce Labs"
   s.description = "A Ruby helper for running tests in Sauce Labs' browser testing cloud service"
   # Include pretty much everything in Git except the examples/ directory
-  s.files = Dir['lib/**/*.rb']
+  s.files = Dir['lib/**/*.rb'] + Dir['lib/**/**/*.rb']
   s.executables = ['sauce']
   s.default_executable = 'sauce'
   s.require_paths = ["lib"]
@@ -28,4 +28,5 @@ Gem::Specification.new do |s|
   s.add_dependency('json', [">= 1.2.0"])
   s.add_dependency('cmdparse', [">= 2.0.2"])
   s.add_dependency('highline', [">= 1.5.0"])
+  s.add_dependency('parallel_tests', ["= 0.12.4"])
 end
