@@ -4,6 +4,7 @@ require "parallel_tests/tasks"
 
 namespace :sauce do
   task :spec do
-    ParallelTests::CLI.new.run(["--type", "saucerspec"] + ["-n #{[20]}", "spec"])
+    concurrency = Sauce::TestBroker.concurrencies
+    ParallelTests::CLI.new.run(["--type", "saucerspec"] + ["-n #{concurrency}", "spec"])
   end
 end
