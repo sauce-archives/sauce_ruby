@@ -9,13 +9,21 @@ Bundler::GemHelper.install_tasks
 namespace :spec do
   rspec_options = '--color --format d --fail-fast --order random'
   RSpec::Core::RakeTask.new(:unit) do |s|
-    s.pattern = 'spec/sauce/**_spec.rb'
+    s.pattern = 'spec/sauce/**/*_spec.rb'
     s.rspec_opts = rspec_options
   end
 
   RSpec::Core::RakeTask.new(:integration) do |s|
     s.pattern = 'spec/integration/**_spec.rb'
     s.rspec_opts = rspec_options
+  end
+
+  namespace :rspec do
+    desc "Run an integration test with rspec and capybara"
+    task :capybara do |t|
+      ensure_rvm!
+      sh "(cd spec/integration/rspec && ./run-test.sh)"
+    end
   end
 end
 

@@ -19,12 +19,10 @@ for information too!
 ```
 
 ## With RSpec 1 & 2
-In your spec_helper.rb:
+In spec/sauce_helper.rb:
 ```ruby
 require "sauce"
 ```
-
-You can run tests against several browsers in series, see "Multiple Browsers", below.
 
 ## With Test::Unit && Mini::Test
 In your test_helper.rb:
@@ -57,34 +55,24 @@ Capybara runs a server on a random port.  Sauce::Connect expects a port from a s
 ```
 Then set Capybara to do that with ```Capybara.server_port = the_chosen_port```
 
-## The Browsers Array
-When setting up the gem, you can pass a list of browsers:
+## Running your tests
+
+### Set Up The Browsers Array
 
 ```ruby
 Sauce.config do |c|
   c.browsers = [
-    ["windows","firefox","18"],
-    ["windows","opera","11"]
+    ["Windows 7","Firefox","18"],
+    ["Windows 7","Opera","11"]
   ]
 end
 ```
 
-Then, depending on your test framework:
+If you run your tests normally (eg with ```rspec```) They'll run one at a time against the Sauce Labs cloud.  The first browser from the array will be used for all tests.
 
-### RSpec 2
-Place your specs in the ```spec/selenium``` folder, or tag the example group with ```:sauce => true```
-
-### RSpec 1
-Give your tests a :type of :selenium, eg ```describe Aioli, :type => :selenium do```
-
-Tests will be run against each combination, sequentially and automagically.  
-
-**If you don't place your tests in these locations, only the first browser in the array will run**.
-
-Work is continuing in magic browser delights for other tools.  (PSST:  If you have ideas, please let us know!)
+If you run your tests with the rake task (```rake sauce:spec```) then your tests will be run concurrently, for as many concurrent VMs as your account is allowed, against every platform specified.
 
 ## Suggested Toolchain
-
 
 The Sauce gem has been optimized to work most effectively with
 [Cucumber](https://www.cukes.info) and
