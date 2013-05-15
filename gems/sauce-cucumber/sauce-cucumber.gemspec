@@ -13,8 +13,8 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "sauce-cucumber"
   gem.require_paths = ["lib"]
-  gem.version       = "#{Sauce::MAJOR_VERSION}.1"
+  gem.version       = "#{Sauce::MAJOR_VERSION}.0"
 
-  gem.add_dependency('sauce', ">= #{Sauce::MAJOR_VERSION}.0")
+  gem.add_dependency('sauce', "~> #{Sauce.version}")
   gem.add_dependency('cucumber', '>= 1.2.0')
 end
