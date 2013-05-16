@@ -39,15 +39,21 @@ module Sauce
 
       def start
         STDERR.puts "Starting Rails server on port 3001..."
+
+        port = 3001
+        if ENV["TEST_ENV_NUMBER"]
+          port = port + ENV["TEST_ENV_NUMBER"].to_i
+        end
+
         if File.exists?('script/server')
-          @server = ChildProcess.build("ruby", "script/server", "-e", "test", "--port", "3001")
+          @server = ChildProcess.build("ruby", "script/server", "-e", "test", "--port", "#{port}")
         elsif File.exists?('script/rails')
-          @server = ChildProcess.build("bundle", "exec", "rails", "server", "-e", "test", "--port", "3001")
+          @server = ChildProcess.build("bundle", "exec", "rails", "server", "-e", "test", "--port", "#{port}")
         end
         @server.io.inherit!
         @server.start
 
-        wait_for_server_on_port(3001)
+        wait_for_server_on_port(port)
 
         at_exit do
           @server.stop
