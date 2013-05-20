@@ -8,8 +8,9 @@ module Sauce
       def initialize(browser, http_address)
         @browser = browser
         @http_address = http_address
-        @driver = Sauce::Selenium2.new(:browser => browser, :job_name => job_name)
-        puts "Starting job named: #{job_name}"
+        name = job_name
+        @driver = Sauce::Selenium2.new(:browser => browser, :job_name => name)
+        puts "Starting job named: #{name}"
       end
 
       def job_name
