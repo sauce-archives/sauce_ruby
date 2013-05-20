@@ -124,9 +124,9 @@ begin
           end
 
           if files_to_run.any? {|file| file =~ /spec\/selenium\//} &&
-            Sauce::Utilities::RailsServer.is_rails_app?
-            @@server = Sauce::Utilities::RailsServer.new
-            @@server.start
+            if Sauce::Utilities::RailsServer.is_rails_app?
+              @@server = Sauce::Utilities::RailsServer.new
+              @@server.start
           end
         end
         ::RSpec.configuration.after :suite do
@@ -241,4 +241,5 @@ rescue LoadError
   # User doesn't have Test::Unit installed
 rescue => e
   STDERR.puts "Exception caught: #{e.to_s}"
+end
 end
