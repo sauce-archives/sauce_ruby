@@ -29,7 +29,7 @@ module Sauce
         :local_application_port => "3001",
         :capture_traffic => false,
         :start_tunnel => true,
-        :start_local_application => false
+        :start_local_application => true
     }
 
     ENVIRONMENT_VARIABLES = %w{SAUCE_HOST SAUCE_PORT SAUCE_BROWSER_URL SAUCE_USERNAME
