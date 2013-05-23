@@ -28,7 +28,8 @@ module Sauce
         :job_name => "Unnamed Ruby job",
         :local_application_port => "3001",
         :capture_traffic => false,
-        :start_tunnel => true
+        :start_tunnel => true,
+        :start_local_application => false
     }
 
     ENVIRONMENT_VARIABLES = %w{SAUCE_HOST SAUCE_PORT SAUCE_BROWSER_URL SAUCE_USERNAME
