@@ -18,11 +18,12 @@ begin
           config = Sauce::Config.new
           if @@need_tunnel
             if config[:application_host]
-              @@tunnel = Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+              @@tunnel = Sauce::Connect.new(:host => config[:application_host], :port => config[:application_port] || 80)
               @@tunnel.connect
               @@tunnel.wait_until_ready
             end
-            if Sauce::Utilities::RailsServer.is_rails_app?
+            if config[:start_local_application] &&
+              Sauce::Utilities::RailsServer.is_rails_app?
               @@server = Sauce::Utilities::RailsServer.new
               @@server.start
             end
@@ -98,12 +99,13 @@ begin
 
           config = Sauce::Config.new
           if config[:application_host]
-            @@tunnel ||= Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+            @@tunnel ||= Sauce::Connect.new(:host => config[:application_host], :port => config[:application_port] || 80)
             @@tunnel.connect
             @@tunnel.wait_until_ready
           end
 
-          if Sauce::Utilities::RailsServer.is_rails_app?
+          if config[:start_local_application] &&
+            Sauce::Utilities::RailsServer.is_rails_app?
             @@server = Sauce::Utilities::RailsServer.new
             @@server.start
           end
@@ -118,12 +120,13 @@ begin
             need_tunnel = files_to_run.any? {|file| file =~ /spec\/selenium\//}
           end
           if need_tunnel
-            @@tunnel ||= Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+            @@tunnel ||= Sauce::Connect.new(:host => config[:application_host], :port => config[:application_port] || 80)
             @@tunnel.connect
             @@tunnel.wait_until_ready
           end
 
-          if files_to_run.any? {|file| file =~ /spec\/selenium\//} &&
+          if config[:start_local_application] &&
+            files_to_run.any? {|file| file =~ /spec\/selenium\//} &&
             Sauce::Utilities::RailsServer.is_rails_app?
             @@server = Sauce::Utilities::RailsServer.new
             @@server.start
@@ -160,13 +163,14 @@ module Sauce
         config = Sauce::Config.new
         if config[:application_host]
           unless ENV['TEST_ENV_NUMBER'].to_i > 1
-            Sauce::Connect.ensure_connected(:host => config.application_host, :port => config.application_port || 80)
+            Sauce::Connect.ensure_connected(:host => config[:application_host], :port => config[:application_port] || 80)
           end
         end
 
         unless defined?(@@server)
           unless ENV['TEST_ENV_NUMBER'].to_i > 1
-            if Sauce::Utilities::RailsServer.is_rails_app?
+            if config[:start_local_application] &&
+              Sauce::Utilities::RailsServer.is_rails_app?
               @@server = Sauce::Utilities::RailsServer.new
               @@server.start
               at_exit do
