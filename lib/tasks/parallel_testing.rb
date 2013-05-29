@@ -37,11 +37,11 @@ Next steps:
       File.open(sauce_helper_path, "w") do |f|
         f.write (<<-ENDFILE
 # You should edit this file with the browsers you wish to use
-# For options, check out http://www.saucelabs.com/platforms
+# For options, check out http://saucelabs.com/platforms
 require "sauce"
 
-Sauce.config do |c|
-  c.browsers = [
+Sauce.config do |config|
+  config[:browsers] = [
     ["OS", "BROWSER", "VERSION"],
     ["OS", "BROWSER", "VERSION"]
   ]
