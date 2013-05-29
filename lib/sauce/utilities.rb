@@ -2,6 +2,7 @@ require 'timeout'
 require 'socket'
 require 'childprocess'
 require 'net/http'
+require 'childprocess/process'
 
 module Sauce
   module Utilities
@@ -50,14 +51,14 @@ module Sauce
         wait_for_server_on_port(3001)
 
         at_exit do
-          @server.stop
+          @server.stop(3, "INT")
         end
         STDERR.puts "Rails server running!"
       end
 
       def stop
         begin
-          @server.stop
+          @server.stop(3, "INT")
         rescue
           STDERR.puts "Rails server could not be killed. Did it fail to start?"
         end
