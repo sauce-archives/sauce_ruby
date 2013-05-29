@@ -13,7 +13,7 @@ describe Sauce::Jasmine::Driver do
     end
 
     it 'should initialize a Sauce driver' do
-      Sauce::Selenium2.should_receive(:new).with(hash_including(:browser => browser)).and_return(true)
+      Sauce::Selenium2.should_receive(:new).with(anything).and_return(true)
       d = Sauce::Jasmine::Driver.new(browser, address)
       d.should_not be_nil
     end
