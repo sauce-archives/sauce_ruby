@@ -246,4 +246,8 @@ rescue LoadError
 rescue => e
   STDERR.puts "Exception caught: #{e.to_s}"
 end
+<<<<<<< HEAD
 end
+=======
+end
+>>>>>>> b9d9548153f8c13eb7ac7f2c33ddbd4b2beee6f9
