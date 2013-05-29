@@ -41,8 +41,8 @@ require "sauce"
 
 Sauce.config do |c|
   c.browsers = [
-    ["BROWSER", "OS", "VERSION"],
-    ["ANOTHER BROWSER", "OS", "VERSION"]
+    ["OS", "BROWSER", "VERSION"],
+    ["OS", "BROWSER", "VERSION"]
   ]
 end
 ENDFILE
