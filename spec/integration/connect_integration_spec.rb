@@ -3,7 +3,18 @@ require 'sauce/connect'
 
 describe 'Sauce::Connect integration testing' do
   def make_connection
+    puts "AUTH #{ENV["SAUCE_USERNAME"]}"
     Sauce::Connect.new({})
+  end
+
+  def backup_and_wipe_env_var(var)
+    self.instance_variable_set("@env_#{var}",  ENV[var])
+    ENV[var] = nil
+  end
+
+  def restore_env_var(var)
+    value_of_variable = self.instance_variable_get("@env_#{var}")
+    ENV[var] = value_of_variable unless value_of_variable.nil? 
   end
 
   before :each do
@@ -41,8 +52,9 @@ describe 'Sauce::Connect integration testing' do
       end
     end
 
-    it 'should fail if the SAUCE_USERNAME is also empty' do
+    it 'should fail if the SAUCE_USERNAME is empty' do
       expect {
+        backup_and_wipe_env_var "SAUCE_USERNAME"
         ENV['SAUCE_USERNAME'] = nil
         make_connection
       }.to raise_error(ArgumentError)
@@ -58,7 +70,8 @@ describe 'Sauce::Connect integration testing' do
     end
 
     after :each do
-      ENV['SAUCE_USERNAME'] = nil
+      restore_env_var "SAUCE_USERNAME"
+      restore_env_var "SAUCE_ACCESS_KEY"
     end
   end
 
