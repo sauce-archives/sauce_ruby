@@ -101,9 +101,11 @@ module Sauce
             end
 
             @browser = Sauce::Selenium2.new
-            at_exit do
-              finish!
-            end
+            # This at_exit call is causing failed rspec tests to exit(0).
+            # Should remain disabled until it's fixed.
+            # at_exit do
+            #   finish!
+            # end
           end
         end
         @browser
@@ -135,7 +137,7 @@ module Sauce
       def render(path)
         browser.save_screenshot path
       end
-        
+
     end
   end
 end
