@@ -117,7 +117,8 @@ begin
           if config[:application_host]
             need_tunnel = files_to_run.any? {|file| file =~ /spec\/selenium\//}
           end
-          if need_tunnel
+
+          if need_tunnel || config[:start_tunnel]
             @@tunnel ||= Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
             @@tunnel.connect
             @@tunnel.wait_until_ready
