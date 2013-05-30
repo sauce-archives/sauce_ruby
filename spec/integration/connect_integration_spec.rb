@@ -62,8 +62,10 @@ describe 'Sauce::Connect integration testing' do
 
     it 'should fail if the SAUCE_ACCESS_KEY is empty' do
       expect {
+        backup_and_wipe_env_var "SAUCE_ACCESS_KEY"
+        backup_and_wipe_env_var "SAUCE_USERNAME"
+
         ENV['SAUCE_USERNAME'] = 'testman'
-        ENV['SAUCE_ACCESS_KEY'] = nil
         make_connection
       }.to raise_error(ArgumentError)
 
