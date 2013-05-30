@@ -3,7 +3,6 @@ require 'sauce/connect'
 
 describe 'Sauce::Connect integration testing' do
   def make_connection
-    puts STDERR.out "EVEVEV #{ENV[SAUCE_USERNAME]}"
     Sauce::Connect.new({})
   end
 
