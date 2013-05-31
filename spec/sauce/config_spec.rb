@@ -131,7 +131,8 @@ describe Sauce::Config do
                                  :access_key => 'test_access',
                                  :os => 'Linux',
                                  :browser => 'firefox',
-                                 :browser_version => '3.')
+                                 :browser_version => '3.',
+                                 :build => 'test param build')
 
       browser_data = JSON.parse(config.to_browser_string)
       browser_data.should == {'name' => 'Unnamed Ruby job',
@@ -139,7 +140,8 @@ describe Sauce::Config do
                               'os' => 'Linux',
                               'username' => 'test_user',
                               'browser-version' => '3.',
-                              'browser' => 'firefox'}
+                              'browser' => 'firefox',
+                              'build' => 'test param build'}
     end
 
     it 'should create a browser string with optional parameters' do
