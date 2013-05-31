@@ -1,6 +1,7 @@
 require "sauce/parallel/test_broker"
 require "parallel_tests"
 require "parallel_tests/tasks"
+require "parallel_tests/cli_patch"
 
 namespace :sauce do
   task :spec, :arg1 do |t, args|

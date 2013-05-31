@@ -4,6 +4,7 @@ gemspec
 
 gem 'rake'
 gem 'capybara', "~> 2.1.0"
+gem 'pry'
 
 group :test do
   gem 'cucumber'

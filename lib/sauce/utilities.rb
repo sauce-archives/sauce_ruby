@@ -39,18 +39,28 @@ module Sauce
       end
 
       def start
-        STDERR.puts "Starting Rails server on port 3001..."
-
         port = 3001
+
         if ENV["TEST_ENV_NUMBER"]
-          port = port + ENV["TEST_ENV_NUMBER"].to_i
+          @test_env = ENV["TEST_ENV_NUMBER"].to_i
+          port = port + @test_env
         end
+
+        STDERR.puts "Starting Rails server on port #{port}..."
 
         if File.exists?('script/server')
-          @server = ChildProcess.build("ruby", "script/server", "-e", "test", "--port", "#{port}")
+          @process_args = ["ruby", "script/server", "-e", "test", "--port", "#{port}"]
+          #@server = ChildProcess.build("ruby", "script/server", "-e", "test", "--port", "#{port}")
         elsif File.exists?('script/rails')
-          @server = ChildProcess.build("bundle", "exec", "rails", "server", "-e", "test", "--port", "#{port}")
+          @process_args = ["bundle", "exec", "rails", "server", "-e", "test", "--port", "#{port}"]
+          #@server = ChildProcess.build("bundle", "exec", "rails", "server", "-e", "test", "--port", "#{port}")
         end
+
+        if @test_env
+          @process_args.push *["--pid", "#{Dir.pwd}/tmp/pids/server-#{@test_env}"]
+        end
+
+        @server = ChildProcess.build *@process_args
         @server.io.inherit!
         @server.start
 

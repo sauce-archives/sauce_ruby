@@ -15,7 +15,23 @@ module Sauce
     end
 
     def self.test_groups
-      @@groups ||= {}
+      @groups ||= {}
+    end
+
+    def self.test_groups=(groups)
+      @groups = groups.reduce({}) do |hash, g|
+        hash[g] = TestGroup.new(self.test_platforms)
+        hash
+      end
+
+      @group_indexes = groups.uniq.reduce({}) do |rh, g|
+        rh[g] =(groups.each_index.select {|i| groups[i] == g})
+        rh
+      end
+    end
+
+    def self.group_index(group)
+      @group_indexes[group].shift
     end
 
     def self.test_platforms
