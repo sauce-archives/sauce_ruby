@@ -106,8 +106,11 @@ begin
 
           if config[:start_local_application] &&
             Sauce::Utilities::RailsServer.is_rails_app?
-            @@server = Sauce::Utilities::RailsServer.new
-            @@server.start
+            # Start the app before the tests if this is a parallel run
+            if ENV["TEST_ENV_NUMBER"].nil?
+              @@server = Sauce::Utilities::RailsServer.new
+              @@server.start
+            end
           end
         end
 
@@ -129,6 +132,8 @@ begin
           if config[:start_local_application] &&
             files_to_run.any? {|file| file =~ /spec\/selenium\//} &&
             Sauce::Utilities::RailsServer.is_rails_app?
+            ## Only open the tunnel once.
+            ## TODO:  Why is this here?  It's above, also
             @@server = Sauce::Utilities::RailsServer.new
             @@server.start
           end
