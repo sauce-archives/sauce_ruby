@@ -13,9 +13,13 @@ namespace :spec do
     s.rspec_opts = rspec_options
   end
 
-  RSpec::Core::RakeTask.new(:integration) do |s|
-    s.pattern = 'spec/integration/**_spec.rb'
-    s.rspec_opts = rspec_options
+  namespace :integration do
+    [:rspec, :testunit].each do |ns|
+      RSpec::Core::RakeTask.new(ns) do |s|
+        s.pattern = "spec/integration/#{ns.to_s}/spec/**_spec.rb"
+        s.rspec_opts = rspec_options
+      end
+    end
   end
 
   namespace :rspec do

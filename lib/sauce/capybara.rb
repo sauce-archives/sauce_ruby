@@ -95,10 +95,8 @@ module Sauce
 
       def browser
         unless existing_browser?
-          unless @browser = rspec_browser
-            if Sauce.get_config[:start_tunnel]
-              Sauce::Capybara.connect_tunnel(:quiet => true)
-            end
+          @browser = rspec_browser
+          unless @browser
 
             @browser = Sauce::Selenium2.new
             at_exit do
@@ -129,7 +127,6 @@ module Sauce
       def finish!
         @browser.quit if existing_browser?
         @browser = nil
-        $sauce_tunnel.disconnect if $sauce_tunnel
       end
 
       def render(path)
