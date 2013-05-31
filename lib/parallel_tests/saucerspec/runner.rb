@@ -12,6 +12,7 @@ module ParallelTests
         env = Sauce::TestBroker.next_environment(test_files)
         env << " #{rspec_1_color}" if version == 1
         options = options.merge(:env => env)
+        puts "launching #{cmd} #{process_number} #{num_processes} #{options}"
         execute_command(cmd, process_number, num_processes, options)
       end
 

@@ -110,6 +110,7 @@ describe Sauce::Config do
       ENV['SAUCE_BROWSER'] = 'firefox'
       ENV['SAUCE_BROWSER_VERSION'] = '3.'
       ENV['SAUCE_JOB_NAME'] = 'Named Ruby Job'
+      ENV['BUILD_NUMBER'] = 'test build'
 
       config = Sauce::Config.new
       browser_data = JSON.parse(config.to_browser_string)
@@ -118,7 +119,8 @@ describe Sauce::Config do
                               'os' => 'Linux',
                               'username' => 'test_user',
                               'browser-version' => '3.',
-                              'browser' => 'firefox'}
+                              'browser' => 'firefox',
+                              'build' => 'test build'}
 
     end
 
