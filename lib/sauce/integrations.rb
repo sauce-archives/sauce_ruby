@@ -121,7 +121,7 @@ begin
           end
 
           if need_tunnel || config[:start_tunnel]
-            @@tunnel ||= Sauce::Connect.new(:host => config.application_host, :port => config.application_port || 80)
+            @@tunnel ||= Sauce::Connect.new(:host => config[:application_host], :port => config[:application_port] || 80)
             @@tunnel.connect
             @@tunnel.wait_until_ready
           end
