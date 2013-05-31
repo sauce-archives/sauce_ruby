@@ -162,6 +162,7 @@ describe Sauce::Config do
     it 'should create a browser string with optional parameters as underscored symbols' do
       config = Sauce::Config.new(:username => "test_user", :access_key => "test_access",
                                 :os => "Linux", :browser => "firefox", :browser_version => "3.",
+                                :build => "test opt build",
                                 :user_extensions_url => "testing")
       browser_data = JSON.parse(config.to_browser_string)
       browser_data.should == {'name' => 'Unnamed Ruby job',
@@ -170,6 +171,7 @@ describe Sauce::Config do
                               'username' => 'test_user',
                               'browser-version' => '3.',
                               'browser' => 'firefox',
+                              'build' => 'test opt build',
                               'user-extensions-url' => 'testing'}
     end
 
