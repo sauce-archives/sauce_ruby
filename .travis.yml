@@ -6,3 +6,7 @@ gemfile:
   - Gemfile
   - gemfiles/capybara-1.x.gemfile
   - gemfiles/capybara-2.0.x.gemfile
+env:
+  global:
+    - secure: "UIwAClJWDx3Be4zPBmjNsjL+Dx/jVr8ckXUVf6jR4gSe7k2fhNV9B06LQvQw\nVLATZJovBTgQZRvXL/i/JFXefkhNAqGxzlv8o9Avt8oup+TmzO96Tr/2N9HP\nneykU8lDybn0oy/uMI/Ho/Wg11YVJpyDwRkAQdUAF/CpqwMT4kw="
+    - secure: "g0lwmEPEtzRFW6ZeED4vhbK4o2ecMsKjglGy1jRGEe/LcDgbeRm4ScFBclYi\np3QC2XQAXhdGzUaszlkCIeIXEqWYml39bduPhbowhS2oe0aAul7Bdxjg+sDL\nJ3BFZtPabdnC2N3ilNQrH+jU2SwPyuhrSX5dgMEXIjuIToQeo0g="
