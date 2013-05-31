@@ -6,7 +6,9 @@ namespace :sauce do
   task :spec, :arg1 do |t, args|
     args.with_defaults(:arg1 => [Sauce::TestBroker.concurrencies, 20].min)
     concurrency = args[:arg1]
-    ParallelTests::CLI.new.run(["--type", "saucerspec"] + ["-n #{concurrency}", "spec"])
+    ParallelTests::CLI.new.run(["--type", "saucerspec",
+                                "-n", "#{concurrency}",
+                                "spec"])
   end
 
   task :install => :create_helper do
