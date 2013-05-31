@@ -5,6 +5,9 @@ require "parallel_tests/cli_patch"
 
 namespace :sauce do
   task :spec, :arg1 do |t, args|
+
+    ::RSpec::Core::Runner.disable_autorun!
+
     args.with_defaults(:arg1 => [Sauce::TestBroker.concurrencies, 20].min)
     concurrency = args[:arg1]
     ParallelTests::CLI.new.run(["--type", "saucerspec",
