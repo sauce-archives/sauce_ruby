@@ -92,7 +92,7 @@ describe Sauce::Config do
       ENV['SAUCE_OS'] = "Linux"
       ENV['SAUCE_BROWSER'] = "firefox"
       ENV['SAUCE_BROWSER_VERSION'] = "3."
-      ENV['BUILD_NUMBER'] = 'test build'
+      ENV['BUILD_NUMBER'] = 'test env build'
 
       config = Sauce::Config.new
       browser_data = JSON.parse(config.to_browser_string)
@@ -102,7 +102,7 @@ describe Sauce::Config do
                               'username' => 'test_user',
                               'browser-version' => '3.',
                               'browser' => 'firefox',
-                              'build' => 'test build'}
+                              'build' => 'test env build'}
     end
 
     it 'should create a browser string from the environment set by the jenkins plugin' do
@@ -112,7 +112,7 @@ describe Sauce::Config do
       ENV['SAUCE_BROWSER'] = 'firefox'
       ENV['SAUCE_BROWSER_VERSION'] = '3.'
       ENV['SAUCE_JOB_NAME'] = 'Named Ruby Job'
-      ENV['BUILD_NUMBER'] = 'test build'
+      ENV['BUILD_NUMBER'] = 'test env build'
 
       config = Sauce::Config.new
       browser_data = JSON.parse(config.to_browser_string)
@@ -122,7 +122,7 @@ describe Sauce::Config do
                               'username' => 'test_user',
                               'browser-version' => '3.',
                               'browser' => 'firefox',
-                              'build' => 'test build'}
+                              'build' => 'test env build'}
 
     end
 
@@ -145,6 +145,7 @@ describe Sauce::Config do
     it 'should create a browser string with optional parameters' do
       config = Sauce::Config.new(:username => "test_user", :access_key => "test_access",
                                 :os => "Linux", :browser => "firefox", :browser_version => "3.",
+                                :build => "test opt build",
                                 :"user-extensions-url" => "testing")
       browser_data = JSON.parse(config.to_browser_string)
       browser_data.should == {'name' => 'Unnamed Ruby job',
@@ -153,7 +154,9 @@ describe Sauce::Config do
                               'username' => 'test_user',
                               'browser-version' => '3.',
                               'browser' => 'firefox',
-                              'user-extensions-url' => 'testing'}
+                              'build' => 'test opt build',
+                              'user-extensions-url' => 'testing',
+      }
     end
 
     it 'should create a browser string with optional parameters as underscored symbols' do
