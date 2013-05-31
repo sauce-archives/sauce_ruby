@@ -120,6 +120,12 @@ module Sauce
     end
 
     def browsers
+      if @undefaulted_opts[:browser]
+        # If a specific browser was requested, ignore :browsers and
+        # use that one. This allows a setup with :browsers to launch
+        # sub-processes pointed just at each browser in the list.
+        return [[os, browser, browser_version]]
+      end
       return @opts[:browsers] if @opts.include? :browsers
       return [[os, browser, browser_version]]
     end
