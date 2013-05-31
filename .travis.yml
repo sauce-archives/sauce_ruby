@@ -10,3 +10,5 @@ env:
   global:
     - secure: "UIwAClJWDx3Be4zPBmjNsjL+Dx/jVr8ckXUVf6jR4gSe7k2fhNV9B06LQvQw\nVLATZJovBTgQZRvXL/i/JFXefkhNAqGxzlv8o9Avt8oup+TmzO96Tr/2N9HP\nneykU8lDybn0oy/uMI/Ho/Wg11YVJpyDwRkAQdUAF/CpqwMT4kw="
     - secure: "g0lwmEPEtzRFW6ZeED4vhbK4o2ecMsKjglGy1jRGEe/LcDgbeRm4ScFBclYi\np3QC2XQAXhdGzUaszlkCIeIXEqWYml39bduPhbowhS2oe0aAul7Bdxjg+sDL\nJ3BFZtPabdnC2N3ilNQrH+jU2SwPyuhrSX5dgMEXIjuIToQeo0g="
+    - secure: "pFMoNolaX7bIGIBEAYMcRSoHGV8oYtm5JhzTzXHE9kZCypAT38DKcbpTS6iy\nUW7l9SXnBaxoZgw3xgKKYvr7q5QF0fQcngye/QX2iCHuCsIzwSQKoEChmVna\ndj9/Cvw6FDfVjB2Pu74X1udKzFBOqVHPqKyAIk+9UaZAYzssE7g="
+    - secure: "JbvC4WR2wIlzq91s4tK5K5phbyEf1v05XvZw87viMduhfV9ndQH6oSDTUrkI\n3tp1AR4YM8WG2erxg5tnlaKRF0nsO+zbuaHzX7vBrKOzd6WFAy9K7S5WYGc/\nm0R/VKvMtrxt3jq2zshrYUgs0QIychAmThEl9vKtbOpCnUijBYs="  
