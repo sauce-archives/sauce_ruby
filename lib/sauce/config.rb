@@ -120,6 +120,12 @@ module Sauce
     end
 
     def browsers
+      if @undefaulted_opts[:browser]
+        # If a specific browser was requested, ignore :browsers and
+        # use that one. This allows a setup with :browsers to launch
+        # sub-processes pointed just at each browser in the list.
+        return [[os, browser, browser_version]]
+      end
       return @opts[:browsers] if @opts.include? :browsers
       return [[os, browser, browser_version]]
     end
@@ -268,7 +274,11 @@ module Sauce
       opts[:os] = env['SAUCE_OS']
       opts[:browser] = env['SAUCE_BROWSER']
       opts[:browser_version] = env['SAUCE_BROWSER_VERSION']
+
       opts[:job_name] = env['SAUCE_JOB_NAME'] || env['JOB_NAME']
+      opts[:build] = (env['BUILD_NUMBER'] ||
+                      env['TRAVIS_BUILD_NUMBER'] ||
+                      env['CIRCLE_BUILD_NUM'])
 
       opts[:firefox_profile_url] = env['SAUCE_FIREFOX_PROFILE_URL']
       opts[:user_extensions_url] = env['SAUCE_USER_EXTENSIONS_URL']

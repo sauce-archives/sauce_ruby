@@ -3,9 +3,12 @@ require "parallel_tests"
 require "parallel_tests/tasks"
 
 namespace :sauce do
-  task :spec do
-    concurrency = Sauce::TestBroker.concurrencies
-    ParallelTests::CLI.new.run(["--type", "saucerspec"] + ["-n #{concurrency}", "spec"])
+  task :spec, :arg1 do |t, args|
+    args.with_defaults(:arg1 => [Sauce::TestBroker.concurrencies, 20].min)
+    concurrency = args[:arg1]
+    ParallelTests::CLI.new.run(["--type", "saucerspec",
+                                "-n", "#{concurrency}",
+                                "spec"])
   end
 
   task :install => :create_helper do
@@ -36,11 +39,11 @@ Next steps:
       File.open(sauce_helper_path, "w") do |f|
         f.write (<<-ENDFILE
 # You should edit this file with the browsers you wish to use
-# For options, check out http://www.saucelabs.com/platforms
+# For options, check out http://saucelabs.com/platforms
 require "sauce"
 
-Sauce.config do |c|
-  c.browsers = [
+Sauce.config do |config|
+  config[:browsers] = [
     ["OS", "BROWSER", "VERSION"],
     ["OS", "BROWSER", "VERSION"]
   ]
