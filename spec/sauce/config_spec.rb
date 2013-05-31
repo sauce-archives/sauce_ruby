@@ -92,6 +92,7 @@ describe Sauce::Config do
       ENV['SAUCE_OS'] = "Linux"
       ENV['SAUCE_BROWSER'] = "firefox"
       ENV['SAUCE_BROWSER_VERSION'] = "3."
+      ENV['BUILD_NUMBER'] = 'test build'
 
       config = Sauce::Config.new
       browser_data = JSON.parse(config.to_browser_string)
@@ -100,7 +101,8 @@ describe Sauce::Config do
                               'os' => 'Linux',
                               'username' => 'test_user',
                               'browser-version' => '3.',
-                              'browser' => 'firefox'}
+                              'browser' => 'firefox',
+                              'build' => 'test build'}
     end
 
     it 'should create a browser string from the environment set by the jenkins plugin' do
