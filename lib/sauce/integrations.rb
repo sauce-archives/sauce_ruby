@@ -1,4 +1,5 @@
 require 'sauce/utilities'
+require "sauce_whisk"
 
 begin
   require 'spec'
@@ -42,6 +43,7 @@ begin
                                               :browser_version => version,
                                               :job_name => description})
             super(*args)
+
             @selenium.stop
           end
         end
@@ -81,6 +83,7 @@ begin
 
               begin
                 the_test.run
+                SauceWhisk::Jobs.change_status @selenium.session_id, example.exception.nil?
               ensure
                 @selenium.stop
                 Sauce.driver_pool.delete Thread.current.object_id
@@ -183,7 +186,10 @@ module Sauce
                           :job_name => my_name.to_s})
           @browser = Sauce::Selenium2.new(options)
           Sauce.driver_pool[Thread.current.object_id] = @browser
+
           super(*args, &blk)
+
+          SauceWhisk::Jobs.change_status @browser.session_id, passed?
           @browser.stop
           Sauce.driver_pool.delete Thread.current.object_id
         end
