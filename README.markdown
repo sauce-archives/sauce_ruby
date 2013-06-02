@@ -18,7 +18,7 @@ for information too!
     % gem install sauce
 ```
 
-## With RSpec 1 & 2
+### With RSpec 1 & 2
 In your spec_helper.rb:
 ```ruby
 require "sauce"
@@ -26,30 +26,30 @@ require "sauce"
 
 You can run tests against several browsers in series, see "Multiple Browsers", below.
 
-## With Test::Unit && Mini::Test
+### With Test::Unit && Mini::Test
 In your test_helper.rb:
 ```ruby
 require "sauce"
 ```
 
-## With Capybara
+### With Capybara
 In your test setup file (test or spec helper, most likely):
 ```ruby
 require "capybara"
 require "capybara/sauce"
 ```
 
-### Run all tests against Sauce
+#### Run all tests against Sauce
 ```ruby
 Capybara.default_driver = :sauce
 ```
 
-### Run only Javascript tests against Sauce
+#### Run only Javascript tests against Sauce
 ```ruby
 Capybara.javascript_driver = :sauce
 ```
 
-### Sauce::Connect
+#### With Sauce::Connect
 Capybara runs a server on a random port.  Sauce::Connect expects a port from a specific range.  So, you need to pick one of :
 
 ```bash
@@ -83,8 +83,17 @@ Tests will be run against each combination, sequentially and automagically.
 
 Work is continuing in magic browser delights for other tools.  (PSST:  If you have ideas, please let us know!)
 
-## Suggested Toolchain
+## Reporting Results
 
+### RSpec 2
+
+If integrated with RSpec (as detailed above), the gem will automatically update your jobs' success (or failure) and name using the brand spankin' new (SauceWhisk)[https://github.com/DylanLacey/sauce_whisk] gem.
+
+### RSpec 1 and Test::Unit
+
+Coming soon!  Check out (SauceWhisk)[https://github.com/DylanLacey/sauce_whisk] while you wait!
+
+## Suggested Toolchain
 
 The Sauce gem has been optimized to work most effectively with
 [Cucumber](https://www.cukes.info) and
