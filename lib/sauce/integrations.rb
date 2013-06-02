@@ -232,14 +232,18 @@ if defined?(ActiveSupport::TestCase)
 end
 
 begin
-  require 'test/unit/testcase'
-  module Sauce
-    class TestCase < Test::Unit::TestCase
-      include SeleniumForTestUnit
-      extend SeleniumForTestUnitClassMethods
+  if Object.const_defined? "Test"
+    if Test.const_defined? "Unit"
+      require 'test/unit/testcase'
+      module Sauce
+        class TestCase < Test::Unit::TestCase
+          include SeleniumForTestUnit
+          extend SeleniumForTestUnitClassMethods
 
-      # Placeholder so test/unit ignores test cases without any tests.
-      def default_test
+          # Placeholder so test/unit ignores test cases without any tests.
+          def default_test
+          end
+        end
       end
     end
   end
