@@ -18,6 +18,7 @@ for information too!
     % gem install sauce
 ```
 
+<<<<<<< HEAD
 ## With RSpec 1 & 2
 In spec/sauce_helper.rb:
 ```ruby
@@ -25,29 +26,30 @@ require "sauce"
 ```
 
 ## With Test::Unit && Mini::Test
+
 In your test_helper.rb:
 ```ruby
 require "sauce"
 ```
 
-## With Capybara
+### With Capybara
 In your test setup file (test or spec helper, most likely):
 ```ruby
 require "capybara"
 require "capybara/sauce"
 ```
 
-### Run all tests against Sauce
+#### Run all tests against Sauce
 ```ruby
 Capybara.default_driver = :sauce
 ```
 
-### Run only Javascript tests against Sauce
+#### Run only Javascript tests against Sauce
 ```ruby
 Capybara.javascript_driver = :sauce
 ```
 
-### Sauce::Connect
+#### With Sauce::Connect
 Capybara runs a server on a random port.  Sauce::Connect expects a port from a specific range.  So, you need to pick one of :
 
 ```bash
@@ -71,6 +73,16 @@ end
 If you run your tests normally (eg with ```rspec```) They'll run one at a time against the Sauce Labs cloud.  The first browser from the array will be used for all tests.
 
 If you run your tests with the rake task (```rake sauce:spec```) then your tests will be run concurrently, for as many concurrent VMs as your account is allowed, against every platform specified.
+
+## Reporting Results
+
+### RSpec 2
+
+If integrated with RSpec (as detailed above), the gem will automatically update your jobs' success (or failure) and name using the brand spankin' new (SauceWhisk)[https://github.com/DylanLacey/sauce_whisk] gem.
+
+### RSpec 1 and Test::Unit
+
+Coming soon!  Check out (SauceWhisk)[https://github.com/DylanLacey/sauce_whisk] while you wait!
 
 ## Suggested Toolchain
 

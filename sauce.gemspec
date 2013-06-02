@@ -29,4 +29,5 @@ Gem::Specification.new do |s|
   s.add_dependency('cmdparse', [">= 2.0.2"])
   s.add_dependency('highline', [">= 1.5.0"])
   s.add_dependency('parallel_tests', ["= 0.12.4"])
+  s.add_dependency('sauce_whisk', ["0.0.3"])
 end
