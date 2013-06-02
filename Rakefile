@@ -13,21 +13,18 @@ namespace :spec do
     s.rspec_opts = rspec_options
   end
 
-  namespace :integration do
-    [:rspec, :testunit].each do |ns|
-      RSpec::Core::RakeTask.new(ns) do |s|
-        s.pattern = "spec/integration/#{ns.to_s}/spec/**_spec.rb"
-        s.rspec_opts = rspec_options
-      end
-    end
+  task :integration => [:rspec, :testunit]
+
+  task :rspec do
+    desc "Run an integration test with rspec and capybara"
+    ensure_rvm!
+    sh "(cd spec/integration/rspec && ./run-test.sh)"
   end
 
-  namespace :rspec do
-    desc "Run an integration test with rspec and capybara"
-    task :capybara do |t|
-      ensure_rvm!
-      sh "(cd spec/integration/rspec && ./run-test.sh)"
-    end
+  task :testunit do
+    desc "Run an integration test with testunit"
+    ensure_rvm!
+    sh "(cd spec/integration/testunit && ./run-test.sh)"
   end
 end
 
