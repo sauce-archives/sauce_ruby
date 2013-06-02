@@ -15,4 +15,4 @@ source ~/.rvm/scripts/rvm
 
 bundle install
 
-${RAKE} spec
+${RAKE} test

@@ -11,21 +11,13 @@ end
 
 class IntegrationTest < Sauce::TestCase
 
-  # Called before every test method runs. Can be used
-  # to set up fixture information.
-  def setup
-    # Do nothing
-  end
-
-  # Called after every test method runs. Can be used to tear
-  # down fixture information.
-
-  def teardown
-
-  end
-
   def test_testunit_is_set_in_sauce_config
     capabilities = Sauce.get_config.to_desired_capabilities
     assert_includes capabilities[:client_version], "Test::Unit"
+  end
+
+  def test_rspec_is_not_set_in_sauce_config
+    capabilities = Sauce.get_config.to_desired_capabilities
+    assert_not_includes capabilities[:client_version], "Rspec"
   end
 end
