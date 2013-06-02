@@ -1,5 +1,9 @@
 # Changelog
 
-## 2.5.0
+## 2.5
+### 2.5.1
+Added Test::Unit integration for result reporting
+Added better tests for above
 
-Added RSpec integration for result reporting.
+### 2.5.0
+Added RSpec 2 integration for result reporting.
