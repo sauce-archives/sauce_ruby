@@ -32,12 +32,10 @@ module Sauce
     end
 
     class Connect
-
       def self.start(options={})
         begin
           require "sauce/connect"
         rescue LoadError => e
-          puts "OH LAWD #{caller[1]}"
           STDERR.puts 'Please install the `sauce-connect` gem if you intend on using Sauce Connect with your tests!'
           exit(1)
         end
