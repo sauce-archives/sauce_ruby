@@ -3,6 +3,7 @@ require 'socket'
 require 'childprocess'
 require 'net/http'
 require 'childprocess/process'
+require 'sauce/parallel'
 
 module Sauce
   module Utilities
@@ -40,18 +41,27 @@ module Sauce
           exit(1)
         end
 
-        unless @tunnel
-          @tunnel = Sauce::Connect.new options
-          @tunnel.connect
-          @tunnel.wait_until_ready
+        if ParallelTests.first_process?
+          unless @tunnel
+            @tunnel = Sauce::Connect.new options
+            @tunnel.connect
+            @tunnel.wait_until_ready
+          end
+            @tunnel
+        else
+          while not File.exist? "sauce_connect.ready"
+            sleep 0.5
+          end
         end
-          @tunnel
       end
 
       def self.close
         if @tunnel
-          @tunnel.disconnect
-          @tunnel = nil
+          if ParallelTests.first_process?
+            ParallelTests.wait_for_other_processes_to_finish
+            @tunnel.disconnect
+            @tunnel = nil
+          end
         end
       end
     end
