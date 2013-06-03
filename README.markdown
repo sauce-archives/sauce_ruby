@@ -18,7 +18,6 @@ for information too!
     % gem install sauce
 ```
 
-<<<<<<< HEAD
 ## With RSpec 1 & 2
 In spec/sauce_helper.rb:
 ```ruby
