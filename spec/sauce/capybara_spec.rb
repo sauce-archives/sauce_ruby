@@ -8,27 +8,6 @@ describe Sauce::Capybara do
     Sauce::Utilities::Connect.instance_variable_set(:@tunnel, false)
   end
 
-  describe '#connect_tunnel' do
-    let(:connector) do
-      connector = double()
-      connector.should_receive(:connect)
-      connector.should_receive(:wait_until_ready)
-      connector
-    end
-
-    it 'should connect if the tunnel is not connected' do
-      Sauce::Connect.should_receive(:new).with(anything).and_return(connector)
-
-      Sauce::Capybara.connect_tunnel
-    end
-
-    it 'should pass the quiet option to Sauce::Connect' do
-      Sauce::Connect.should_receive(:new).with(
-                    hash_including(:quiet => true)).and_return(connector)
-      Sauce::Capybara.connect_tunnel(:quiet => true)
-    end
-  end
-
   describe Sauce::Capybara::Driver do
 
     let(:app) { double('Mock App for Driver') }

@@ -1,9 +1,14 @@
 require "spec_helper"
+require "sauce/connect"
+
+Sauce.config do |c|
+  c[:start_tunnel] = false
+end
 
 describe "Sauce::Utilities::Connect" do
 
   before :each do
-    @mock_tunnel = double(Sauce::Connect.new)
+    @mock_tunnel = double()
   end
 
   after :each do

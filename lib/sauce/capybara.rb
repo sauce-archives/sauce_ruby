@@ -9,24 +9,6 @@ $sauce_tunnel = nil
 
 module Sauce
   module Capybara
-    def connect_tunnel(options={})
-      begin
-        require 'sauce/connect'
-      rescue LoadError
-        puts 'Please install the `sauce-connect` gem if you intend on using Sauce Connect with your tests!'
-        raise
-      end
-
-      unless $sauce_tunnel.nil?
-        return $sauce_tunnel
-      end
-      $sauce_tunnel = Sauce::Connect.new(options)
-      $sauce_tunnel.connect
-      $sauce_tunnel.wait_until_ready
-      $sauce_tunnel
-    end
-    module_function :connect_tunnel
-
     class Driver < ::Capybara::Selenium::Driver
       RETRY_ON = [::Selenium::WebDriver::Error::UnhandledError,
                   ::Selenium::WebDriver::Error::UnknownError]
@@ -99,11 +81,9 @@ module Sauce
           unless @browser
 
             @browser = Sauce::Selenium2.new
-            # This at_exit call is causing failed rspec tests to exit(0).
-            # Should remain disabled until it's fixed.
-            # at_exit do
-            #   finish!
-            # end
+            at_exit do
+              finish!
+            end
           end
         end
         @browser

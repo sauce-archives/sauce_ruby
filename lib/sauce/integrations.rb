@@ -19,7 +19,7 @@ begin
           config = Sauce::Config.new
           if @@need_tunnel
             if config[:application_host]
-              @@tunnel = Sauce::Connect.new(:host => config[:application_host], :port => config[:application_port] || 80)
+              @@tunnel = Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80)
               @@tunnel.connect
               @@tunnel.wait_until_ready
             end
@@ -32,7 +32,7 @@ begin
         end
 
         after :suite do
-          @@tunnel.disconnect if defined? @@tunnel
+          Sauce::Utilities::Connect.close
           @@server.stop if defined? @@server
         end
 
@@ -102,7 +102,7 @@ begin
 
           config = Sauce::Config.new
           if config[:application_host]
-            @@tunnel ||= Sauce::Connect.new(:host => config[:application_host], :port => config[:application_port] || 80)
+            @@tunnel ||= Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80)
             @@tunnel.connect
             @@tunnel.wait_until_ready
           end
@@ -127,7 +127,7 @@ begin
           end
 
           if need_tunnel || config[:start_tunnel]
-            @@tunnel ||= Sauce::Connect.new(:host => config[:application_host], :port => config[:application_port] || 80)
+            @@tunnel ||= Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80)
             @@tunnel.connect
             @@tunnel.wait_until_ready
           end
@@ -142,7 +142,7 @@ begin
           end
         end
         ::RSpec.configuration.after :suite do
-          @@tunnel.disconnect if defined? @@tunnel
+          Sauce::Utilities::Connect.close
           @@server.stop if defined? @@server
         end
       end
