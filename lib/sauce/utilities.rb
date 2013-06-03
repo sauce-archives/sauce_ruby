@@ -31,6 +31,33 @@ module Sauce
       end
     end
 
+    class Connect
+
+      def self.start(options={})
+        puts "TUNNEL CONNECTION REQUESTED #{options}"
+        begin
+          require "sauce/connect"
+        rescue LoadError => e
+          STDERR.puts 'Please install the `sauce-connect` gem if you intend on using Sauce Connect with your tests!'
+          exit(1)
+        end
+
+        unless @tunnel
+          @tunnel = Sauce::Connect.new options
+          @tunnel.connect
+          @tunnel.wait_until_ready
+        end
+          @tunnel
+      end
+
+      def self.close
+        if @tunnel
+          @tunnel.disconnect
+          @tunnel = nil
+        end
+      end
+    end
+
     class RailsServer
       include Sauce::Utilities
 
