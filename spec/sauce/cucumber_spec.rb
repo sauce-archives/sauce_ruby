@@ -155,7 +155,6 @@ module Sauce::Capybara
 
           # Make sure we actually configure ourselves
           Sauce::Utilities::Connect.should_receive(:start).and_return {true}
-          Sauce::Utilities::Connect.should_receive(:close).and_return {true}
           run_defined_feature feature
           $ran_scenario.should be true
         end
