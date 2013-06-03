@@ -9,6 +9,10 @@ module Sauce::Capybara
     include Sauce::Capybara::Cucumber
     include Sauce::Cucumber::SpecHelper
 
+    before :each do
+      Sauce::Utilities::Connect.stub!(:start) {}
+    end
+
     describe '#use_sauce_driver' do
       before :each do
         ::Capybara.current_driver = :test
@@ -107,6 +111,53 @@ module Sauce::Capybara
           $ran_scenario.should == 2
         end
 
+      end
+
+      context "when using sauce/connect" do
+        let(:feature) do
+          """
+          Feature: A dummy feature
+            @selenium
+            Scenario: A dummy scenario
+              Given a scenario
+              When I raise no exceptions
+          """
+        end
+
+        before :each do
+          Sauce::Utilities::Connect.rspec_reset
+
+          Sauce.config do |c|
+            c[:start_tunnel] = true
+          end
+          $ran_scenario = nil
+        end
+
+        after :all do
+          Sauce::Utilities::Connect.stub!(:start) {}
+        end
+
+        it 'should have set up a tunnel' do
+          define_steps do
+            Given /^a scenario$/ do
+            end
+            When /^I raise no exceptions$/ do
+              $ran_scenario = true
+            end
+            # Set up and invoke our defined Around hook
+            Around('@selenium') do |scenario, block|
+              # We need to fully reference the module function here due to a
+              # change in scoping that will happen to this block courtesy of
+              # define_steps
+              Sauce::Capybara::Cucumber.around_hook(scenario, block)
+            end
+          end
+
+          # Make sure we actually configure ourselves
+          Sauce::Utilities::Connect.should_receive(:start).and_return {true}
+          run_defined_feature feature
+          $ran_scenario.should be true
+        end
       end
 
       context 'with a correct scenario' do

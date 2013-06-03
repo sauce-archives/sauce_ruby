@@ -55,6 +55,10 @@ module Sauce
       module_function :using_jenkins?
 
       def around_hook(scenario, block)
+        if Sauce.get_config[:start_tunnel]
+          Sauce::Utilities::Connect.start
+        end
+
         ::Capybara.current_driver = :sauce
         driver = ::Capybara.current_session.driver
         # This session_id is the job ID used by Sauce Labs, we're pulling it
@@ -117,5 +121,10 @@ begin
   Around('@selenium') do |scenario, block|
     Sauce::Capybara::Cucumber.around_hook(scenario, block)
   end
+
+  at_exit do
+    Sauce::Utilities::Connect.close
+  end
+
 rescue NoMethodError # This makes me sad
 end
