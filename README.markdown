@@ -83,6 +83,12 @@ If integrated with RSpec (as detailed above), the gem will automatically update 
 
 Coming soon!  Check out (SauceWhisk)[https://github.com/DylanLacey/sauce_whisk] while you wait!
 
+## Full configuration details
+
+Check out the ((in)Complete guide to Configuration)[https://github.com/sauce-labs/sauce_ruby/wiki/Configuration----The-(in)Complete-Guide] for a full list of configuration options and details.
+
+This also details how to customise application/tunnel setup.
+
 ## Suggested Toolchain
 
 The Sauce gem has been optimized to work most effectively with
