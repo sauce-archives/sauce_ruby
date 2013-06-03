@@ -1,5 +1,6 @@
-
 require 'capybara/cucumber'
 require 'sauce/cucumber'
 
-Capybara.current_driver = :sauce
+Sauce.config do |c|
+  c[:start_tunnel] = true
+end
