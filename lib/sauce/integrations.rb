@@ -19,9 +19,7 @@ begin
           config = Sauce::Config.new
           if @@need_tunnel
             if config[:application_host]
-              @@tunnel = Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80)
-              @@tunnel.connect
-              @@tunnel.wait_until_ready
+              Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80)
             end
             if config[:start_local_application] &&
               Sauce::Utilities::RailsServer.is_rails_app?
@@ -102,9 +100,7 @@ begin
 
           config = Sauce::Config.new
           if config[:application_host]
-            @@tunnel ||= Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80)
-            @@tunnel.connect
-            @@tunnel.wait_until_ready
+            Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80)
           end
 
           if config[:start_local_application] &&
@@ -127,9 +123,7 @@ begin
           end
 
           if need_tunnel || config[:start_tunnel]
-            @@tunnel ||= Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80)
-            @@tunnel.connect
-            @@tunnel.wait_until_ready
+            Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80)
           end
 
           if config[:start_local_application] &&
