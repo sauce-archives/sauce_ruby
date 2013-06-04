@@ -34,11 +34,17 @@ module Sauce
     class Connect
 
       def self.start(options={})
-        puts "TUNNEL CONNECTION REQUESTED #{options}"
         begin
           require "sauce/connect"
         rescue LoadError => e
-          STDERR.puts 'Please install the `sauce-connect` gem if you intend on using Sauce Connect with your tests!'
+          STDERR.puts <<-ERROR
+Please install the `sauce-connect` gem if you intend on using Sauce Connect with your tests!
+
+If you don't wish to use Sauce Connect, set [:start_tunnel] to false:
+  Sauce.config do |config|
+    config[:start_tunnel] = false
+  end
+          ERROR
           exit(1)
         end
 
