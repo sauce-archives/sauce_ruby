@@ -15,6 +15,14 @@ namespace :sauce do
                                 "spec"])
   end
 
+  task :features, :arg1  do |t, args|
+    #args.with_defaults(:arg1 => [Sauce::TestBroker.concurrencies, 20].min)
+    #concurrency = args.shift
+    concurrency = 4
+    ParallelTests::CLI.new.run(["--type", "saucecucumber", args[:arg1],
+                                  "-n", "#{concurrency}"])
+  end
+
   task :install => :create_helper do
     spec_helper_path = "spec/spec_helper.rb"
     unless File.open(spec_helper_path) { |f| f.read.match "require \"sauce_helper\""}

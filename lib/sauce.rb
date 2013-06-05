@@ -7,6 +7,7 @@ require 'sauce/selenium'
 require 'sauce/integrations'
 require 'tasks/parallel_testing'
 require 'parallel_tests/saucerspec/runner'
+require 'parallel_tests/saucecucumber/runner'
 
 # Ruby before 1.9.3-p382 does not handle exit codes correctly when nested
 if RUBY_VERSION == "1.9.3" && RUBY_PATCHLEVEL < 392

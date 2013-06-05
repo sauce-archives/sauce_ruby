@@ -2,16 +2,23 @@ require "rest-client"
 require "json"
 require "yaml"
 require "sauce/parallel/test_group"
+require "thread"
 
 module Sauce
   class TestBroker
+
+    def self.environment_mutex
+      @@m ||= Mutex.new
+    end
    
     def self.next_environment(group)
-      unless test_groups.has_key? group
-        test_groups[group] = TestGroup.new(self.test_platforms)
+     # puts "Asked for #{group} next environment"
+      environment_mutex.synchronize do
+        unless test_groups.has_key? group
+          test_groups[group] = TestGroup.new(self.test_platforms)
+        end
+        return test_groups[group].next_platform
       end
-
-      test_groups[group].next_platform
     end
 
     def self.test_groups
@@ -53,11 +60,25 @@ module Sauce
     end
 
     def self.load_sauce_config
-      if File.exists? "./spec/sauce_helper.rb"
-        require "./spec/sauce_helper"
-      else
-        require "./spec/spec_helper"
+      begin
+        if File.exists? "./spec/sauce_helper.rb"
+          require "./spec/sauce_helper"
+        else
+          require "./spec/spec_helper"
+        end
+      rescue LoadError => e
+        # Gross, but maybe theyre using Cuke
+        begin
+          if File.exists? "./features/support/sauce_helper.rb"
+            require "./features/support/sauce_helper"
+          else
+            raise LoadError "Can't find sauce_helper, please add it in ./features/support/sauce_helper.rb"
+          end
+        rescue LoadError => e
+          #WHO KNOWS
+        end
       end
+
     end
 
     SAUCE_USERNAME = ENV["SAUCE_USERNAME"]
