@@ -20,9 +20,9 @@ describe Sauce::TestBroker do
       first_environment.should eq({
         :SAUCE_PERFILE_BROWSERS => (
           "'" +
-          JSON.generate({"./spec/a_spec" => [{"os" => "'Windows 7'",
-                                              "browser" => "'Opera'",
-                                              "version" => "'10'"}]}) +
+          JSON.generate({"./spec/a_spec" => [{"os" => "Windows 7",
+                                              "browser" => "Opera",
+                                              "version" => "10"}]}) +
           "'")
       })
     end
@@ -34,9 +34,9 @@ describe Sauce::TestBroker do
       second_environment.should eq({
         :SAUCE_PERFILE_BROWSERS => (
           "'" +
-          JSON.generate({"./spec/a_spec" => [{"os" => "'Linux'",
-                                               "browser" => "'Firefox'",
-                                               "version" => "'19'"}]}) +
+          JSON.generate({"./spec/a_spec" => [{"os" => "Linux",
+                                               "browser" => "Firefox",
+                                               "version" => "19"}]}) +
           "'")
       })
     end
