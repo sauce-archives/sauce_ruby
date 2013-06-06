@@ -7,6 +7,13 @@ require "thread"
 module Sauce
   class TestBroker
 
+    def self.reset
+      if defined? @@platforms
+        remove_class_variable(:@@platforms)
+      end
+      @groups = {}
+    end
+
     def self.environment_mutex
       @@m ||= Mutex.new
     end

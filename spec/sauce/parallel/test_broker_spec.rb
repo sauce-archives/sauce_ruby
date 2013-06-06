@@ -6,13 +6,8 @@ describe Sauce::TestBroker do
 
   describe "#next_environment" do
 
-    before :all do
-      Sauce.config do |c|
-        c.browsers = [
-            ["Windows 7", "Opera", "10"],
-            ["Linux", "Firefox", "19"]
-        ]
-      end
+    before :each do
+      Sauce::TestBroker.reset
     end
 
     it "returns the first browser for new entries" do
