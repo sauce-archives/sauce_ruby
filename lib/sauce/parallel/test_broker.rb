@@ -48,8 +48,7 @@ module Sauce
     def self.test_platforms
       unless defined? @@platforms
         load_sauce_config
-        brokers = Sauce.get_config
-        @@platforms ||= brokers[:browsers]
+        @@platforms ||= Sauce.get_config[:browsers]
       end
       @@platforms
     end
