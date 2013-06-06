@@ -1,3 +1,4 @@
+require "json"
 require "rspec"
 require "sauce/parallel/test_broker"
 
@@ -15,22 +16,26 @@ describe Sauce::TestBroker do
     end
 
     it "returns the first environment for new entries" do
-      first_environment = Sauce::TestBroker.next_environment "spec/a_spec"
+      first_environment = Sauce::TestBroker.next_environment ["spec/a_spec"]
       first_environment.should eq({
-        :SAUCE_OS => "'Windows 7'",
-        :SAUCE_BROWSER => "'Opera'",
-        :SAUCE_BROWSER_VERSION => "'10'"
+        :SAUCE_PERFILE_BROWSERS => ("'" +
+                                    JSON.generate({"os" => "'Windows 7'",
+                                                    "browser" => "'Opera'",
+                                                    "version" => "'10'"}) +
+                                    "'")
       })
     end
 
     it "should only return an environment once" do
       Sauce::TestBroker.next_environment "spec/b_spec"
-      second_environment = Sauce::TestBroker.next_environment "spec/b_spec"
+      second_environment = Sauce::TestBroker.next_environment ["spec/a_spec"]
 
       second_environment.should eq({
-          :SAUCE_OS => "'Linux'",
-          :SAUCE_BROWSER => "'Firefox'",
-          :SAUCE_BROWSER_VERSION => "'19'"
+        :SAUCE_PERFILE_BROWSERS => ("'" +
+                                    JSON.generate({"os" => "'Linux'",
+                                                    "browser" => "'Firefox'",
+                                                    "version" => "'19'"}) +
+                                    "'")
       })
     end
   end
