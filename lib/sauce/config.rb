@@ -264,36 +264,30 @@ module Sauce
 
     def extract_options_from_hash(env)
       opts = {}
-      opts[:host] = env['SAUCE_HOST']
-      opts[:port] = env['SAUCE_PORT']
-      opts[:browser_url] = env['SAUCE_BROWSER_URL']
 
-      opts[:username] = env['SAUCE_USERNAME'] || env['SAUCE_USER_NAME']
-      opts[:access_key] = env['SAUCE_ACCESS_KEY'] || env['SAUCE_API_KEY']
+      on_demand = env.delete "SAUCE_ONDEMAND_BROWSERS"
+      env_browsers = env.delete "SAUCE_BROWSERS"
 
-      opts[:os] = env['SAUCE_OS']
-      opts[:browser] = env['SAUCE_BROWSER']
-      opts[:browser_version] = env['SAUCE_BROWSER_VERSION']
+      env.select {|k,v| k.start_with? "SAUCE_"}.each do |k,v|
+        opts[k.downcase.sub("sauce_", "").to_sym] = v
+      end
 
       opts[:job_name] = env['SAUCE_JOB_NAME'] || env['JOB_NAME']
       opts[:build] = (env['BUILD_NUMBER'] ||
                       env['TRAVIS_BUILD_NUMBER'] ||
                       env['CIRCLE_BUILD_NUM'])
 
-      opts[:firefox_profile_url] = env['SAUCE_FIREFOX_PROFILE_URL']
-      opts[:user_extensions_url] = env['SAUCE_USER_EXTENSIONS_URL']
-
       if env.include? 'URL'
         opts['SAUCE_BROWSER_URL'] = "http://#{env['URL']}/"
       end
 
-      if env.include? 'SAUCE_ONDEMAND_BROWSERS'
-        browsers = JSON.parse(env['SAUCE_ONDEMAND_BROWSERS'])
+      if on_demand
+        browsers = JSON.parse(on_demand)
         opts[:browsers] = browsers.map { |x| [x['os'], x['browser'], x['browser-version']] }
       end
 
-      if env.include? 'SAUCE_BROWSERS'
-        browsers = JSON.parse(env['SAUCE_BROWSERS'])
+      if env_browsers
+        browsers = JSON.parse(env_browsers)
         opts[:browsers] = browsers.map { |x| [x['os'], x['browser'], x['version']] }
       end
 
