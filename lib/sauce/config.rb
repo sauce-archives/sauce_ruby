@@ -290,7 +290,8 @@ module Sauce
       opts[:browser_version] = env['SAUCE_BROWSER_VERSION']
 
       opts[:job_name] = env['SAUCE_JOB_NAME'] || env['JOB_NAME']
-      opts[:build] = (env['BUILD_NUMBER'] ||
+      opts[:build] = (env['BUILD_TAG'] ||
+                      env['BUILD_NUMBER'] ||
                       env['TRAVIS_BUILD_NUMBER'] ||
                       env['CIRCLE_BUILD_NUM'])
 
