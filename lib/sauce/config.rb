@@ -74,6 +74,10 @@ module Sauce
       @opts[key] = value
     end
 
+    def has_key?(key)
+      @opts.has_key? key
+    end
+
     def silence_warnings
       false
     end
@@ -128,6 +132,16 @@ module Sauce
       end
       return @opts[:browsers] if @opts.include? :browsers
       return [[os, browser, browser_version]]
+    end
+
+    def browsers_for_file(file)
+      if @opts[:perfile_browsers]
+        @opts[:perfile_browsers][file].map do |h|
+          [h['os'], h['browser'], h['version']]
+        end
+      else
+        browsers
+      end
     end
 
     def browser
@@ -295,6 +309,10 @@ module Sauce
       if env.include? 'SAUCE_BROWSERS'
         browsers = JSON.parse(env['SAUCE_BROWSERS'])
         opts[:browsers] = browsers.map { |x| [x['os'], x['browser'], x['version']] }
+      end
+
+      if env.include? 'SAUCE_PERFILE_BROWSERS'
+        opts[:perfile_browsers] = JSON.parse(env['SAUCE_PERFILE_BROWSERS'])
       end
 
       return opts.delete_if {|key, value| value.nil?}

@@ -10,9 +10,9 @@ module Sauce
       begin
         @index = @index + 1
         {
-          :SAUCE_OS => "'#{platform[0]}'",
-          :SAUCE_BROWSER => "'#{platform[1]}'",
-          :SAUCE_BROWSER_VERSION => "'#{platform[2]}'"
+          'os' => platform[0],
+          'browser' => platform[1],
+          'version' => platform[2]
         }
       rescue NoMethodError => e
         puts "I don't have any config"
