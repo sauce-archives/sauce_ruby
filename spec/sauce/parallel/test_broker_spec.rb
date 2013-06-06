@@ -18,11 +18,12 @@ describe Sauce::TestBroker do
     it "returns the first environment for new entries" do
       first_environment = Sauce::TestBroker.next_environment ["spec/a_spec"]
       first_environment.should eq({
-        :SAUCE_PERFILE_BROWSERS => ("'" +
-                                    JSON.generate({"os" => "'Windows 7'",
-                                                    "browser" => "'Opera'",
-                                                    "version" => "'10'"}) +
-                                    "'")
+        :SAUCE_PERFILE_BROWSERS => (
+          "'" +
+          JSON.generate({"./spec/a_spec" => [{"os" => "'Windows 7'",
+                                              "browser" => "'Opera'",
+                                              "version" => "'10'"}]}) +
+          "'")
       })
     end
 
@@ -31,11 +32,12 @@ describe Sauce::TestBroker do
       second_environment = Sauce::TestBroker.next_environment ["spec/a_spec"]
 
       second_environment.should eq({
-        :SAUCE_PERFILE_BROWSERS => ("'" +
-                                    JSON.generate({"os" => "'Linux'",
-                                                    "browser" => "'Firefox'",
-                                                    "version" => "'19'"}) +
-                                    "'")
+        :SAUCE_PERFILE_BROWSERS => (
+          "'" +
+          JSON.generate({"./spec/a_spec" => [{"os" => "'Linux'",
+                                               "browser" => "'Firefox'",
+                                               "version" => "'19'"}]}) +
+          "'")
       })
     end
   end
