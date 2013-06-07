@@ -1,4 +1,10 @@
 # Changelog
+### 3.0.0
+W00t!  Parallelization for Cucumber, RSpec.  The gem now uses parallel_tests to spin up instances of your tests across all specified browsers.  Tests are run at the lower of your concurrency limit OR 20.
+
+Added sauce:install:spec, sauce:install:features to create config helpers
+Added parallelization - Gem will now run your tests across multiple browsers and as many threads as you have Sauce VMs
+Added sauce:features and sauce:spec to run tests in parallel.
 
 ## 2.5
 ### 2.5.1
