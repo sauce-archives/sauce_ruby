@@ -55,15 +55,12 @@ module Sauce
       module_function :using_jenkins?
 
       def around_hook(scenario, block)
-        if Sauce.get_config[:start_tunnel]
-          Sauce::Utilities::Connect.start
+        if Sauce::Config.new[:start_tunnel]
+          Sauce::Utilities::Connect.start(:quiet => true)
         end
 
         ::Capybara.current_driver = :sauce
-        driver = ::Capybara.current_session.driver
-        # This session_id is the job ID used by Sauce Labs, we're pulling it
-        # off of the driver now to make sure we have it after `block.call`
-        session_id = driver.browser.session_id
+
         job_name = Sauce::Capybara::Cucumber.name_from_scenario(scenario)
         custom_data = {}
 
@@ -72,11 +69,6 @@ module Sauce
                        :jenkins_node => ENV['NODE_NAME'],
                        :jenkins_job => ENV['JOB_NAME']})
         end
-
-        job = Sauce::Job.new('id' => session_id,
-                             'name' => job_name,
-                             'custom-data' => custom_data)
-        job.save unless job.nil?
 
         Sauce.config do |c|
           c[:name] = Sauce::Capybara::Cucumber.name_from_scenario(scenario)
@@ -96,15 +88,34 @@ module Sauce
           output << "job-name=#{Sauce::Capybara::Cucumber.jenkins_name_from_scenario(scenario)}"
           puts output.join(' ')
         end
+        Sauce::Config.new.browsers_for_file("./#{scenario.location.file}").each do |os, browser, version|
 
-        block.call
+          @selenium = Sauce::Selenium2.new({:os => os,
+                                            :browser => browser,
+                                            :browser_version => version,
+                                            :job_name => job_name})
 
-        # Quit the driver to allow for the generation of a new session_id
-        driver.finish!
+          Sauce.driver_pool[Thread.current.object_id] = @selenium
 
-        unless job.nil?
-          job.passed = !scenario.failed?
-          job.save
+          driver = ::Capybara.current_session.driver
+          # This session_id is the job ID used by Sauce Labs, we're pulling it
+          # off of the driver now to make sure we have it after `block.call`
+          session_id = driver.browser.session_id
+
+          job = Sauce::Job.new('id' => session_id,
+                               'name' => job_name,
+                               'custom-data' => custom_data)
+          job.save unless job.nil?
+
+          block.call
+
+          # Quit the driver to allow for the generation of a new session_id
+          driver.finish!
+
+          unless job.nil?
+            job.passed = !scenario.failed?
+            job.save
+          end
         end
       end
       module_function :around_hook
