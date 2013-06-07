@@ -2,6 +2,7 @@ require 'capybara'
 require 'cucumber'
 require 'sauce/job'
 require 'sauce/capybara'
+require 'sauce/utilities'
 
 module Sauce
   module Capybara
