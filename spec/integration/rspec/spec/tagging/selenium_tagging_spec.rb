@@ -25,7 +25,7 @@ describe "Specs with the @sauce tag", :sauce => true do
   end
 
   it "should be using Sauce Connect" do
-    Sauce::RSpec::SeleniumExampleGroup.class_variable_defined?(:@@tunnel).should be_true
+    Sauce::Utilities::Connect.instance_variable_get(:@tunnel).should_not be_nil
   end
 end
 
