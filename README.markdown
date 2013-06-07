@@ -6,34 +6,26 @@
 This is the Ruby client adapter for testing with [Sauce
 Labs](https://www.saucelabs.com), a Selenium-based browser testing service.
 
+The gem supports opening Sauce Connect tunnels, starting Rails applications, and most importantly, running your tests in parallel across multiple platforms.
+
 
 There is more information on **[the
 wiki](https://github.com/sauce-labs/sauce_ruby/wiki)**, so be sure to look there
 for information too!
-
 
 ## Installation
 
 ```bash
     % gem install sauce
 ```
-
-## With RSpec 1 & 2
-In spec/sauce_helper.rb:
 ```ruby
-require "sauce"
-```
-
-## With Test::Unit && Mini::Test
-
-In your test_helper.rb:
-```ruby
+## In your test/spec/support helper
 require "sauce"
 ```
 
 ### With Capybara
-In your test setup file (test or spec helper, most likely):
 ```ruby
+## In your test/spec/support helper
 require "capybara"
 require "capybara/sauce"
 ```
@@ -58,7 +50,7 @@ Then set Capybara to do that with ```Capybara.server_port = the_chosen_port```
 
 ## Running your tests
 
-### Set Up The Browsers Array
+### Set Up The Platform Array
 
 ```ruby
 Sauce.config do |c|
@@ -71,7 +63,27 @@ end
 
 If you run your tests normally (eg with ```rspec```) They'll run one at a time against the Sauce Labs cloud.  The first browser from the array will be used for all tests.
 
-If you run your tests with the rake task (```rake sauce:spec```) then your tests will be run concurrently, for as many concurrent VMs as your account is allowed, against every platform specified.
+
+### In Parallel
+### Running RSpec tests in parallel
+
+Create a sauce_helper.rb in `spec/sauce_helper.rb` and setup your platforms (See "Set Up the Platform Array", above).
+
+Require this file in `spec/spec_helper.rb`.  There is a Rake task which will do this for you, `rake sauce:install:spec`.
+
+```bash
+$ rake sauce:install:spec
+$ rake sauce:spec
+```
+
+### Running Cucumber tests in parallel
+Create a sauce_helper.rb in `features/support/sauce_helper.rb` and setup your platforms (See "Set Up the Platform Array", above).
+
+There is a Rake task which will do this for you, `rake sauce:install:features`.
+```base
+$ rake sauce:install:features
+$ rake sauce:features
+```
 
 ## Reporting Results
 
