@@ -1,3 +1,4 @@
+require "json"
 require "rspec"
 require "sauce/parallel/test_broker"
 
@@ -5,32 +6,65 @@ describe Sauce::TestBroker do
 
   describe "#next_environment" do
 
-    before :all do
-      Sauce.config do |c|
-        c.browsers = [
-            ["Windows 7", "Opera", "10"],
-            ["Linux", "Firefox", "19"]
-        ]
-      end
+    before :each do
+      Sauce::TestBroker.reset
     end
 
-    it "returns the first environment for new entries" do
-      first_environment = Sauce::TestBroker.next_environment "spec/a_spec"
+    it "returns the first browser for new entries" do
+      first_environment = Sauce::TestBroker.next_environment ["spec/a_spec"]
       first_environment.should eq({
-        :SAUCE_OS => "'Windows 7'",
-        :SAUCE_BROWSER => "'Opera'",
-        :SAUCE_BROWSER_VERSION => "'10'"
+        :SAUCE_PERFILE_BROWSERS => (
+          "'" +
+          JSON.generate({"./spec/a_spec" => [{"os" => "Windows 7",
+                                              "browser" => "Opera",
+                                              "version" => "10"}]}) +
+          "'")
       })
     end
 
-    it "should only return an environment once" do
-      Sauce::TestBroker.next_environment "spec/b_spec"
-      second_environment = Sauce::TestBroker.next_environment "spec/b_spec"
+    it "only returns a browser once for a given file" do
+      Sauce::TestBroker.next_environment ["spec/a_spec"]
+      second_environment = Sauce::TestBroker.next_environment ["spec/a_spec"]
 
       second_environment.should eq({
-          :SAUCE_OS => "'Linux'",
-          :SAUCE_BROWSER => "'Firefox'",
-          :SAUCE_BROWSER_VERSION => "'19'"
+        :SAUCE_PERFILE_BROWSERS => (
+          "'" +
+          JSON.generate({"./spec/a_spec" => [{"os" => "Linux",
+                                              "browser" => "Firefox",
+                                              "version" => "19"}]}) +
+          "'")
+      })
+    end
+
+    it "returns multiple browsers for files given multiple times" do
+      first_environment = Sauce::TestBroker.next_environment ["spec/a_spec",
+                                                              "spec/a_spec"]
+      first_environment.should eq({
+        :SAUCE_PERFILE_BROWSERS => (
+          "'" +
+          JSON.generate({"./spec/a_spec" => [{"os" => "Windows 7",
+                                              "browser" => "Opera",
+                                              "version" => "10"},
+                                             {"os" => "Linux",
+                                              "browser" => "Firefox",
+                                              "version" => "19"}]}) +
+          "'")
+      })
+    end
+
+    it "uses the first browser for each of multiple files" do
+      first_environment = Sauce::TestBroker.next_environment ["spec/a_spec",
+                                                              "spec/b_spec"]
+      first_environment.should eq({
+        :SAUCE_PERFILE_BROWSERS => (
+          "'" +
+          JSON.generate({"./spec/a_spec" => [{"os" => "Windows 7",
+                                              "browser" => "Opera",
+                                              "version" => "10"}],
+                         "./spec/b_spec" => [{"os" => "Windows 7",
+                                              "browser" => "Opera",
+                                              "version" => "10"}]}) +
+          "'")
       })
     end
   end

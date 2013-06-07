@@ -92,7 +92,7 @@ describe Sauce::Config do
       ENV['SAUCE_OS'] = "Linux"
       ENV['SAUCE_BROWSER'] = "firefox"
       ENV['SAUCE_BROWSER_VERSION'] = "3."
-      ENV['BUILD_NUMBER'] = 'test env build'
+      ENV['BUILD_TAG'] = 'test env build'
 
       config = Sauce::Config.new
       browser_data = JSON.parse(config.to_browser_string)
@@ -112,7 +112,7 @@ describe Sauce::Config do
       ENV['SAUCE_BROWSER'] = 'firefox'
       ENV['SAUCE_BROWSER_VERSION'] = '3.'
       ENV['SAUCE_JOB_NAME'] = 'Named Ruby Job'
-      ENV['BUILD_NUMBER'] = 'test env build'
+      ENV['BUILD_TAG'] = 'test env build'
 
       config = Sauce::Config.new
       browser_data = JSON.parse(config.to_browser_string)

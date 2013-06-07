@@ -7,17 +7,28 @@ require "thread"
 module Sauce
   class TestBroker
 
+    def self.reset
+      if defined? @@platforms
+        remove_class_variable(:@@platforms)
+      end
+      @groups = {}
+    end
+
     def self.environment_mutex
       @@m ||= Mutex.new
     end
-   
+
     def self.next_environment(group)
-     # puts "Asked for #{group} next environment"
       environment_mutex.synchronize do
-        unless test_groups.has_key? group
-          test_groups[group] = TestGroup.new(self.test_platforms)
+        browsers = {}
+        group.each do |file|
+          file = "./" + file
+          test_groups[file] ||= TestGroup.new(self.test_platforms)
+          browsers[file] ||= []
+          browsers[file] << test_groups[file].next_platform
         end
-        return test_groups[group].next_platform
+
+        return {:SAUCE_PERFILE_BROWSERS => "'" + JSON.generate(browsers) + "'"}
       end
     end
 
@@ -44,8 +55,7 @@ module Sauce
     def self.test_platforms
       unless defined? @@platforms
         load_sauce_config
-        brokers = Sauce.get_config
-        @@platforms ||= brokers[:browsers]
+        @@platforms ||= Sauce.get_config[:browsers]
       end
       @@platforms
     end

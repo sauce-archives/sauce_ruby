@@ -73,7 +73,8 @@ begin
           othermod.around do |the_test|
             config = Sauce::Config.new
             description = the_test.metadata[:full_description]
-            config.browsers.each do |os, browser, version|
+            file = the_test.metadata[:file_path]
+            config.browsers_for_file(file).each do |os, browser, version|
               @selenium = Sauce::Selenium2.new({:os => os,
                                                 :browser => browser,
                                                 :browser_version => version,
