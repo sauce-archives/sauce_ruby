@@ -23,6 +23,16 @@ module Sauce
       end
       module_function :name_from_scenario
 
+      def file_name_from_scenario(scenario)
+        if scenario.instance_of? ::Cucumber::Ast::OutlineTable::ExampleRow
+          table = scenario.instance_variable_get(:@table)
+          outline = table.instance_variable_get(:@scenario_outline)
+          return outline.feature.file
+        end
+        return scenario.location.file
+      end
+      module_function :file_name_from_scenario
+
       def jenkins_name_from_scenario(scenario)
         # Special behavior to handle Scenario Outlines
         if scenario.instance_of? ::Cucumber::Ast::OutlineTable::ExampleRow
@@ -88,8 +98,8 @@ module Sauce
           output << "job-name=#{Sauce::Capybara::Cucumber.jenkins_name_from_scenario(scenario)}"
           puts output.join(' ')
         end
-        Sauce::Config.new.browsers_for_file("./#{scenario.location.file}").each do |os, browser, version|
-
+        filename = file_name_from_scenario(scenario)
+        Sauce::Config.new.browsers_for_file("./#{filename}").each do |os, browser, version|
           @selenium = Sauce::Selenium2.new({:os => os,
                                             :browser => browser,
                                             :browser_version => version,

@@ -70,6 +70,7 @@ module Sauce::Capybara
         # Need to create our nice mocked Capybara driver
         Capybara.stub_chain(:current_session, :driver).and_return(driver)
         Sauce::Job.stub(:new).and_return(nil)
+        Sauce::Selenium2.stub(:new).with(anything).and_return Object.new
       end
 
       context 'with a scenario outline' do
@@ -154,7 +155,7 @@ module Sauce::Capybara
           end
 
           # Make sure we actually configure ourselves
-          Sauce::Utilities::Connect.should_receive(:start).and_return {true}
+          Sauce::Utilities::Connect.should_receive(:start).with(anything).and_return {true}
           run_defined_feature feature
           $ran_scenario.should be true
         end
