@@ -68,7 +68,7 @@ namespace :sauce do
         File.open(path, "w") do |f|
           f.write (<<-ENDFILE
   # You should edit this file with the browsers you wish to use
-  # For options, check out http://saucelabs.com/platforms
+  # For options, check out http://saucelabs.com/docs/platforms
   require "sauce"
 
   Sauce.config do |config|
