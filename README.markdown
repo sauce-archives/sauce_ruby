@@ -8,51 +8,111 @@ Labs](https://www.saucelabs.com), a Selenium-based browser testing service.
 
 The gem supports opening Sauce Connect tunnels, starting Rails applications, and most importantly, running your tests in parallel across multiple platforms.
 
-
 There is more information on **[the
 wiki](https://github.com/sauce-labs/sauce_ruby/wiki)**, so be sure to look there
 for information too!
 
 ## Installation
 
-```bash
-    % gem install sauce
-```
 ```ruby
-## In your test/spec/support helper
-require "sauce"
+# Gemfile
+gem "sauce"
+gem "sauce-connect" # Sauce Connect is required by tests by default.
+```
+```bash
+$ bundle install
+```
+### RSpec
+```bash
+$ bundle exec rake sauce:install:spec
 ```
 
-### With Capybara
+Edit spec/sauce_helper.rb with your desired config.
+
+Tag your tests `:sauce => true` or place them in the `spec/selenium` directory to get the Sauce behaviours included.
+
+### Test::Unit
+Create test/sauce_helper.rb with your desired config, and `require sauce_helper` in your test_helper.rb
+
+### Cucumber
 ```ruby
-## In your test/spec/support helper
+## Gemfile
+gem "sauce-cucumber"
+```
+```bash
+$ bundle install
+$ bundle exec rake sauce:install:features
+```
+
+Edit features/support/sauce_helper.rb with your desired config.
+
+Tag your features with `@selenium` to get Sauce behaviour included.
+
+## Using the gem
+### RSpec
+Every test with Sauce behaviour included gets access to its own selenium driver, already connected to a Sauce job and ready to go.
+
+This driver is a Sauce subclassing of the Selenium driver object, and responds to all the same functions.
+
+It's available as `page`, `selenium` and `s`, eg
+```ruby
+describe "The friend list" do
+  it "should include at least one friend" do
+    page.navigate_to "/friends"
+    page.should have_content "You have friends!"
+  end
+end
+```
+
+We recommend, however, the use of Capybara for your tests.
+
+### Capybara
+The gem provides a Capybara driver that functions exactly the same as the existing Selenium driver.
+```ruby
+## In your test or spec helper
 require "capybara"
 require "capybara/sauce"
-```
 
-#### Run all tests against Sauce
-```ruby
+# To run all tests with Sauce
 Capybara.default_driver = :sauce
-```
 
-#### Run only Javascript tests against Sauce
-```ruby
+# To run only JS tests against Sauce
 Capybara.javascript_driver = :sauce
+
+# To allow Sauce::Connect through to your application
+Capybara.server_port = an_appropriate_port
+
+# Appropriate ports: 80, 443, 888, 2000, 2001, 2020, 2222, 3000, 3001, 3030, 3333, 4000, 4001, 4040, 4502, 4503, 5000, 5001, 5050, 5555, 6000, 6001, 6060, 6666, 7000, 7070, 7777, 8000, 8001, 8003, 8031, 8080, 8081, 8888, 9000, 9001, 9080, 9090, 9999, 49221
 ```
 
-#### With Sauce::Connect
-Capybara runs a server on a random port.  Sauce::Connect expects a port from a specific range.  So, you need to pick one of :
+You can now use Capybara as normal, and all actions will be executed against your Sauce session.
 
-```bash
-80, 443, 888, 2000, 2001, 2020, 2222, 3000, 3001, 3030, 3333, 4000, 4001, 4040, 4502, 4503, 5000, 5001, 5050, 5555, 6000, 6001, 6060, 6666, 7000, 7070, 7777, 8000, 8001, 8003, 8031, 8080, 8081, 8888, 9000, 9001, 9080, 9090, 9999, 49221
+If you're running from inside a RSpec test, the `@selenium` object and the actual driver object used by the Sauce driver are the same object.  So, if you need access to the Selenium Webdriver when using Capybara, you have it.
+
+### Cucumber
+The `sauce-jasmine` gem works best with Capybara.  Each tagged feature automatically sets the Capybara driver to :sauce.  All tagged features can simply use the Capybara DSL directly from step definitions:
+```Ruby
+## a_feature.rb
+@selenium
+Feature: Social Life
+  Scenario: I have one
+    Given Julia is my friend
+    ## SNIP ##
+
+## step_definition.rb
+Given /^(\w+) is my friend$/ do |friends_name|
+ visit "/friends/#{friends_name}"
+end
 ```
-Then set Capybara to do that with ```Capybara.server_port = the_chosen_port```
+
+For more details, check out the wiki page, [Cucumber and Capybara](https://github.com/sauce-labs/sauce_ruby/wiki/Cucumber-and-Capybara).
 
 ## Running your tests
 
-### Set Up The Platform Array
+### Setting Up The Platform Array
 
 ```ruby
+## Somewhere loaded by your test harness -- spec/sauce_helper or features/support/sauce_helper.rb
 Sauce.config do |c|
   c.browsers = [
     ["Windows 7","Firefox","18"],
@@ -61,61 +121,35 @@ Sauce.config do |c|
 end
 ```
 
-If you run your tests normally (eg with ```rspec```) They'll run one at a time against the Sauce Labs cloud.  The first browser from the array will be used for all tests.
-
-
-### In Parallel
-### Running RSpec tests in parallel
-
-Create a sauce_helper.rb in `spec/sauce_helper.rb` and setup your platforms (See "Set Up the Platform Array", above).
-
-Require this file in `spec/spec_helper.rb`.  There is a Rake task which will do this for you, `rake sauce:install:spec`.
+### Run tests in Parallel (Highly recommended)
 
 ```bash
-$ rake sauce:install:spec
-$ rake sauce:spec
+$ bundle exec sauce:spec
+$ bundle exec sauce:features
 ```
 
-### Running Cucumber tests in parallel
-Create a sauce_helper.rb in `features/support/sauce_helper.rb` and setup your platforms (See "Set Up the Platform Array", above).
+This will run your RSpec tests or Cucumber features against every platform defined, across as many concurrent Sauce sessions as your account has access too.
 
-There is a Rake task which will do this for you, `rake sauce:install:features`.
-```base
-$ rake sauce:install:features
-$ rake sauce:features
-```
+Check out the [Parallisation guide](https://github.com/sauce-labs/sauce_ruby/wiki/Concurrent-Testing) for more details.
+
+### Run against several browsers in series
+As long as your tests are correctly tagged (See installation, above), running them without the rake task (eg `$ bundle exec rspec`) will run them one at a time, once for every platform requested.
 
 ## Reporting Results
 
-### RSpec 2
+### RSpec 2, Test::Unit and Cucumber
 
-If integrated with RSpec (as detailed above), the gem will automatically update your jobs' success (or failure) and name using the brand spankin' new (SauceWhisk)[https://github.com/DylanLacey/sauce_whisk] gem.
-
-### RSpec 1 and Test::Unit
-
-Coming soon!  Check out (SauceWhisk)[https://github.com/DylanLacey/sauce_whisk] while you wait!
+If integrated with RSpec (as detailed above), the gem will automatically update your jobs' success (or failure) and name using the brand spankin' new [SauceWhisk](https://github.com/DylanLacey/sauce_whisk) gem.
 
 ## Full configuration details
 
-Check out the ((in)Complete guide to Configuration)[https://github.com/sauce-labs/sauce_ruby/wiki/Configuration----The-(in)Complete-Guide] for a full list of configuration options and details.
+Check out the [(in)Complete guide to Configuration](https://github.com/sauce-labs/sauce_ruby/wiki/Configuration----The-\(in\)Complete-Guide) for a full list of configuration options and details.
 
 This also details how to customise application/tunnel setup.
 
 ## Suggested Toolchain
 
 The Sauce gem has been optimized to work most effectively with
-[Cucumber](https://www.cukes.info) and
-[Capybara](http://jnicklas.github.com/capybara/).
-
-To get started with Sauce and Cucumber, install the appropriate gem:
-
-```bash
-    % gem install sauce-cucumber
-```
-
-And then read more how to get started with [Cucumber and Capybara on this
-wiki
-page](https://github.com/sauce-labs/sauce_ruby/wiki/Cucumber-and-Capybara).
 
 ## Contributing to the Gem
 
@@ -127,7 +161,6 @@ page](https://github.com/sauce-labs/sauce_ruby/wiki/Cucumber-and-Capybara).
 * Make your feature addition or bug fix.
 * Commit
 * Send a pull request! :)
-
 
 ### Testing the Gem
 
@@ -144,3 +177,10 @@ Running the full test suite will require [RVM](http://rvm.beginrescueend.com)
 * If you'd like to run the *entire* test suit, ```rake test``` will run all the
   integration tests, but requires the Sauce credentials to be set up properly
   as these tests will run actual jobs on Sauce.
+
+
+## References
+* [Cucumber](https://www.cukes.info)     -- Cucumber, the only BDD Framework that doesn't suck.
+* [Capybara](http://jnicklas.github.com/capybara/)     -- Don't handcode webdriver commands.
+* [SauceWhisk](https://github.com/DylanLacey/sauce_whisk)     -- Ruby REST API Wrapper for the Sauce API.  Fresh New Minty Flavour!
+
