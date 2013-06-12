@@ -120,7 +120,11 @@ module Sauce
         :platform => PLATFORMS[os] || os,
         :name => @opts[:job_name],
         :client_version => client_version
-      }.update(@opts.reject {|k, v| [:browser, :browser_version, :os, :job_name].include? k})
+      }.update(@opts.reject { |k, v|
+                 [:host, :port, :browser, :browser_version, :os, :job_name,
+                  :browsers, :perfile_browsers, :start_tunnel,
+                  :start_local_application, :local_application_port].include? k
+               })
     end
 
     def browsers
