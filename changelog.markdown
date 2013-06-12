@@ -1,4 +1,8 @@
 # Changelog
+## 3.0
+### 3.0.1
+Make parallel tests correctly exit when child tests exit with an error.
+
 ### 3.0.0
 W00t!  Parallelization for Cucumber, RSpec.  The gem now uses parallel_tests to spin up instances of your tests across all specified browsers.  Tests are run at the lower of your concurrency limit OR 20.
 
