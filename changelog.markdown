@@ -1,5 +1,8 @@
 # Changelog
 ## 3.0
+### 3.0.2
+Strip out extraneous config details from :desired_capabilities
+
 ### 3.0.1
 Make parallel tests correctly exit when child tests exit with an error.
 
