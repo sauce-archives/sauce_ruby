@@ -24,7 +24,7 @@ module Sauce
               socket.close unless socket.nil?
               return
           end
-        rescue Errno::ECONNREFUSED, 
+        rescue Errno::ECONNREFUSED,
           Errno::EBADF,           # Windows
           Timeout::Error
         end
@@ -47,7 +47,7 @@ module Sauce
             @tunnel.connect
             @tunnel.wait_until_ready
           end
-            @tunnel
+          @tunnel
         else
           while not File.exist? "sauce_connect.ready"
             sleep 0.5
