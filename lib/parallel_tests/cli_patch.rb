@@ -14,6 +14,8 @@ module ParallelTests
 
         report_results(test_results)
       end
+
+      abort final_fail_message if any_test_failed?(test_results)
     end
   end
 end
