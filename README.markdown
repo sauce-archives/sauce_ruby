@@ -107,6 +107,30 @@ end
 
 For more details, check out the wiki page, [Cucumber and Capybara](https://github.com/sauce-labs/sauce_ruby/wiki/Cucumber-and-Capybara).
 
+### Test::Unit
+To get sweeeeet Saucy features like job status updating, subclass `Sauce::TestCase` or `Sauce::RailsTestCase`.
+
+`Sauce::TestCase` is a subclass of `Test::Unit::TestCase`, for simple test cases without anything extra.
+
+`Sauce::RailsTestCase` is a subclass of `ActiveSupport::TestCase` so you can use all the associated ActiveSupport goodness.
+
+Each test will have access to a fresh Sauce VM, already running and ready for commands.  The driver is a subclass of the Selenium::WebDriver class, and responds to all the same functions.  It can be accessed with the `page`, `s` and `selenium` methods.
+
+```ruby
+## test/integration/some_test.rb
+require "test_helper"
+
+class FriendList < Sauce::TestCase
+
+  def test_the_list_can_be_opened
+    page.navigate.to "/friends"
+    page.should have_content "You have friends!"
+  end
+end
+```
+
+We still recommend the use of Capybara, see above.
+
 ## Running your tests
 
 ### Setting Up The Platform Array
