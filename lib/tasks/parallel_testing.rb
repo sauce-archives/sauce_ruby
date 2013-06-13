@@ -66,7 +66,7 @@ namespace :sauce do
       path = args[:helper_type].to_sym == :features ? "features/support/sauce_helper.rb" : "spec/sauce_helper.rb"
       unless File.exists? path
         File.open(path, "w") do |f|
-          f.write (<<-ENDFILE
+          f.write(<<-ENDFILE
   # You should edit this file with the browsers you wish to use
   # For options, check out http://saucelabs.com/docs/platforms
   require "sauce"
