@@ -97,7 +97,7 @@ begin
             })
         ::RSpec.configuration.include(self, :sauce => true)
 
-        ::RSpec.configuration.before(:suite, sauce: true) do
+        ::RSpec.configuration.before(:suite, :sauce => true) do
 
           config = Sauce::Config.new
           if config[:application_host]
