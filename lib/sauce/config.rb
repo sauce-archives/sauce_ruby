@@ -22,14 +22,20 @@ module Sauce
         :host => "ondemand.saucelabs.com",
         :port => 80,
         :browser_url => "http://saucelabs.com",
-        :os => "Windows 2003",
-        :browser => "firefox",
-        :browser_version => "3.6.",
         :job_name => "Unnamed Ruby job",
         :local_application_port => "3001",
         :capture_traffic => false,
         :start_tunnel => true,
         :start_local_application => true
+    }
+
+    DEFAULT_BROWSERS = {
+        :browsers => [
+          ["Windows 8", "Internet Explorer", "10"],
+          ["Windows 7", "Firefox", "20"],
+          ["OS X 10.8", "Safari", "6"],
+          ["Linux", "Chrome", nil]
+        ]
     }
 
     ENVIRONMENT_VARIABLES = %w{SAUCE_HOST SAUCE_PORT SAUCE_BROWSER_URL SAUCE_USERNAME
@@ -56,6 +62,7 @@ module Sauce
       @undefaulted_opts = {}
       if opts != false
         @opts.merge! DEFAULT_OPTIONS
+        @opts.merge! DEFAULT_BROWSERS
 
         @undefaulted_opts.merge! load_options_from_yaml
         @undefaulted_opts.merge! load_options_from_environment
@@ -71,6 +78,7 @@ module Sauce
     end
 
     def []=(key, value)
+      @undefaulted_opts.merge!({key => value})
       @opts[key] = value
     end
 
@@ -134,6 +142,8 @@ module Sauce
         # sub-processes pointed just at each browser in the list.
         return [[os, browser, browser_version]]
       end
+
+      puts "undefaulted: #{@undefaulted_opts}"
       return @opts[:browsers] if @opts.include? :browsers
       return [[os, browser, browser_version]]
     end
