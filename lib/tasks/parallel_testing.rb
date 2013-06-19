@@ -66,19 +66,7 @@ namespace :sauce do
       path = args[:helper_type].to_sym == :features ? "features/support/sauce_helper.rb" : "spec/sauce_helper.rb"
       unless File.exists? path
         File.open(path, "w") do |f|
-          f.write(<<-ENDFILE
-  # You should edit this file with the browsers you wish to use
-  # For options, check out http://saucelabs.com/docs/platforms
-  require "sauce"
-
-  Sauce.config do |config|
-    config[:browsers] = [
-      ["OS", "BROWSER", "VERSION"],
-      ["OS", "BROWSER", "VERSION"]
-    ]
-  end
-  ENDFILE
-          )
+          f.write(Sauce::Utilities::Rake.sauce_helper)
         end
       else
         STDERR.puts "WARNING - sauce_helper has already been created."

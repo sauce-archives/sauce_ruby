@@ -143,7 +143,6 @@ module Sauce
         return [[os, browser, browser_version]]
       end
 
-      puts "undefaulted: #{@undefaulted_opts}"
       return @opts[:browsers] if @opts.include? :browsers
       return [[os, browser, browser_version]]
     end

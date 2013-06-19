@@ -1,5 +1,6 @@
 require 'sauce/version'
 require 'sauce/utilities'
+require 'sauce/utilities/rake'
 require 'sauce/job'
 require 'sauce/client'
 require 'sauce/config'
