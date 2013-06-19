@@ -1,5 +1,10 @@
 # Changelog
 ## 3.0
+### 3.0.3
+Update Rake sauce_helper task to include Capybara when required
+Match the default browsers with those in Sauce Labs' Ruby tutorial
+Update sauce-whisk dependency to be pessimistic
+
 ### 3.0.2
 Strip out extraneous config details from :desired_capabilities
 
