@@ -32,8 +32,6 @@ module Sauce
       end
     end
 
-
-
     class Connect
       def self.start(options={})
         begin
