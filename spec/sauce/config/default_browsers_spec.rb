@@ -6,7 +6,6 @@ describe "Sauce::Config :browsers" do
   end
 
   context "When unset" do
-
     it "defaults to the tutorial browsers" do
       tutorial_browsers = [
         ["Windows 8", "Internet Explorer", "10"],

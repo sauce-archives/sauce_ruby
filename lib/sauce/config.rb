@@ -7,8 +7,9 @@ module Sauce
     yield get_config
   end
 
-  def self.get_config
-    @cfg ||= Sauce::Config.new(false)
+  def self.get_config(default = false)
+    get_default = default == :default ? {} : false
+    @cfg ||= Sauce::Config.new(get_default)
   end
 
   def self.clear_config

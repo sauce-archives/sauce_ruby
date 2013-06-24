@@ -5,10 +5,12 @@ module ParallelTests
 
       report_time_taken do
         groups = @runner.tests_in_groups(options[:files], num_processes, options)
-        Sauce::TestBroker.test_groups = groups
-        report_number_of_tests(groups)
+        non_empty_groups = groups.reject {|group| group.empty?}
+        Sauce::TestBroker.test_groups = non_empty_groups
 
-        test_results = execute_in_parallel(groups, groups.size, options) do |group|
+        report_number_of_tests(non_empty_groups)
+
+        test_results = execute_in_parallel(non_empty_groups, non_empty_groups.size, options) do |group|
           run_tests(group, Sauce::TestBroker.group_index(group), num_processes, options)
         end
 

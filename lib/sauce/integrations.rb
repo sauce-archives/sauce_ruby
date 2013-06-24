@@ -101,7 +101,7 @@ begin
 
           config = Sauce::Config.new
           if config[:application_host]
-            Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80)
+            Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80, :quiet => true)
           end
 
           if config[:start_local_application] &&
@@ -124,7 +124,7 @@ begin
           end
 
           if need_tunnel || config[:start_tunnel]
-            Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80)
+            Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80, :quiet => true)
           end
 
           if config[:start_local_application] &&
