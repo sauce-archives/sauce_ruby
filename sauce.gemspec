@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency("capybara", ["~>2.1.0"])
   s.add_development_dependency("rspec", ["~>2.0"])
-
+  s.add_development_dependency("simplecov")
   s.add_dependency('net-http-persistent')
   s.add_dependency('rest-client', [">= 0"])
   s.add_dependency('net-ssh', [">= 0"])

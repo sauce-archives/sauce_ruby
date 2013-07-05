@@ -10,7 +10,6 @@ module ParallelTests
         env = Sauce::TestBroker.next_environment(test_files)
         env.merge!({"AUTOTEST" => "1"}) if $stdout.tty? # display color when we are in a terminal
         options.merge!({:env => env})
-        runtime_logging = " --format ParallelTests::Cucumber::RuntimeLogger --out #{runtime_log}"
         cmd = [
             executable,
             (runtime_logging if File.directory?(File.dirname(runtime_log))),
@@ -19,6 +18,8 @@ module ParallelTests
         ].compact.join(" ")
         execute_command(cmd, process_number, num_processes, options)
       end
+
+
 
       def self.tests_in_groups(tests, num_groups, options={})
         originals = (options[:group_by] == :steps) ? Grouper.by_steps(find_tests(tests, options), num_groups, options) : super
