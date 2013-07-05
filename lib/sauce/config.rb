@@ -159,7 +159,7 @@ module Sauce
     end
 
     def browser
-      if @undefaulted_opts[:browser]
+      if single_browser_set?
         return @undefaulted_opts[:browser]
       end
       if !ENV["TEST_ENV_NUMBER"] && @opts[:browsers]
@@ -170,7 +170,7 @@ module Sauce
     end
 
     def os
-      if @undefaulted_opts[:os]
+      if single_browser_set?
         return @undefaulted_opts[:os]
       end
       if !ENV["TEST_ENV_NUMBER"] && @opts[:browsers]
@@ -181,7 +181,7 @@ module Sauce
     end
 
     def browser_version
-      if @undefaulted_opts[:browser_version]
+      if single_browser_set?
         return @undefaulted_opts[:browser_version]
       end
       if !ENV["TEST_ENV_NUMBER"] && @opts[:browsers]
@@ -325,6 +325,12 @@ module Sauce
       end
 
       return opts.delete_if {|key, value| value.nil?}
+    end
+
+    private
+
+    def single_browser_set?
+      @undefaulted_opts[:browser] || @undefaulted_opts[:os] || @undefaulted_opts[:version]
     end
 
     def no_browser_message

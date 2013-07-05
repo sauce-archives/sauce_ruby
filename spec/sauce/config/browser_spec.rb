@@ -17,6 +17,17 @@ describe "Sauce::Config" do
 
         Sauce::Config.new.browser.should eq "Opera"
       end
+
+      it "defaults version to blank for Chrome" do
+        Sauce.clear_config
+
+        Sauce.config do |c|
+          c[:browser] = "Chrome"
+          c[:os] = "Windows"
+        end
+
+        Sauce::Config.new.browser_version.should eq nil
+      end
     end
 
     context "when @opts[:browser] is nil" do
