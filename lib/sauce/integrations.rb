@@ -66,8 +66,12 @@ begin
     module RSpec
       module SeleniumExampleGroup
         attr_reader :selenium
-        alias_method :page, :selenium
         alias_method :s, :selenium
+
+        def page
+          warn Sauce::Utilities.page_deprecation_message
+          @selenium
+        end
 
         def self.included(othermod)
           othermod.around do |the_test|

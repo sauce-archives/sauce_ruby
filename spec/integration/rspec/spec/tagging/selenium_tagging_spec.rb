@@ -11,22 +11,7 @@ Sauce.config do |c|
 end
 
 describe "Specs with the @sauce tag", :sauce => true do
-
-  before :all do
-    $TAGGED_EXECUTIONS = 0
-  end
-
-  after :all do
-    $TAGGED_EXECUTIONS.should eq 2
-  end
-
-  it "should get run on every defined browser" do
-    $TAGGED_EXECUTIONS += 1
-  end
-
-  it "should be using Sauce Connect" do
-    Sauce::Utilities::Connect.instance_variable_get(:@tunnel).should_not be_nil
-  end
+  it_behaves_like "an integrated spec"
 end
 
 describe "Specs without the @sauce tag" do

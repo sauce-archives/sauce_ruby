@@ -32,6 +32,14 @@ module Sauce
       end
     end
 
+    def self.page_deprecation_message
+      return <<-MESSAGE
+[DEPRECATED] Using the #page method is deprecated for RSpec tests without Capybara.  Please use the #s or #selenium method instead.
+If you are using Capybara and are seeing this message, check the Capybara README for information on how to include the Capybara DSL in your tests.
+      MESSAGE
+    end
+
+
     class Connect
       def self.start(options={})
         begin
