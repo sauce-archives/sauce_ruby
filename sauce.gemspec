@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency("capybara", ["~>2.1.0"])
   s.add_development_dependency("rspec", ["~>2.0"])
-
+  s.add_development_dependency("simplecov")
   s.add_dependency('net-http-persistent')
   s.add_dependency('rest-client', [">= 0"])
   s.add_dependency('net-ssh', [">= 0"])
@@ -29,6 +29,6 @@ Gem::Specification.new do |s|
   s.add_dependency('json', [">= 1.2.0"])
   s.add_dependency('cmdparse', [">= 2.0.2"])
   s.add_dependency('highline', [">= 1.5.0"])
-  s.add_dependency('parallel_tests', ["= 0.12.4"])
+  s.add_dependency('parallel_tests', ["= 0.15.0"])
   s.add_dependency('sauce_whisk', ["~> 0.0.8"])
 end

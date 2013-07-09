@@ -159,18 +159,18 @@ module Sauce
     end
 
     def browser
-      if @undefaulted_opts[:browser]
+      if single_browser_set?
         return @undefaulted_opts[:browser]
       end
       if !ENV["TEST_ENV_NUMBER"] && @opts[:browsers]
         @opts[:browsers][0][1]
       else
-        @opts[:browser]
+        raise StandardError, no_browser_message
       end
     end
 
     def os
-      if @undefaulted_opts[:os]
+      if single_browser_set?
         return @undefaulted_opts[:os]
       end
       if !ENV["TEST_ENV_NUMBER"] && @opts[:browsers]
@@ -181,7 +181,7 @@ module Sauce
     end
 
     def browser_version
-      if @undefaulted_opts[:browser_version]
+      if single_browser_set?
         return @undefaulted_opts[:browser_version]
       end
       if !ENV["TEST_ENV_NUMBER"] && @opts[:browsers]
@@ -325,6 +325,24 @@ module Sauce
       end
 
       return opts.delete_if {|key, value| value.nil?}
+    end
+
+    private
+
+    def single_browser_set?
+      @undefaulted_opts[:browser] || @undefaulted_opts[:os] || @undefaulted_opts[:version]
+    end
+
+    def no_browser_message
+      <<-MESSAGE
+No browser has been configured.
+
+It seems you're trying to run your tests in parallel, but haven't configured your specs/tests to use the Sauce integration.
+
+To fix this, add :sauce => true to your specs or make your tests subclasses of Sauce::TestCase or Sauce::RailsTestCase.
+
+For more details check the gem readme at https://github.com/DylanLacey/sauce_ruby/blob/master/README.markdown
+      MESSAGE
     end
   end
 end
