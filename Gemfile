@@ -8,7 +8,6 @@ gem 'pry'
 
 group :test do
   gem 'cucumber'
-  gem 'rspec', '~> 2.12'
   gem 'jasmine', '~> 1.2.0.0'
   gem 'sauce-connect'
 end

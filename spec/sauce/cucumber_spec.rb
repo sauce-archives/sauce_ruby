@@ -10,7 +10,7 @@ module Sauce::Capybara
     include Sauce::Cucumber::SpecHelper
 
     before :each do
-      Sauce::Utilities::Connect.stub!(:start) {}
+      Sauce::Utilities::Connect.stub(:start) {}
     end
 
     describe '#use_sauce_driver' do
@@ -60,7 +60,7 @@ module Sauce::Capybara
     context 'Around hook' do
       let(:session_id) { 'deadbeef' }
       let(:driver) do
-        driver = mock('Sauce::Selenium2 Driver')
+        driver = double('Sauce::Selenium2 Driver')
         driver.stub_chain(:browser, :quit)
         driver.stub_chain(:browser, :session_id).and_return(session_id)
         driver
@@ -126,8 +126,6 @@ module Sauce::Capybara
         end
 
         before :each do
-          Sauce::Utilities::Connect.rspec_reset
-
           Sauce.config do |c|
             c[:start_tunnel] = true
           end
@@ -135,7 +133,7 @@ module Sauce::Capybara
         end
 
         after :all do
-          Sauce::Utilities::Connect.stub!(:start) {}
+          Sauce::Utilities::Connect.stub(:start) {}
         end
 
         it 'should have set up a tunnel' do

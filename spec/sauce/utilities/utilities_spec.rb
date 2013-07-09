@@ -29,11 +29,10 @@ describe "Sauce::Utilities::Connect" do
     end
 
     it "should connect the new tunnel" do
-      Sauce::Connect.rspec_reset
       @mock_tunnel.should_receive(:connect).with().and_return(true)
       @mock_tunnel.should_receive(:wait_until_ready).and_return(true)
 
-      Sauce::Connect.stub!(:new).with(anything).and_return @mock_tunnel
+      Sauce::Connect.stub(:new).with(anything).and_return @mock_tunnel
 
       Sauce::Utilities::Connect.start
     end

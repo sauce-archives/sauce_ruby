@@ -30,7 +30,7 @@ describe Jasmine::Config do
     end
 
     let(:driver) do
-      driver = mock('Sauce::Jasmine::Driver')
+      driver = double('Sauce::Jasmine::Driver')
       driver.stub(:connect)
       driver
     end

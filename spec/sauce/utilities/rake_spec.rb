@@ -3,10 +3,6 @@ require "spec_helper"
 describe Sauce::Utilities::Rake do
 
   describe "#create_sauce_helper" do
-    after :all do
-      Object.rspec_reset
-    end
-
     context "with Capybara" do
       before :all do
         Object.stub(:const_defined?).with("Capybara").and_return true

@@ -36,7 +36,7 @@ describe Sauce::Selenium2 do
     describe '#session_id' do
       it 'should query the driver for the session_id' do
         expected = 101
-        bridge = mock('bridge')
+        bridge = double('bridge')
         bridge.should_receive(:session_id).and_return(expected)
         @client.driver.should_receive(:bridge).and_return(bridge)
         @client.session_id.should == expected
@@ -46,7 +46,7 @@ describe Sauce::Selenium2 do
     describe '#method_missing' do
       it 'should pass #navigate#to onto the driver' do
         url = 'http://example.com'
-        navigator = mock('navigator')
+        navigator = double('navigator')
         navigator.should_receive(:to).with(url).and_return(true)
         @client.driver.should_receive(:navigate).and_return(navigator)
 
