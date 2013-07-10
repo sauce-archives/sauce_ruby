@@ -1,5 +1,18 @@
 # Changelog
 ## 3.0
+### 3.0.5
+Update Parallel Tests to 0.15.0
+Read :browser, :version and :os as nil if one is set and the others aren't
+Added SimpleCov to base tests
+Removed Gemcutter from all Gemfiles
+Updated RSpec to 2.14.0
+Cleaned up test output, removing deprecation warnings
+
+### 3.0.4
+Make Sauce Connect much quieter
+Add a "false" flag to Sauce.get\_config to let you get without defaults
+Filtered out empty groups form execution during parallel tests
+
 ### 3.0.3
 Update Rake sauce_helper task to include Capybara when required
 Match the default browsers with those in Sauce Labs' Ruby tutorial
