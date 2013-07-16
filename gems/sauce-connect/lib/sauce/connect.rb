@@ -11,16 +11,12 @@ module Sauce
       @status = "uninitialized"
       @error = nil
       @quiet = options[:quiet]
-      host = options[:host] || '127.0.0.1'
-      port = options[:port] || '3000'
-      tunnel_port = options[:tunnel_port] || '80'
-      options.delete(:host)
-      options.delete(:port)
-      options.delete(:tunnel_port)
       @config = Sauce::Config.new(options)
+
       if @config.username.nil?
         raise ArgumentError, "Username required to launch Sauce Connect. Please set the environment variable $SAUCE_USERNAME"
       end
+
       if @config.access_key.nil?
         raise ArgumentError, "Access key required to launch Sauce Connect. Please set the environment variable $SAUCE_ACCESS_KEY"
       end
