@@ -24,7 +24,12 @@ module Sauce
 
     def connect
       puts "[Connecting to Sauce Labs...]"
-      @pipe = IO.popen("exec #{Sauce::Connect.connect_command} #{@config.username} #{@config.access_key} -f sauce_connect.ready 2>&1")
+
+      formatted_cli_options = array_of_formatted_cli_options_from_hash(cli_options)
+      command_args = [@config.username, @config.access_key] + formatted_cli_options
+      command = "exec #{Sauce::Connect.connect_command} #{command_args.join(' ')} 2>&1"
+      @pipe = IO.popen(command)
+
       @process_status = $?
       at_exit do
         Process.kill("INT", @pipe.pid)
@@ -55,6 +60,12 @@ module Sauce
         end
         @ready = false
       }
+    end
+
+    def cli_options
+      cli_options = { readyfile: "sauce_connect.ready" }
+      cli_options.merge!(@config[:connect_options]) if @config.has_key?(:connect_options)
+      cli_options
     end
 
     def wait_until_ready
@@ -106,6 +117,15 @@ module Sauce
         @connection.wait_until_ready
       else
         connect!(*args)
+      end
+    end
+
+    private
+
+    def array_of_formatted_cli_options_from_hash(hash)
+      hash.collect do |key, value|
+        opt_name = key.to_s.gsub("_", "-")
+        "--#{opt_name}=#{value}"
       end
     end
   end
