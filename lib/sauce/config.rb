@@ -56,7 +56,9 @@ module Sauce
 
     SAUCE_OPTIONS = %w{record-video record-screenshots capture-html tags
         sauce-advisor single-window user-extensions-url firefox-profile-url
-        max-duration idle-timeout build custom-data}
+        max-duration idle-timeout build custom-data tunnel-identifier
+        selenium-version command-timeout prerun prerun-args screen-resolution
+        disable-popup-handler avoid-proxy public}
 
     def initialize(opts={})
       @opts = {}
@@ -123,17 +125,21 @@ module Sauce
     end
 
     def to_desired_capabilities
-      {
+      desired_capabilities = {
         :browserName => BROWSERS[browser] || browser,
         :version => browser_version,
         :platform => PLATFORMS[os] || os,
         :name => @opts[:job_name],
         :client_version => client_version
-      }.update(@opts.reject { |k, v|
-                 [:host, :port, :browser, :browser_version, :os, :job_name,
-                  :browsers, :perfile_browsers, :start_tunnel,
-                  :start_local_application, :local_application_port].include? k
-               })
+      }
+
+      SAUCE_OPTIONS.each do |opt|
+        [opt, opt.gsub("-", "_")].map(&:to_sym).each do |sym|
+          desired_capabilities[opt.to_sym] = @opts[sym] if @opts.include? sym
+        end
+      end
+
+      desired_capabilities
     end
 
     def browsers
