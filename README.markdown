@@ -66,6 +66,10 @@ end
 
 We recommend, however, the use of Capybara for your tests.
 
+#### Run tests locally or remotely
+
+A suggestion of how to run tests locally or remotely is available at the [Swappable Sauce](https://github.com/sauce-labs/sauce_ruby/wiki/_preview) wiki page.
+
 ### Capybara
 The gem provides a Capybara driver that functions exactly the same as the existing Selenium driver.
 ```ruby
@@ -164,6 +168,22 @@ As long as your tests are correctly tagged (See installation, above), running th
 ### RSpec 2, Test::Unit and Cucumber
 
 If integrated with RSpec (as detailed above), the gem will automatically update your jobs' success (or failure) and name using the brand spankin' new [SauceWhisk](https://github.com/DylanLacey/sauce_whisk) gem.
+
+## Running tests against firewalled servers
+
+If your system under test is located behind a firewall, you can use [Sauce Connect](http://www.saucelabs.com/docs/connect) to run tests through your firewall, quickly and simply.
+
+Sauce Connect is started by default, spinning up a tunnel prior to your tests and closing it down afterwards.
+
+To disable Sauce Connect, set `start-tunnel` to false in your Sauce.config block:
+
+```ruby
+Sauce.config do |c|
+  c[:start_tunnel] = false
+end
+```
+
+For details on named tunnels (including why you might want to use them) check out the [Using Identified Tunnels with Sauce Connect](https://github.com/sauce-labs/sauce_ruby/wiki/Using-Identified-Tunnels-with-Sauce-Connect) page.
 
 ## Full configuration details
 
