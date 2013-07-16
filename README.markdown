@@ -56,7 +56,7 @@ This driver is a Sauce subclassing of the Selenium driver object, and responds t
 
 It's available as `page`, `selenium` and `s`, eg
 ```ruby
-describe "The friend list" do
+describe "The friend list", :sauce => true do
   it "should include at least one friend" do
     page.navigate_to "/friends"
     page.should have_content "You have friends!"
