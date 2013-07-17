@@ -1,5 +1,8 @@
 # Changelog
 ## 3.0
+### 3.0.6
+Added Command Line options for Sauce Connect (thanks, Rick Martínez!)
+
 ### 3.0.5
 Update Parallel Tests to 0.15.0
 Read :browser, :version and :os as nil if one is set and the others aren't
