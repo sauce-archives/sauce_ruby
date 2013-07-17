@@ -27,9 +27,17 @@ $ bundle install
 $ bundle exec rake sauce:install:spec
 ```
 
-Edit spec/sauce_helper.rb with your desired config.
+Tag each example group you wish to use Sauce to run with `:sauce => true`:
 
-Tag your tests `:sauce => true` or place them in the `spec/selenium` directory to get the Sauce behaviours included.
+```ruby
+describe "A Saucy Example Group", :sauce => true do
+  it "will run on sauce" do
+    # SNIP
+  end
+end
+```
+
+Place your Sauce.config block in spec_helper.rb
 
 ### Test::Unit
 Create test/sauce_helper.rb with your desired config, and `require sauce_helper` in your test_helper.rb
@@ -193,7 +201,14 @@ This also details how to customise application/tunnel setup.
 
 ## Suggested Toolchain
 
-The Sauce gem has been optimized to work most effectively with
+The Sauce gem has been optimized to work most effectively with RSpec.
+
+## Troubleshooting
+
+### Specs only run on the first browser configured
+
+* Make sure you've tagged your example groups `:sauce => true`
+* Make sure you've only configured `[:browsers]`, not `[:browser]`, in Sauce.config
 
 ## Contributing to the Gem
 
