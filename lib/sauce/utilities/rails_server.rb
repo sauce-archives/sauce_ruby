@@ -42,7 +42,8 @@ module Sauce
 
         STDERR.puts "Starting Rails server on port #{port}..."
 
-        @process_args = process_arguments
+        @process_args = RailsServer.process_arguments
+        @process_args.push *["-e", "test", "--port", "#{port}"]
 
         if @test_env
           @process_args.push *["--pid", "#{Dir.pwd}/tmp/pids/server-#{@test_env}"]

@@ -119,19 +119,15 @@ begin
         end
 
         ::RSpec.configuration.before :suite do
-          STDERR.puts "Before the Suite"
           need_tunnel = false
           config = Sauce::Config.new
           files_to_run = ::RSpec.configuration.respond_to?(:files_to_run) ? ::RSpec.configuration.files_to_run :
             ::RSpec.configuration.settings[:files_to_run]
           if config[:application_host]
-            STDERR.puts "application Host"
             need_tunnel = files_to_run.any? {|file| file =~ /spec\/selenium\//}
           end
 
-          STDERR.puts "Need Tunnel #{need_tunnel}  && config[start_tunnel] #{config[:start_tunnel]}"
           if need_tunnel || config[:start_tunnel]
-            STDERR.puts "Connecting to Sauce Connect Connnect"
             Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80, :quiet => true)
           end
 
