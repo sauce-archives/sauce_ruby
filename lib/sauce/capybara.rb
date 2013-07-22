@@ -114,7 +114,6 @@ module Sauce
       def render(path)
         browser.save_screenshot path
       end
-
     end
   end
 end
@@ -129,4 +128,24 @@ module Capybara
   def self.javascript_driver
     @javascript_driver || :sauce
   end
+end
+
+begin
+  require "rspec/core"
+  module Sauce
+    module RSpec
+      module SeleniumExampleGroup
+        ::RSpec.configuration.before(:suite, :sauce => true) do
+          ::Capybara.configure do |config|
+            host = Sauce::Config.new[:application_host] || "127.0.0.1"
+            port = Sauce::Config.new[:application_port]
+            config.app_host = "http://#{host}:#{port}"
+            config.run_server = false
+          end
+        end
+      end
+    end
+  end
+rescue LoadError => e
+  # User is not using RSpec
 end

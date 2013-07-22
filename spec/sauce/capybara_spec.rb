@@ -290,6 +290,23 @@ describe Sauce::Capybara do
       end
     end
 
+    describe "#needs_server?" do
+      context "When an existing Rails server is running" do
+        it "should return false" do
+          dummy_server_pool = {}
+          dummy_server_pool[Thread.current.object_id] = true
+          Sauce::Utilities::RailsServer.stub(:server_pool).and_return dummy_server_pool
+          driver.needs_server?.should be_false
+        end
+      end
+
+      context "When there is no rails server running" do
+        it "should return true" do
+          driver.needs_server?.should be_true
+        end
+      end
+    end
+
   end
 
   describe '#install_hooks' do

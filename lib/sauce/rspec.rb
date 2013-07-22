@@ -19,7 +19,7 @@ begin
           config = Sauce::Config.new
           if @@need_tunnel
             if config[:application_host]
-              Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80)
+              Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port])
             end
             if config[:start_local_application] &&
               Sauce::Utilities::RailsServer.is_rails_app?
@@ -105,16 +105,13 @@ begin
 
           config = Sauce::Config.new
           if config[:application_host]
-            Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80, :quiet => true)
+            Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port], :quiet => true)
           end
 
           if config[:start_local_application] &&
             Sauce::Utilities::RailsServer.is_rails_app?
-            # Start the app before the tests if this is a parallel run
-            if ENV["TEST_ENV_NUMBER"].nil?
               @@server = Sauce::Utilities::RailsServer.new
               @@server.start
-            end
           end
         end
 
@@ -128,7 +125,7 @@ begin
           end
 
           if need_tunnel || config[:start_tunnel]
-            Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port] || 80, :quiet => true)
+            Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port], :quiet => true)
           end
 
           if config[:start_local_application] &&

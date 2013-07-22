@@ -32,18 +32,23 @@ module Sauce
         end
       end
 
+      def self.server_pool
+        @@server_pool ||= {}
+      end
+
+      attr_reader :port
+
       def start
-        port = 3001
+        @port = Sauce::Config.new[:application_port]
 
         if ENV["TEST_ENV_NUMBER"]
           @test_env = ENV["TEST_ENV_NUMBER"].to_i
-          port = port + @test_env
         end
 
-        STDERR.puts "Starting Rails server on port #{port}..."
+        STDERR.puts "Starting Rails server on port #{@port}..."
 
         @process_args = RailsServer.process_arguments
-        @process_args.push *["-e", "test", "--port", "#{port}"]
+        @process_args.push *["-e", "test", "--port", "#{@port}"]
 
         if @test_env
           @process_args.push *["--pid", "#{Dir.pwd}/tmp/pids/server-#{@test_env}"]
@@ -53,12 +58,15 @@ module Sauce
         @server.io.inherit!
         @server.start
 
-        wait_for_server_on_port(port)
+        wait_for_server_on_port(@port)
 
         at_exit do
           @server.stop(3, "INT")
+          RailsServer.server_pool.delete Thread.current.object_id
         end
         STDERR.puts "Rails server running!"
+
+        RailsServer.server_pool[Thread.current.object_id] = @server
       end
 
       def stop
