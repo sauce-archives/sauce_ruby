@@ -289,7 +289,6 @@ describe Sauce::Capybara do
         end
       end
     end
-
   end
 
   describe '#install_hooks' do
