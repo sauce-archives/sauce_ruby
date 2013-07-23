@@ -1,5 +1,11 @@
 # Changelog
 ## 3.0
+### 3.1.0
+Extracted Rails server config into separate file
+Prevented Capybara from starting a server when already started
+Made Capybara & Parallel Tests respect Sauce Connect ports
+Removed default port of 80 from Sauce Connect startup
+
 ### 3.0.6
 Added Command Line options for Sauce Connect (thanks, Rick Martínez!)
 
