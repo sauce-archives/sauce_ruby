@@ -118,6 +118,11 @@ module Sauce
                                'custom-data' => custom_data)
           job.save unless job.nil?
 
+          # This allow us to execute steps (n) times
+          block.steps.each do |step|
+            step.instance_variable_set(:@skip_invoke, false)
+          end
+
           block.call
 
           # Quit the driver to allow for the generation of a new session_id
