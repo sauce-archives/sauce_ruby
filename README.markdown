@@ -79,7 +79,7 @@ We recommend, however, the use of Capybara for your tests.
 A suggestion of how to run tests locally or remotely is available at the [Swappable Sauce](https://github.com/sauce-labs/sauce_ruby/wiki/_preview) wiki page.
 
 ### Capybara
-The gem provides a Capybara driver that functions exactly the same as the existing Selenium driver.
+The gem provides a Capybara driver that functions mostly the same as the existing Selenium driver.
 ```ruby
 ## In your test or spec helper
 require "capybara"
@@ -90,16 +90,22 @@ Capybara.default_driver = :sauce
 
 # To run only JS tests against Sauce
 Capybara.javascript_driver = :sauce
+```
 
-# To allow Sauce::Connect through to your application
+You can now use Capybara as normal, and all actions will be executed against your Sauce session.
+
+#### Inside an RSpec Example (tagged with :sauce => true)
+If you're running from inside an RSpec example, the `@selenium` object and the actual driver object used by the Sauce driver are the same object.  So, if you need access to the Selenium Webdriver when using Capybara, you have it.
+
+#### With Sauce Connect
+Sauce Connect automatically proxies content on certain ports;  Using one of these will allow Sauce Connect to tunnel traffic to your local machine:
+```ruby
 Capybara.server_port = an_appropriate_port
 
 # Appropriate ports: 80, 443, 888, 2000, 2001, 2020, 2222, 3000, 3001, 3030, 3333, 4000, 4001, 4040, 4502, 4503, 5000, 5001, 5050, 5555, 6000, 6001, 6060, 6666, 7000, 7070, 7777, 8000, 8001, 8003, 8031, 8080, 8081, 8888, 9000, 9001, 9080, 9090, 9999, 49221
 ```
 
-You can now use Capybara as normal, and all actions will be executed against your Sauce session.
-
-If you're running from inside a RSpec test, the `@selenium` object and the actual driver object used by the Sauce driver are the same object.  So, if you need access to the Selenium Webdriver when using Capybara, you have it.
+Capybara.server_port will be set to a value suitable for use with Sauce Connect by default.
 
 ### Cucumber
 The `sauce-jasmine` gem works best with Capybara.  Each tagged feature automatically sets the Capybara driver to :sauce.  All tagged features can simply use the Capybara DSL directly from step definitions:
