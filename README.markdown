@@ -83,7 +83,7 @@ The gem provides a Capybara driver that functions mostly the same as the existin
 ```ruby
 ## In your test or spec helper
 require "capybara"
-require "capybara/sauce"
+require "sauce/capybara"
 
 # To run all tests with Sauce
 Capybara.default_driver = :sauce
