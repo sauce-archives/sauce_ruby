@@ -9,7 +9,7 @@ gem 'pry'
 group :test do
   gem 'cucumber'
   gem 'jasmine', '~> 1.2.0.0'
-  gem 'sauce-connect'
+  gem 'sauce-connect', :path => './gems/sauce-connect'
   gem 'simplecov'
 end
 

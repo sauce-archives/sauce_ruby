@@ -2,7 +2,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../lib/sauce/version')
 Gem::Specification.new do |gem|
   gem.name          = "sauce-connect"
-  gem.version       = "#{Sauce::MAJOR_VERSION}.2"
+  gem.version       = "#{Sauce::MAJOR_VERSION}.0"
   gem.authors       = ["R. Tyler Croy", "Steve Hazel", "Dylan Lacey", "Rick Martínez"]
   gem.email         = ["tyler@monkeypox.org"]
   gem.description   = ""
@@ -14,5 +14,5 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency('sauce', "~> #{Sauce.version}")
+  gem.add_dependency('sauce', "~> #{Sauce::MAJOR_VERSION}")
 end
