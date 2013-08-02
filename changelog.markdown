@@ -1,5 +1,9 @@
 # Changelog
 ## 3.0
+### 3.1.1
+Correctly serialize string based desired capabilitites
+Correct https://github.com/saucelabs/sauce\_ruby/issues/163
+
 ### 3.1.0
 Extracted Rails server config into separate file
 Prevented Capybara from starting a server when already started
