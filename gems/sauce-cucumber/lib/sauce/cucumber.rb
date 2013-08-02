@@ -85,21 +85,8 @@ module Sauce
           c[:name] = Sauce::Capybara::Cucumber.name_from_scenario(scenario)
         end
 
-        if using_jenkins?
-          # If we're running under Jenkins, we should dump the
-          # `SauceOnDemandSessionID` into the Console Output for the Sauce OnDemand
-          # Jenkins plugin.
-          # See: <https://github.com/sauce-labs/sauce_ruby/issues/48>
-          output = []
-          output << "\nSauceOnDemandSessionID=#{session_id}"
-          # The duplication in the scenario_name comes from the fact that the
-          # JUnit formatter seems to do the same, so in order to get the sauce
-          # OnDemand plugin for Jenkins to co-operate, we need to double it up as
-          # well
-          output << "job-name=#{Sauce::Capybara::Cucumber.jenkins_name_from_scenario(scenario)}"
-          puts output.join(' ')
-        end
         filename = file_name_from_scenario(scenario)
+
         Sauce::Config.new.browsers_for_file("./#{filename}").each do |os, browser, version|
           @selenium = Sauce::Selenium2.new({:os => os,
                                             :browser => browser,
@@ -112,6 +99,23 @@ module Sauce
           # This session_id is the job ID used by Sauce Labs, we're pulling it
           # off of the driver now to make sure we have it after `block.call`
           session_id = driver.browser.session_id
+
+          if using_jenkins?
+            # If we're running under Jenkins, we should dump the
+            # `SauceOnDemandSessionID` into the Console Output for the Sauce OnDemand
+            # Jenkins plugin.
+            # See: <https://github.com/sauce-labs/sauce_ruby/issues/48>
+            output = []
+            output << "\nSauceOnDemandSessionID=#{session_id}"
+            # The duplication in the scenario_name comes from the fact that the
+            # JUnit formatter seems to do the same, so in order to get the sauce
+            # OnDemand plugin for Jenkins to co-operate, we need to double it up as
+            # well
+            job_name = "job-name=#{Sauce::Capybara::Cucumber.jenkins_name_from_scenario(scenario)}"
+            job_name << " (#{browser} #{version} on #{os}" if ENV["TEST_ENV_NUMBER"]
+            output << job_name
+            puts output.join(' ')
+          end
 
           job = Sauce::Job.new('id' => session_id,
                                'name' => job_name,
