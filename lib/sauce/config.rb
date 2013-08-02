@@ -149,7 +149,11 @@ module Sauce
 
       SAUCE_OPTIONS.each do |opt|
         [opt, opt.gsub("-", "_")].map(&:to_sym).each do |sym|
-          desired_capabilities[opt.to_sym] = @opts[sym] if @opts.include? sym
+          if @opts.include? sym
+            desired_capabilities[opt.to_sym] = @opts[sym]
+          elsif @opts.include? sym.to_s
+            desired_capabilities[opt.to_sym] = @opts[sym.to_s]
+          end
         end
       end
 

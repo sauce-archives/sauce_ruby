@@ -193,6 +193,14 @@ describe Sauce::Config do
 
         it { should have_key :'max-duration' }
       end
+
+      context "prerun" do
+        subject do
+          Sauce::Config.new('prerun' => "Something Prerun").to_desired_capabilities
+        end
+
+        it { should have_key :'prerun'}
+      end
     end
 
     context 'platforms' do
