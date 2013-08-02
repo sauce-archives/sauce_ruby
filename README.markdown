@@ -45,7 +45,8 @@ Create test/sauce_helper.rb with your desired config, and `require sauce_helper`
 ### Cucumber
 ```ruby
 ## Gemfile
-gem "sauce-cucumber"
+gem "sauce-cucumber", :require => false
+gem "sauce"
 ```
 ```bash
 $ bundle install
@@ -108,7 +109,7 @@ Capybara.server_port = an_appropriate_port
 Capybara.server_port will be set to a value suitable for use with Sauce Connect by default.
 
 ### Cucumber
-The `sauce-jasmine` gem works best with Capybara.  Each tagged feature automatically sets the Capybara driver to :sauce.  All tagged features can simply use the Capybara DSL directly from step definitions:
+The `sauce-cucumber` gem works best with Capybara.  Each "@selenium" tagged feature automatically sets the Capybara driver to :sauce.  All tagged features can simply use the Capybara DSL directly from step definitions:
 ```Ruby
 ## a_feature.rb
 @selenium
