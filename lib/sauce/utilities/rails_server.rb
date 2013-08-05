@@ -1,3 +1,6 @@
+require 'childprocess'
+require 'childprocess/process'
+
 module Sauce
   module Utilities
     class RailsServer
