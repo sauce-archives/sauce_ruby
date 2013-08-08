@@ -4,13 +4,13 @@ require "parallel_tests/tasks"
 require "parallel_tests/cli_patch"
 
 namespace :sauce do
-  task :spec, :files, :concurrencies, :tag do |t, args|
+  task :spec, :files, :concurrencies, :rspec_opts do |t, args|
     ::RSpec::Core::Runner.disable_autorun!
 
     args.with_defaults({
       :concurrencies => [Sauce::TestBroker.concurrencies, 20].min,
       :files => "spec",
-      :tag => "-t sauce"
+      :rspec_opts => "-t sauce"
     })
 
     parallel_arguments = [
@@ -18,9 +18,9 @@ namespace :sauce do
       "-n", "#{args[:concurrencies]}"
     ]
 
-    unless args[:tag].nil?
+    unless args[:rspec_opts].nil?
       parallel_arguments.push "-o"
-      parallel_arguments.push args[:tag]
+      parallel_arguments.push args[:rspec_opts]
     end
 
     parallel_arguments.push args[:files]
