@@ -4,25 +4,42 @@ require "parallel_tests/tasks"
 require "parallel_tests/cli_patch"
 
 namespace :sauce do
-  task :spec, :files, :concurrencies do |t, args|
+  task :spec, :files, :concurrencies, :rspec_opts do |t, args|
     ::RSpec::Core::Runner.disable_autorun!
 
     args.with_defaults({
       :concurrencies => [Sauce::TestBroker.concurrencies, 20].min,
-      :files => "spec"
+      :files => "spec",
+      :rspec_opts => "-t sauce"
     })
-    ParallelTests::CLI.new.run(["--type", "saucerspec",
-                                "-n", "#{args[:concurrencies]}",
-                                "#{args[:files]}"])
+
+    parallel_arguments = [
+      "--type", "saucerspec",
+      "-n", "#{args[:concurrencies]}"
+    ]
+
+    unless args[:rspec_opts].nil?
+      parallel_arguments.push "-o"
+      parallel_arguments.push args[:rspec_opts]
+    end
+
+    parallel_arguments.push args[:files]
+    ParallelTests::CLI.new.run(parallel_arguments)
   end
 
-  task :features, :files, :concurrency  do |t, args|
+  task :features, :files, :concurrencies  do |t, args|
     args.with_defaults({
       :concurrency => [Sauce::TestBroker.concurrencies, 20].min,
       :files => "features"
     })
-    ParallelTests::CLI.new.run(["--type", "saucecucumber", args[:files],
-                                  "-n", args[:concurrency].to_s])
+
+    parallel_arguments = [
+      "--type", "saucecucumber",
+      "-n", args[:concurrencies].to_s,
+      args[:files]
+    ]
+
+    ParallelTests::CLI.new.run(parallel_arguments)
   end
 
   namespace :install do
