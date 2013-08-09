@@ -1,5 +1,9 @@
 # Changelog
 ## 3.0
+# 3.1.2
+Default to only running tasks tagged with ":sauce"
+Allow for options to be passed to Parallel Tests when running the rspec rake task
+
 ### 3.1.1
 Correctly serialize string based desired capabilitites
 Correct https://github.com/saucelabs/sauce\_ruby/issues/163
