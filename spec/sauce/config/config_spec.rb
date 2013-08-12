@@ -203,6 +203,14 @@ describe Sauce::Config do
       end
     end
 
+    context 'with a :name set' do
+      subject do
+        Sauce::Config.new(:name => 'As Sweet').to_desired_capabilities[:name]
+      end
+
+      it {should eq "As Sweet"}
+    end
+
     context 'platforms' do
       it 'should refer to Windows 2003 as WINDOWS' do
         config = Sauce::Config.new(:os => "Windows 2003")
