@@ -89,8 +89,8 @@ if defined?(ActiveSupport::TestCase)
 end
 
 begin
-  if Object.const_defined? "Test"
-    if Test.const_defined? "Unit"
+  if Object.const_defined? :Test
+    if Test.const_defined? :Unit
       require 'test/unit/testcase'
       module Sauce
         class TestCase < Test::Unit::TestCase

@@ -43,7 +43,6 @@ module Sauce
     end
 
     def method_missing(meth, *args)
-      STDERR.puts "Sending #{meth} to driver"
       @driver.send(meth, *args)
     end
 
