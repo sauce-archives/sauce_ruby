@@ -150,6 +150,11 @@ end
 
 We still recommend the use of Capybara, see above.
 
+### Uploading Files
+Uploading files in Selenium is done by calling `send_keys` on a File input element, with the filename as the first parameter.
+Remote uploads usually require you to create a File Detector and pass it to the Driver after initialization.
+
+The gem takes care of this for you, so uploading files from your local machine during tests should "JustWork(tm)".
 ## Running your tests
 
 ### Setting Up The Platform Array
