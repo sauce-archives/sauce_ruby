@@ -119,7 +119,7 @@ module Sauce
 end
 
 Capybara.register_driver :sauce do |app|
-  Sauce::Capybara::Driver.new(app)
+  driver = Sauce::Capybara::Driver.new(app)
 end
 
 # Monkeypatch Capybara to not use :selenium driver

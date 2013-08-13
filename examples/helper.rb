@@ -6,11 +6,7 @@ require 'sauce'
 
 Sauce.config do |config|
   config[:browsers] = [
-    ["Linux", "firefox", "3.6."],
-    #["Windows 2003", "safariproxy", "5."]
+    ["Linux", "firefox", "3.6."]
   ]
   config[:browser_url] = "http://saucelabs.com"
-
-  #config[:application_host] = "localhost"
-  #config[:application_port] = "4444"
 end
