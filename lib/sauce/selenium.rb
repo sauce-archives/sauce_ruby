@@ -38,7 +38,7 @@ module Sauce
 
       @driver.file_detector = lambda do |args|
         file_path = args.first.to_s
-        if File.exist?(file_path) ? file_path : false
+        File.exist?(file_path) ? file_path : false
       end
     end
 
