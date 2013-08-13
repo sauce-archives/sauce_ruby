@@ -38,11 +38,12 @@ module Sauce
 
       @driver.file_detector = lambda do |args|
         file_path = args.first.to_s
-        file_path if File.exist?(file_path)
+        if File.exist?(file_path) ? file_path : false
       end
     end
 
     def method_missing(meth, *args)
+      STDERR.puts "Sending #{meth} to driver"
       @driver.send(meth, *args)
     end
 
