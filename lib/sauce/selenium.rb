@@ -35,9 +35,18 @@ module Sauce
                       :desired_capabilities => @config.to_desired_capabilities,
                       :http_client => http_client)
       http_client.timeout = 90 # Once the browser is up, commands should time out reasonably
+
+      @driver.file_detector = lambda do |args|
+        STDERR.puts "Uploading File If exists #{args}"
+        file_path = args.first.to_s
+        file_path if File.exist?(file_path)
+      end
+
+
     end
 
     def method_missing(meth, *args)
+      STDERR.puts "Sending #{meth} to driver"
       @driver.send(meth, *args)
     end
 
