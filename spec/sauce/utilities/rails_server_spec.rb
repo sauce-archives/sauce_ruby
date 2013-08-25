@@ -3,6 +3,18 @@ require "spec_helper"
 describe "Sauce::Utilities::RailsServer" do
   let (:server) {Sauce::Utilities::RailsServer.new}
 
+  describe "##start_if_required" do
+    context "With an :application_host in config" do
+      it "starts" do
+        config = {:start_local_application => true}
+        expect(Sauce::Utilities::RailsServer).to receive(:start) {nil}
+        allow(Sauce::Utilities::RailsServer).to receive(:is_rails_app?) {true}
+
+        Sauce::Utilities::RailsServer.start_if_required(config)
+      end
+    end
+  end
+
   context "With a Rails 4 app" do
     before (:each) do
       File.stub(:exists?).and_return false

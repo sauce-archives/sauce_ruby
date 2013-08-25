@@ -102,43 +102,35 @@ begin
         ::RSpec.configuration.include(self, :sauce => true)
 
         ::RSpec.configuration.before(:suite, :sauce => true) do
-
           config = Sauce::Config.new
           if config[:application_host]
             Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port], :quiet => true)
           end
 
-          if config[:start_local_application] &&
-            Sauce::Utilities::RailsServer.is_rails_app?
-              @@server = Sauce::Utilities::RailsServer.new
-              @@server.start
-          end
+          @@server = Sauce::Utilities::RailsServer.start_if_required(config)
         end
 
         ::RSpec.configuration.before :suite do
           config = Sauce::Config.new
+          # TODO: Check which rspec version this changed in -- If < 2, change.
           files_to_run = ::RSpec.configuration.respond_to?(:files_to_run) ? ::RSpec.configuration.files_to_run :
             ::RSpec.configuration.settings[:files_to_run]
 
           running_selenium_specs = files_to_run.any? {|file| file =~ /spec\/selenium\//}
-
           need_tunnel = running_selenium_specs && config[:application_host]
 
           if need_tunnel || config[:start_tunnel]
             Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port], :quiet => true)
           end
 
-          if config[:start_local_application] &&
-            running_selenium_specs &&
-            Sauce::Utilities::RailsServer.is_rails_app?
-              @@server = Sauce::Utilities::RailsServer.new
-              @@server.start
+          if running_selenium_specs
+            @@server = Sauce::Utilities::RailsServer.start_if_required(config)
           end
         end
 
         ::RSpec.configuration.after :suite do
-          Sauce::Utilities::Connect.close
-          @@server.stop if defined? @@server
+            Sauce::Utilities::Connect.close
+            @@server.stop if defined? @@server
         end
       end
     end

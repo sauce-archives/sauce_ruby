@@ -6,6 +6,14 @@ module Sauce
     class RailsServer
       include Sauce::Utilities
 
+      def self.start_if_required(config)
+        if config[:start_local_application] && self.is_rails_app?
+          server = self.start
+        end
+
+        return server
+      end
+
       def self.is_rails_app?
         return !major_version.nil?
       end
