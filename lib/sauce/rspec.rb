@@ -104,7 +104,7 @@ begin
         ::RSpec.configuration.before(:suite, :sauce => true) do
           config = Sauce::Config.new
           if config[:application_host]
-            Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port], :quiet => true)
+            Sauce::Utilities::Connect.start_from_config(config)
           end
 
           @@server = Sauce::Utilities::RailsServer.start_if_required(config)
@@ -120,7 +120,7 @@ begin
           need_tunnel = running_selenium_specs && config[:application_host]
 
           if need_tunnel || config[:start_tunnel]
-            Sauce::Utilities::Connect.start(:host => config[:application_host], :port => config[:application_port], :quiet => true)
+            Sauce::Utilities::Connect.start_from_config(config)
           end
 
           if running_selenium_specs
@@ -129,8 +129,8 @@ begin
         end
 
         ::RSpec.configuration.after :suite do
-            Sauce::Utilities::Connect.close
-            @@server.stop if defined? @@server
+          Sauce::Utilities::Connect.close
+          @@server.stop if @@server
         end
       end
     end

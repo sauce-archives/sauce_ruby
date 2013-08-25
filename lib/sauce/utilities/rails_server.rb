@@ -8,7 +8,10 @@ module Sauce
 
       def self.start_if_required(config)
         if config[:start_local_application] && self.is_rails_app?
-          server = self.start
+          server = new
+          server.start
+
+          return server
         end
 
         return server

@@ -7,7 +7,9 @@ describe "Sauce::Utilities::RailsServer" do
     context "With an :application_host in config" do
       it "starts" do
         config = {:start_local_application => true}
-        expect(Sauce::Utilities::RailsServer).to receive(:start) {nil}
+        fake_rails_server = double("Sauce::Utilities::RailsServer")
+        expect(fake_rails_server).to receive(:start) {nil}
+        expect(Sauce::Utilities::RailsServer).to receive(:new) {fake_rails_server}
         allow(Sauce::Utilities::RailsServer).to receive(:is_rails_app?) {true}
 
         Sauce::Utilities::RailsServer.start_if_required(config)

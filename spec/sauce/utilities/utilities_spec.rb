@@ -14,6 +14,7 @@ describe "Sauce::Utilities::Connect" do
   after :each do
     Sauce::Utilities::Connect.instance_variable_set(:@tunnel, nil)
   end
+
   describe "##start" do
     it "should call Sauce Connect when included" do
       @mock_tunnel.stub(:connect).and_return true
@@ -83,4 +84,54 @@ describe "Sauce::Utilities::Connect" do
       Sauce::Utilities::Connect.close
     end
   end
+
+  describe "##warn_if_suspect_misconfiguration" do
+    it "does not fire if no Selenium sessions have been fired" do
+
+    end
+  end
+
+  describe "##incorrectly_integrated_warning" do
+    it "should return rspec warning by default" do
+      Sauce::Utilities.incorrectly_integrated_warning.should eq rspec_warning
+    end
+
+    it "should allow for the cucumber warning to be selected" do
+      Sauce::Utilities.incorrectly_integrated_warning(:cuke).should eq cuke_warning
+    end
+  end
+end
+
+def rspec_warning
+  return <<-stringend
+
+===============================================================================
+Your specs used the Sauce Selenium driver, but not the RSpec integration.
+This may result in undesired behaviour, such as configured platforms being
+skipped.
+
+You can correct this by tagging specs intended for Sauce with
+':sauce => true'.
+
+You can disable this message by setting the 'warn_on_skipped_integration'
+config option to false.
+===============================================================================
+  stringend
+end
+
+def cuke_warning
+  return <<-stringend
+
+===============================================================================
+Your features used the Sauce Selenium driver, but not the Cucumber integration.
+This may result in undesired behaviour, such as configured platforms being
+skipped.
+
+You can correct this by tagging features intended for Sauce with
+'@selenium'.
+
+You can disable this message by setting the 'warn_on_skipped_integration'
+config option to false.
+===============================================================================
+  stringend
 end

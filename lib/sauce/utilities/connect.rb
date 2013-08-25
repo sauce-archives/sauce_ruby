@@ -1,6 +1,10 @@
 module Sauce
   module Utilities
     class Connect
+      def self.start_from_config(config)
+        self.start(:host => config[:application_host], :port => config[:application_port], :quiet => true)
+      end
+
       def self.start(options={})
         begin
           require "sauce/connect"
