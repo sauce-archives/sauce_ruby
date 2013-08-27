@@ -130,7 +130,10 @@ begin
 
         ::RSpec.configuration.after :suite do
           Sauce::Utilities::Connect.close
-          @@server.stop if @@server
+          if (defined? @@server) && @@server
+            @@server.stop 
+          end
+          Sauce::Utilities.warn_if_suspect_misconfiguration
         end
       end
     end
