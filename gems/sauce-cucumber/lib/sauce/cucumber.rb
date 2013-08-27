@@ -157,6 +157,7 @@ begin
 
   at_exit do
     Sauce::Utilities::Connect.close
+    Sauce::Utilities.warn_if_suspect_misconfiguration(:cucumber)
   end
 
 rescue NoMethodError # This makes me sad
