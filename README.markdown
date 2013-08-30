@@ -1,7 +1,7 @@
 # Sauce for Ruby
  
-[![Build Status](https://travis-ci.org/sauce-labs/sauce_ruby.png)](https://travis-ci.org/sauce-labs/sauce_ruby)
-[![Dependency Status](https://gemnasium.com/sauce-labs/sauce_ruby.png)](https://gemnasium.com/sauce-labs/sauce_ruby)
+[![Build Status](https://travis-ci.org/saucelabs/sauce_ruby.png)](https://travis-ci.org/saucelabs/sauce_ruby)
+[![Dependency Status](https://gemnasium.com/saucelabs/sauce_ruby.png)](https://gemnasium.com/saucelabs/sauce_ruby)
 
 This is the Ruby client adapter for testing with [Sauce
 Labs](https://www.saucelabs.com), a Selenium-based browser testing service.
@@ -9,7 +9,7 @@ Labs](https://www.saucelabs.com), a Selenium-based browser testing service.
 The gem supports opening Sauce Connect tunnels, starting Rails applications, and most importantly, running your tests in parallel across multiple platforms.
 
 There is more information on **[the
-wiki](https://github.com/sauce-labs/sauce_ruby/wiki)**, so be sure to look there
+wiki](https://github.com/saucelabs/sauce_ruby/wiki)**, so be sure to look there
 for information too!
 
 ## Installation
@@ -77,7 +77,7 @@ We recommend, however, the use of Capybara for your tests.
 
 #### Run tests locally or remotely
 
-A suggestion of how to run tests locally or remotely is available at the [Swappable Sauce](https://github.com/sauce-labs/sauce_ruby/wiki/_preview) wiki page.
+A suggestion of how to run tests locally or remotely is available at the [Swappable Sauce](https://github.com/saucelabs/sauce_ruby/wiki/_preview) wiki page.
 
 ### Capybara
 The gem provides a Capybara driver that functions mostly the same as the existing Selenium driver.
@@ -124,7 +124,7 @@ Given /^(\w+) is my friend$/ do |friends_name|
 end
 ```
 
-For more details, check out the wiki page, [Cucumber and Capybara](https://github.com/sauce-labs/sauce_ruby/wiki/Cucumber-and-Capybara).
+For more details, check out the wiki page, [Cucumber and Capybara](https://github.com/saucelabs/sauce_ruby/wiki/Cucumber-and-Capybara).
 
 ### Test::Unit
 To get sweeeeet Saucy features like job status updating, subclass `Sauce::TestCase` or `Sauce::RailsTestCase`.
@@ -178,7 +178,7 @@ $ bundle exec rake sauce:features
 
 This will run your RSpec tests or Cucumber features against every platform defined, across as many concurrent Sauce sessions as your account has access too.
 
-Check out the [Parallisation guide](https://github.com/sauce-labs/sauce_ruby/wiki/Concurrent-Testing) for more details.
+Check out the [Parallisation guide](https://github.com/saucelabs/sauce_ruby/wiki/Concurrent-Testing) for more details.
 
 ### Run against several browsers in series
 As long as your tests are correctly tagged (See installation, above), running them without the rake task (eg `$ bundle exec rspec`) will run them one at a time, once for every platform requested.
@@ -203,11 +203,11 @@ Sauce.config do |c|
 end
 ```
 
-For details on named tunnels (including why you might want to use them) check out the [Using Identified Tunnels with Sauce Connect](https://github.com/sauce-labs/sauce_ruby/wiki/Using-Identified-Tunnels-with-Sauce-Connect) page.
+For details on named tunnels (including why you might want to use them) check out the [Using Identified Tunnels with Sauce Connect](https://github.com/saucelabs/sauce_ruby/wiki/Using-Identified-Tunnels-with-Sauce-Connect) page.
 
 ## Full configuration details
 
-Check out the [(in)Complete guide to Configuration](https://github.com/sauce-labs/sauce_ruby/wiki/Configuration----The-\(in\)Complete-Guide) for a full list of configuration options and details.
+Check out the [(in)Complete guide to Configuration](https://github.com/saucelabs/sauce_ruby/wiki/Configuration----The-\(in\)Complete-Guide) for a full list of configuration options and details.
 
 This also details how to customise application/tunnel setup.
 
