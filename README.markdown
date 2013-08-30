@@ -172,8 +172,8 @@ end
 ### Run tests in Parallel (Highly recommended)
 
 ```bash
-$ bundle exec sauce:spec
-$ bundle exec sauce:features
+$ bundle exec rake sauce:spec
+$ bundle exec rake sauce:features
 ```
 
 This will run your RSpec tests or Cucumber features against every platform defined, across as many concurrent Sauce sessions as your account has access too.
