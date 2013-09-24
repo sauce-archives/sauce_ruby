@@ -1,6 +1,12 @@
 # Changelog
-## 3.0
-# 3.1.2
+## 3.1
+### 3.1.3
+Added ability to pass "SAUCE\_DISABLE\_HEROKU\_CONFIG" environment variable to disable attempts to load Heroku
+Enabled seamless native uploads
+Corrected job\_name overwriting name in config
+Corrected TestUnit examples in Examples directory for Selenium 2
+
+### 3.1.2
 Default to only running tasks tagged with ":sauce"
 Allow for options to be passed to Parallel Tests when running the rspec rake task
 
@@ -14,6 +20,7 @@ Prevented Capybara from starting a server when already started
 Made Capybara & Parallel Tests respect Sauce Connect ports
 Removed default port of 80 from Sauce Connect startup
 
+## 3.0
 ### 3.0.6
 Added Command Line options for Sauce Connect (thanks, Rick Martínez!)
 
