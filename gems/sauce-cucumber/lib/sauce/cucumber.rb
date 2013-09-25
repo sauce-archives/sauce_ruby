@@ -3,6 +3,7 @@ require 'cucumber'
 require 'sauce/job'
 require 'sauce/capybara'
 require 'sauce/utilities'
+require 'sauce_whisk'
 
 module Sauce
   module Capybara
@@ -117,7 +118,7 @@ module Sauce
             puts output.join(' ')
           end
 
-          job = Sauce::Job.new('id' => session_id,
+          job = SauceWhisk::Job.new('id' => session_id,
                                'name' => job_name,
                                'custom-data' => custom_data)
           job.save unless job.nil?
@@ -157,6 +158,7 @@ begin
 
   at_exit do
     Sauce::Utilities::Connect.close
+    Sauce::Utilities.warn_if_suspect_misconfiguration(:cucumber)
   end
 
 rescue NoMethodError # This makes me sad

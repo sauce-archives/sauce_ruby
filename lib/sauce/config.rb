@@ -27,7 +27,8 @@ module Sauce
         :local_application_port => "3001",
         :capture_traffic => false,
         :start_tunnel => true,
-        :start_local_application => true
+        :start_local_application => true,
+        :warn_on_skipped_integration => true
     }
 
     DEFAULT_BROWSERS = {
@@ -71,6 +72,14 @@ module Sauce
     def self.get_application_port
       port_index = ENV["TEST_ENV_NUMBER"].to_i
       return POTENTIAL_PORTS[port_index]
+    end
+
+    def self.called_from_integrations?
+      @called_from_integrations || false
+    end
+
+    def self.called_from_integrations
+      @called_from_integrations = true
     end
 
     def initialize(opts={})
@@ -173,6 +182,8 @@ module Sauce
     end
 
     def browsers_for_file(file)
+      Sauce::Config.called_from_integrations
+
       if @opts[:perfile_browsers]
         @opts[:perfile_browsers][file].map do |h|
           [h['os'], h['browser'], h['version']]

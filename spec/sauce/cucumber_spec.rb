@@ -69,7 +69,7 @@ module Sauce::Capybara
       before :each do
         # Need to create our nice mocked Capybara driver
         Capybara.stub_chain(:current_session, :driver).and_return(driver)
-        Sauce::Job.stub(:new).and_return(nil)
+        SauceWhisk::Job.stub(:new).and_return(nil)
         Sauce::Selenium2.stub(:new).with(anything).and_return Object.new
       end
 
