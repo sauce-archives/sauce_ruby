@@ -26,6 +26,14 @@ module Sauce
   class Selenium2
     attr_reader :config, :driver
 
+    def self.used_at_least_once?
+      @used_at_least_once || false
+    end
+
+    def self.used_at_least_once
+      @used_at_least_once = true
+    end
+
     def initialize(opts={})
       @config = Sauce::Config.new(opts)
       http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new
@@ -40,6 +48,8 @@ module Sauce
         file_path = args.first.to_s
         File.exist?(file_path) ? file_path : false
       end
+
+      Sauce::Selenium2.used_at_least_once
     end
 
     def method_missing(meth, *args)

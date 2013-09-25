@@ -178,7 +178,15 @@ $ bundle exec rake sauce:features
 
 This will run your RSpec tests or Cucumber features against every platform defined, across as many concurrent Sauce sessions as your account has access too.
 
-Check out the [Parallisation guide](https://github.com/saucelabs/sauce_ruby/wiki/Concurrent-Testing) for more details.
+You can pass arguments to these tasks to control concurrency, specs/features to run and commandline arguments.
+
+```
+# Run login\spec across all platforms with up to 8 concurrent specs
+$ bundle exec sauce:spec concurrency=8 specs="spec/login_spec.rb"
+
+# Run report.feature across all platforms with up to 3 concurrent features
+$ bundle exec sauce:features concurrency=3 features="features/report.feature"
+Check out the [Parallisation guide](https://github.com/sauce-labs/sauce_ruby/wiki/Concurrent-Testing) for more details.
 
 ### Run against several browsers in series
 As long as your tests are correctly tagged (See installation, above), running them without the rake task (eg `$ bundle exec rspec`) will run them one at a time, once for every platform requested.
