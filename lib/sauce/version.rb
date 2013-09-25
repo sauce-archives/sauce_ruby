@@ -1,6 +1,6 @@
 module Sauce
-  MAJOR_VERSION = '3.1'
-  PATCH_VERSION = '3'
+  MAJOR_VERSION = '3.2'
+  PATCH_VERSION = '0'
 
   def version
     "#{MAJOR_VERSION}.#{PATCH_VERSION}"

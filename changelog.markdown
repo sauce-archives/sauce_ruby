@@ -1,4 +1,9 @@
 # Changelog
+## 3.2
+### 3.2.0
+Added ENV_VAR rake parameters for spec and cucumber tasks (concurrency, rspec_options, specs)
+Added a check for correct integration:
+
 ## 3.1
 ### 3.1.3
 Added ability to pass "SAUCE\_DISABLE\_HEROKU\_CONFIG" environment variable to disable attempts to load Heroku
