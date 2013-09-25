@@ -4,11 +4,11 @@ require "parallel_tests/tasks"
 require "parallel_tests/cli_patch"
 
 namespace :sauce do
-  task :spec, :spec_files, :concurrencies, :rspec_options do |t, args|
+  task :spec, :spec_files, :concurrency, :rspec_options do |t, args|
     ::RSpec::Core::Runner.disable_autorun!
 
     env_args = {
-      :concurrencies => ENV['concurrency'],
+      :concurrency => ENV['concurrency'],
       :rspec_options => ENV['rspec_options'],
       :spec_files => ENV['specs']
     }
@@ -16,12 +16,12 @@ namespace :sauce do
     env_args.delete_if {|k,v| k.nil? || k == ''}
 
     args.with_defaults({
-      :concurrencies => [Sauce::TestBroker.concurrencies, 20].min,
+      :concurrency => [Sauce::TestBroker.concurrency, 20].min,
       :files => "spec",
       :rspec_opts => "-t sauce"
     })
 
-    concurrency = env_args[:concurrencies]    || args[:concurrencies]
+    concurrency = env_args[:concurrency]    || args[:concurrency]
     spec_files = env_args[:spec_files]        || args[:files]
     rspec_options = env_args[:rspec_options]  || args[:rspec_options]
 
