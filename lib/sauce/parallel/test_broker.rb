@@ -60,7 +60,7 @@ module Sauce
       @@platforms
     end
 
-    def self.concurrencies
+    def self.concurrency
       response = RestClient.get "#{rest_jobs_url}/#{SAUCE_USERNAME}/limits"
       res = JSON.parse(response)["concurrency"]
     end

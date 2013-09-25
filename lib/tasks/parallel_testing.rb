@@ -42,7 +42,7 @@ namespace :sauce do
 
   task :features, :files, :concurrency  do |t, args|
     args.with_defaults({
-      :concurrency => [Sauce::TestBroker.concurrencies, 20].min,
+      :concurrency => [Sauce::TestBroker.concurrency, 20].min,
       :files => "features"
     })
 
