@@ -184,8 +184,11 @@ You can pass arguments to these tasks to control concurrency, specs/features to 
 # Run login\spec across all platforms with up to 8 concurrent specs
 $ bundle exec sauce:spec concurrency=8 specs="spec/login_spec.rb"
 
+
 # Run report.feature across all platforms with up to 3 concurrent features
 $ bundle exec sauce:features concurrency=3 features="features/report.feature"
+```
+
 Check out the [Parallisation guide](https://github.com/sauce-labs/sauce_ruby/wiki/Concurrent-Testing) for more details.
 
 ### Run against several browsers in series
