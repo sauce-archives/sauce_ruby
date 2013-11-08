@@ -124,10 +124,11 @@ module Sauce
           job.save unless job.nil?
 
           # This allow us to execute steps (n) times
-          unless scenario.instance_of? ::Cucumber::Ast::OutlineTable::ExampleRow
-            scenario.steps.each do |step|
-              step.instance_variable_set(:@skip_invoke, false)
-            end
+          is_example_row = scenario.instance_of? ::Cucumber::Ast::OutlineTable::ExampleRow 
+          steps = is_example_row ? scenario.instance_variable_get(:@step_invocations) : scenario.steps
+
+          steps.each do |step|
+            step.instance_variable_set(:@skip_invoke, false)
           end
 
           block.call
