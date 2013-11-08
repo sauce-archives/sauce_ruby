@@ -1,37 +1,28 @@
 require 'jasmine'
 
-module Sauce
-  module Jasmine
-    class Driver < ::Jasmine::SeleniumDriver
-      attr_reader :http_address, :driver, :browser
+module Jasmine
+  class SeleniumDriver
+    attr_reader :http_address, :driver, :browser
 
-      def initialize(browser, http_address)
-        @browser = browser
-        @http_address = http_address
-        name = job_name
-        
-        @driver = Sauce::Selenium2.new(:job_name => job_name)
-        puts "Starting job named: #{job_name}"
-      end
+    def initialize(browser, http_address)
+      @browser = browser
+      @http_address = http_address
+      name = job_name
 
-      def job_name
-        "Jasmine Test Run #{Time.now.utc.to_i}"
-      end
+      @driver = Sauce::Selenium2.new(:browser => ENV['SAUCE_BROWSER'], :job_name => job_name)
+      puts "Starting job named: #{job_name}"
+    end
+
+    def job_name
+      "Jasmine Test Run #{Time.now.utc.to_i}"
     end
   end
 end
 
 module Jasmine
-  class Config
-    def jasmine_port
-      '3001'
-    end
-
-    def start
-      @client = ::Sauce::Jasmine::Driver.new(browser, "#{jasmine_host}:#{jasmine_port}/")
-      @client.connect
+  class Configuration
+    def port
+      3001
     end
   end
 end
-
-
