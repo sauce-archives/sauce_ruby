@@ -17,5 +17,5 @@ Gem::Specification.new do |gem|
 
 
   gem.add_dependency('sauce', ">= #{Sauce::MAJOR_VERSION}.0")
-  gem.add_dependency('jasmine', '~> 1.2.0.0')
+  gem.add_dependency('jasmine', '~> 1.3')
 end
