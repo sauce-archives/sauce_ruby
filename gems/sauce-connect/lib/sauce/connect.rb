@@ -11,6 +11,7 @@ module Sauce
       @status = "uninitialized"
       @error = nil
       @quiet = options[:quiet]
+      @timeout = options.fetch(:timeout) { TIMEOUT }
       @config = Sauce::Config.new(options)
 
       if @config.username.nil?
@@ -70,7 +71,7 @@ module Sauce
 
     def wait_until_ready
       start = Time.now
-      while !@ready and (Time.now-start) < TIMEOUT and @error != "Missing requirements"
+      while !@ready and (Time.now-start) < @timeout and @error != "Missing requirements"
         sleep 0.5
       end
 
@@ -79,7 +80,7 @@ module Sauce
       end
 
       if !@ready
-        raise "Sauce Connect failed to connect after #{TIMEOUT} seconds"
+        raise "Sauce Connect failed to connect after #{@timeout} seconds"
       end
     end
 
