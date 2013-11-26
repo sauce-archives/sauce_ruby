@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.email = 'help@saucelabs.com'
   s.summary = "A Ruby helper for running tests in Sauce Labs"
   s.description = "A Ruby helper for running tests in Sauce Labs' browser testing cloud service"
+  s.license = 'MIT'
   # Include pretty much everything in Git except the examples/ directory
   s.files = Dir['lib/**/*.rb'] + Dir['lib/**/**/*.rb']
   s.executables = ['sauce']
