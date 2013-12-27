@@ -356,7 +356,6 @@ module Sauce
       end
 
       if env.include? 'SAUCE_PERFILE_BROWSERS'
-        STDERR.puts "FOUND PERFILE BROWSERS -- ##{opts[:perfile_browsers]}#"
         opts[:perfile_browsers] = JSON.parse(env['SAUCE_PERFILE_BROWSERS'])
       end
 

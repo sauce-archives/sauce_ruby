@@ -62,7 +62,6 @@ namespace :sauce do
       features
     ]
 
-    STDERR.puts "ARGS #{parallel_arguments}"
     ParallelTests::CLI.new.run(parallel_arguments)
   end
 
