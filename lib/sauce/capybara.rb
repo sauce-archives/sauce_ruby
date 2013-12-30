@@ -38,14 +38,13 @@ module Sauce
 
       alias :base_visit :visit
       alias :base_current_url :current_url
-      alias :base_reset! :reset!
       alias :base_within_frame :within_frame
       alias :base_within_window :within_window
       alias :base_find_window :find_window
       alias :base_execute_script :execute_script
       alias :base_evaluate_script :evaluate_script
 
-      @methods_to_retry = [:visit, :current_url, :reset!,
+      @methods_to_retry = [:visit, :current_url,
         :within_frame, :within_window, :find_window, :source,
         :execute_script, :evaluate_script
       ]
@@ -113,6 +112,23 @@ module Sauce
 
       def render(path)
         browser.save_screenshot path
+      end
+
+      # Overridden to deal with Capybara calling empty html file.
+      # Stolen from (And can be removed when superceeded by the merge of)
+      # https://github.com/jnicklas/capybara/pull/1215
+      def reset!
+        empty_html = "data:text/html,<html></html>"
+        # Use instance variable directly so we avoid starting the browser just to reset the session
+        if @browser
+          begin @browser.manage.delete_all_cookies
+          rescue Selenium::WebDriver::Error::UnhandledError
+          # delete_all_cookies fails when we've previously gone
+          # to about:blank, so we rescue this error and do nothing
+          # instead.
+          end
+          @browser.navigate.to(empty_html)
+        end
       end
     end
   end
