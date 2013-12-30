@@ -13,7 +13,6 @@ namespace :sauce do
 
   task :features, :files, :concurrency, :test_options, :parallel_options do |t, args|
     parallel_arguments = parse_task_args(:cucumber, args)
-    STDERR.puts "ARGS: #{parallel_arguments}"
     ParallelTests::CLI.new.run(parallel_arguments)
   end
 
