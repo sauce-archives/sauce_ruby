@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe 'parse_task_args' do
+  before :all do
+    Sauce::TestBroker.stub(:concurrency) {20}
+  end
+  
   it 'returns the saucerspec type when using rspec' do
     actual_args = parse_task_args(:rspec, {}).join ' '
     actual_args.should include '--type saucerspec'
