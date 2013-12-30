@@ -78,7 +78,7 @@ begin
             config = Sauce::Config.new
             description = the_test.metadata[:full_description]
             file = the_test.metadata[:file_path]
-            config.browsers_for_file(file).each do |os, browser, version|
+            config.browsers_for_location(file).each do |os, browser, version|
               @selenium = Sauce::Selenium2.new({:os => os,
                                                 :browser => browser,
                                                 :browser_version => version,

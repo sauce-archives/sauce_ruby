@@ -29,9 +29,9 @@ module Sauce
         if scenario.instance_of? ::Cucumber::Ast::OutlineTable::ExampleRow
           table = scenario.instance_variable_get(:@table)
           outline = table.instance_variable_get(:@scenario_outline)
-          return outline.feature.file
+          return {:file => outline.feature.file, :line => outline.feature.line}
         end
-        return scenario.location.file
+        return {:file => scenario.location.file, :line => scenario.location.line}
       end
       module_function :file_name_from_scenario
 
@@ -86,9 +86,10 @@ module Sauce
           c[:name] = Sauce::Capybara::Cucumber.name_from_scenario(scenario)
         end
 
-        filename = file_name_from_scenario(scenario)
+        fn = file_name_from_scenario(scenario)
+        config = Sauce::Config.new
 
-        Sauce::Config.new.browsers_for_file("./#{filename}").each do |os, browser, version|
+        config.browsers_for_location("./#{fn[:file]}", fn[:line]).each do |os, browser, version|
           @selenium = Sauce::Selenium2.new({:os => os,
                                             :browser => browser,
                                             :browser_version => version,

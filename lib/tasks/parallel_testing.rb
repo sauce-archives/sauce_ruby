@@ -3,66 +3,16 @@ require "parallel_tests"
 require "parallel_tests/tasks"
 require "parallel_tests/cli_patch"
 
+
 namespace :sauce do
-  task :spec, :spec_files, :concurrency, :rspec_options do |t, args|
+  task :spec, :spec_files, :concurrency, :test_options, :parallel_options do |t, args|
     ::RSpec::Core::Runner.disable_autorun!
-
-    env_args = {
-      :concurrency => ENV['concurrency'],
-      :rspec_options => ENV['rspec_options'],
-      :spec_files => ENV['specs']
-    }
-
-    env_args.delete_if {|k,v| k.nil? || k == ''}
-
-    args.with_defaults({
-      :concurrency => [Sauce::TestBroker.concurrency, 20].min,
-      :files => "spec",
-      :rspec_opts => "-t sauce"
-    })
-
-    concurrency = env_args[:concurrency]    || args[:concurrency]
-    spec_files = env_args[:spec_files]        || args[:files]
-    rspec_options = env_args[:rspec_options]  || args[:rspec_options]
-
-    parallel_arguments = [
-      "--type", "saucerspec",
-      "-n", "#{concurrency}"
-    ]
-
-    unless rspec_options.nil?
-      parallel_arguments.push "-o"
-      parallel_arguments.push rspec_options
-    end
-
-    parallel_arguments.push spec_files
-
+    parallel_arguments = parse_task_args(:rspec, args)
     ParallelTests::CLI.new.run(parallel_arguments)
   end
 
-  task :features, :files, :concurrency  do |t, args|
-    args.with_defaults({
-      :concurrency => [Sauce::TestBroker.concurrency, 20].min,
-      :files => "features"
-    })
-
-    env_args = {
-      :concurrency => ENV['concurrency'],
-      :features => ENV['features']
-    }
-
-    env_args.delete_if {|k,v| k.nil? || k == ''}
-
-    concurrency = env_args[:concurrency] || args[:concurrency]
-    features = env_args[:features] || args[:files]
-
-    parallel_arguments = [
-      "--type", "saucecucumber",
-      "-n", concurrency.to_s,
-      features
-    ]
-
-    STDERR.puts "ARGS #{parallel_arguments}"
+  task :features, :files, :concurrency, :test_options, :parallel_options do |t, args|
+    parallel_arguments = parse_task_args(:cucumber, args)
     ParallelTests::CLI.new.run(parallel_arguments)
   end
 
@@ -114,4 +64,50 @@ namespace :sauce do
       end
     end
   end
+end
+
+def parse_task_args(test_tool=:rspec, args)
+  default = {
+    :concurrency => [Sauce::TestBroker.concurrency, 20].min
+  }
+
+  if test_tool == :rspec
+    default[:test_options] = '-t sauce'
+    default[:files] = 'spec'
+  end
+
+  if test_tool == :cucumber
+    default[:files] = 'features'
+  end
+
+  env_args = {
+    :concurrency => ENV['concurrency'],
+    :features => ENV['features'],
+    :parallel_options => ENV['parallel_test_options'],
+    :test_options => ENV['test_options'],
+    :files => ENV['test_files']
+  }
+
+  concurrency = args[:concurrency] || env_args[:concurrency] || default[:concurrency]
+  test_options = args[:test_options] || env_args[:test_options] || default[:test_options]
+  parallel_options = args[:parallel_options] || env_args[:parallel_options] 
+  files = args[:files] || env_args[:files] || default[:files]
+
+  return_args = [
+    '-n', concurrency.to_s,
+    '--type'
+  ]
+
+  return_args.push 'saucerspec' if test_tool == :rspec 
+  return_args.push 'saucecucumber' if test_tool == :cucumber
+    
+  if test_options
+    return_args.push '-o'
+    return_args.push test_options
+  end
+
+  return_args.push *(parallel_options.split(' ')) if parallel_options
+  return_args.push files
+
+  return return_args
 end
