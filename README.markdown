@@ -4,20 +4,15 @@
 [![Dependency Status](https://gemnasium.com/saucelabs/sauce_ruby.png)](https://gemnasium.com/saucelabs/sauce_ruby)
 
 This is the Ruby client adapter for testing with [Sauce
-Labs](https://www.saucelabs.com), a Selenium-based browser testing service.
+Labs](https://www.saucelabs.com), the multi-platform, multi-device testing service.  The gem supports opening Sauce Connect tunnels, starting Rails applications, and most importantly, running your tests in parallel across multiple platforms.
 
-The gem supports opening Sauce Connect tunnels, starting Rails applications, and most importantly, running your tests in parallel across multiple platforms.
-
-There is more information on **[the
-wiki](https://github.com/saucelabs/sauce_ruby/wiki)**, so be sure to look there
-for information too!
-
+Be sure to check **[the wiki](https://github.com/saucelabs/sauce_ruby/wiki)** for more information, guides and support.
 ## Installation
 
 ```ruby
 # Gemfile
 gem "sauce"
-gem "sauce-connect" # Sauce Connect is required by tests by default.
+gem "sauce-connect" # Sauce Connect is required by default.
 ```
 ```bash
 $ bundle install
@@ -40,7 +35,7 @@ end
 Place your Sauce.config block in spec_helper.rb
 
 ### Test::Unit
-Create test/sauce_helper.rb with your desired config, and `require sauce_helper` in your test_helper.rb
+Create test/sauce\_helper.rb with your desired config, and `require sauce_helper` in your test_helper.rb
 
 ### Cucumber
 ```ruby
@@ -55,7 +50,7 @@ $ bundle exec rake sauce:install:features
 
 Edit features/support/sauce_helper.rb with your desired config.
 
-Tag your features with `@selenium` to get Sauce behaviour included.
+Tag your Sauce-intended features with `@selenium`.
 
 ## Using the gem
 ### RSpec
@@ -99,15 +94,12 @@ You can now use Capybara as normal, and all actions will be executed against you
 If you're running from inside an RSpec example, the `@selenium` object and the actual driver object used by the Sauce driver are the same object.  So, if you need access to the Selenium Webdriver when using Capybara, you have it.
 
 #### With Sauce Connect
-Sauce Connect automatically proxies content on certain ports;  Using one of these will allow Sauce Connect to tunnel traffic to your local machine:
+Sauce Connect automatically proxies content on certain ports;   Capybara.server_port will be set to a value suitable for use with Sauce Connect by default.  If you want to use a specific port, using one of these will allow Sauce Connect to tunnel traffic to your local machine: 
 ```ruby
 Capybara.server_port = an_appropriate_port
 
 # Appropriate ports: 80, 443, 888, 2000, 2001, 2020, 2222, 3000, 3001, 3030, 3333, 4000, 4001, 4040, 4502, 4503, 5000, 5001, 5050, 5555, 6000, 6001, 6060, 6666, 7000, 7070, 7777, 8000, 8001, 8003, 8031, 8080, 8081, 8888, 9000, 9001, 9080, 9090, 9999, 49221
 ```
-
-Capybara.server_port will be set to a value suitable for use with Sauce Connect by default.
-
 ### Cucumber
 The `sauce-cucumber` gem works best with Capybara.  Each "@selenium" tagged feature automatically sets the Capybara driver to :sauce.  All tagged features can simply use the Capybara DSL directly from step definitions:
 ```Ruby
