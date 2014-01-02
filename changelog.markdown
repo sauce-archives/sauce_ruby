@@ -1,4 +1,11 @@
 # Changelog
+## 3.3
+## 3.3.0
+Added 'parallel\_test\_options' to rake tasks, allows for arbitrary p-tests options:
+`bundle exec rake sauce:spec parallel_test_options='--group-by scenario'
+Update parallel_tests to 0.16.5
+Monkeypatch Capybara's reset! functionality to remove dependance on the gem's in-build empty page
+
 ## 3.2
 ### 3.2.0
 Added ENV_VAR rake parameters for spec and cucumber tasks (concurrency, rspec_options, specs)

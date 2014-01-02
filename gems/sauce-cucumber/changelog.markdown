@@ -1,5 +1,9 @@
 Changelog
 =========
+3.3.0
+-----
+* Changes to be compatible with latest version of Sauce gem
+
 3.2.1
 -----
 * Allowed scenario outlines to run more then once
