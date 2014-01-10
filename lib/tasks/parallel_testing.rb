@@ -7,13 +7,32 @@ require "parallel_tests/cli_patch"
 namespace :sauce do
   task :spec, :spec_files, :concurrency, :test_options, :parallel_options do |t, args|
     ::RSpec::Core::Runner.disable_autorun!
-    parallel_arguments = parse_task_args(:rspec, args)
-    ParallelTests::CLI.new.run(parallel_arguments)
+
+    config = Sauce.get_config
+    if(config.username && config.access_key)
+      parallel_arguments = parse_task_args(:rspec, args)
+      ParallelTests::CLI.new.run(parallel_arguments)
+    else
+      puts <<-ENDLINE
+  Your Sauce username and/or access key are unavailable. Please:
+  1.  Set the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables.
+  2.  Run your tests with 'rake sauce:spec'
+      ENDLINE
+    end
   end
 
   task :features, :files, :concurrency, :test_options, :parallel_options do |t, args|
-    parallel_arguments = parse_task_args(:cucumber, args)
-    ParallelTests::CLI.new.run(parallel_arguments)
+    config = Sauce.get_config
+    if(config.username && config.access_key)
+      parallel_arguments = parse_task_args(:cucumber, args)
+      ParallelTests::CLI.new.run(parallel_arguments)
+    else
+      puts <<-ENDLINE
+  Your Sauce username and/or access key are unavailable. Please:
+  1.  Set the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables.
+  2.  Run your tests with 'rake sauce:features'
+      ENDLINE
+    end
   end
 
   namespace :install do
@@ -90,7 +109,7 @@ def parse_task_args(test_tool=:rspec, args)
 
   concurrency = args[:concurrency] || env_args[:concurrency] || default[:concurrency]
   test_options = args[:test_options] || env_args[:test_options] || default[:test_options]
-  parallel_options = args[:parallel_options] || env_args[:parallel_options] 
+  parallel_options = args[:parallel_options] || env_args[:parallel_options]
   files = args[:files] || env_args[:files] || default[:files]
 
   return_args = [
@@ -98,9 +117,9 @@ def parse_task_args(test_tool=:rspec, args)
     '--type'
   ]
 
-  return_args.push 'saucerspec' if test_tool == :rspec 
+  return_args.push 'saucerspec' if test_tool == :rspec
   return_args.push 'saucecucumber' if test_tool == :cucumber
-    
+
   if test_options
     return_args.push '-o'
     return_args.push test_options
