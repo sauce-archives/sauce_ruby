@@ -60,7 +60,8 @@ module Sauce
     }
 
     BROWSERS = {
-      "iexplore" => "internet explorer"
+      "iexplore" => "internet explorer",
+      "ie" => "internet explorer"
     }
 
     SAUCE_OPTIONS = %w{record-video record-screenshots capture-html tags
