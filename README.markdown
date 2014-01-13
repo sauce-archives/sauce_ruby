@@ -220,10 +220,7 @@ The Sauce gem has been optimized to work most effectively with RSpec.
 
 ## Troubleshooting
 
-### Specs only run on the first browser configured
-
-* Make sure you've tagged your example groups `:sauce => true`
-* Make sure you've only configured `[:browsers]`, not `[:browser]`, in Sauce.config
+Check the [Troubleshooting Guide](https://github.com/saucelabs/sauce_ruby/wiki/Troubleshooting)
 
 ## Contributing to the Gem
 
