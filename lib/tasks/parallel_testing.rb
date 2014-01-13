@@ -8,31 +8,11 @@ namespace :sauce do
   task :spec, :spec_files, :concurrency, :test_options, :parallel_options do |t, args|
     ::RSpec::Core::Runner.disable_autorun!
 
-    config = Sauce.get_config
-    if(config.username && config.access_key)
-      parallel_arguments = parse_task_args(:rspec, args)
-      ParallelTests::CLI.new.run(parallel_arguments)
-    else
-      puts <<-ENDLINE
-  Your Sauce username and/or access key are unavailable. Please:
-  1.  Set the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables.
-  2.  Run your tests with 'rake sauce:spec'
-      ENDLINE
-    end
+    run_parallel_tests(t, args, :rspec)
   end
 
   task :features, :files, :concurrency, :test_options, :parallel_options do |t, args|
-    config = Sauce.get_config
-    if(config.username && config.access_key)
-      parallel_arguments = parse_task_args(:cucumber, args)
-      ParallelTests::CLI.new.run(parallel_arguments)
-    else
-      puts <<-ENDLINE
-  Your Sauce username and/or access key are unavailable. Please:
-  1.  Set the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables.
-  2.  Run your tests with 'rake sauce:features'
-      ENDLINE
-    end
+    run_parallel_tests(t, args, :cucumber)
   end
 
   namespace :install do
@@ -82,6 +62,21 @@ namespace :sauce do
         STDERR.puts "WARNING - sauce_helper has already been created."
       end
     end
+  end
+end
+
+def run_parallel_tests(t, args, command)
+  username    = ENV["SAUCE_USERNAME"].to_s
+  access_key  = ENV["SAUCE_ACCESS_KEY"].to_s
+  if(!username.empty? && !access_key.empty?)
+    parallel_arguments = parse_task_args(command, args)
+    ParallelTests::CLI.new.run(parallel_arguments)
+  else
+    puts <<-ENDLINE
+  Your Sauce username and/or access key are unavailable. Please:
+  1.  Set the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables.
+  2.  Rerun your tests.
+    ENDLINE
   end
 end
 
