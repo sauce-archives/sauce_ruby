@@ -8,6 +8,7 @@ Gem::Specification.new do |gem|
   gem.description   = ""
   gem.summary       = ""
   gem.homepage      = ""
+  gem.license       = "Apache 2.0"
 
   gem.files         = Dir['lib/**/*.rb'] + ['support/Sauce-Connect.jar']
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }

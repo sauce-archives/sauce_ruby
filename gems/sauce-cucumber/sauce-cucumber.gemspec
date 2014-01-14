@@ -7,7 +7,7 @@ Gem::Specification.new do |gem|
   gem.description   = 'A Cucumber driver to use Sauce Labs with Cucumber and Capybara.  Supports job naming, job success updates and more!'
   gem.summary       = 'Use http://www.saucelabs.com with Cucumber'
   gem.homepage      = 'https://github.com/saucelabs/sauce_ruby/tree/master/gems/sauce-cucumber'
-  gem.licenses      = ['Apache2']
+  gem.license       = 'Apache 2.0'
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
