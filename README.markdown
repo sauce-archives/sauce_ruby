@@ -1,5 +1,5 @@
 # Sauce for Ruby
- 
+
 [![Build Status](https://travis-ci.org/saucelabs/sauce_ruby.png)](https://travis-ci.org/saucelabs/sauce_ruby)
 [![Dependency Status](https://gemnasium.com/saucelabs/sauce_ruby.png)](https://gemnasium.com/saucelabs/sauce_ruby)
 
@@ -94,7 +94,7 @@ You can now use Capybara as normal, and all actions will be executed against you
 If you're running from inside an RSpec example, the `@selenium` object and the actual driver object used by the Sauce driver are the same object.  So, if you need access to the Selenium Webdriver when using Capybara, you have it.
 
 #### With Sauce Connect
-Sauce Connect automatically proxies content on certain ports;   Capybara.server_port will be set to a value suitable for use with Sauce Connect by default.  If you want to use a specific port, using one of these will allow Sauce Connect to tunnel traffic to your local machine: 
+Sauce Connect automatically proxies content on certain ports;   Capybara.server_port will be set to a value suitable for use with Sauce Connect by default.  If you want to use a specific port, using one of these will allow Sauce Connect to tunnel traffic to your local machine:
 ```ruby
 Capybara.server_port = an_appropriate_port
 
@@ -255,3 +255,4 @@ Running the full test suite will require [RVM](http://rvm.beginrescueend.com)
 * [Capybara](http://jnicklas.github.com/capybara/)     -- Don't handcode webdriver commands.
 * [SauceWhisk](https://github.com/DylanLacey/sauce_whisk)     -- Ruby REST API Wrapper for the Sauce API.  Fresh New Minty Flavour!
 
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/saucelabs/sauce_ruby/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
