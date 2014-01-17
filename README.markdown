@@ -233,6 +233,8 @@ Check the [Troubleshooting Guide](https://github.com/saucelabs/sauce_ruby/wiki/T
 * Commit
 * Send a pull request! :)
 
+There is a [Mailing List](https://groups.google.com/forum/#!newtopic/sauce-ruby-developers) for developers.
+
 ### Testing the Gem
 
 Running the full test suite will require [RVM](http://rvm.beginrescueend.com)
