@@ -105,6 +105,9 @@ module Sauce
     end
 
     def []=(key, value)
+      if(key == :browsers)
+        value = [value] unless value.first.instance_of?(Array)
+      end
       @undefaulted_opts.merge!({key => value})
       @opts[key] = value
     end
