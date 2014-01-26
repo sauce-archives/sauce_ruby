@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rake'
-gem 'capybara', "~> 2.1.0"
+gem 'capybara', "~> 2.2.1"
 gem 'pry'
 
 group :test do
