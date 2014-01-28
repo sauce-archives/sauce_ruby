@@ -165,3 +165,20 @@ begin
 
 rescue NoMethodError # This makes me sad
 end
+
+
+begin
+  module Cucumber
+    module Ast
+      class Scenario
+        def sauce_public_link
+          @sauce_public_link ||= ""
+        end
+
+        def sauce_public_link=(link)
+          @sauce_public_link = link
+        end
+      end
+    end
+  end
+end
