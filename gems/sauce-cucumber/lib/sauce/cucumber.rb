@@ -124,8 +124,10 @@ module Sauce
                                'custom-data' => custom_data)
           job.save unless job.nil?
 
+          scenario.sauce_public_link = SauceWhisk.public_link(session_id)
+
           # This allow us to execute steps (n) times
-          is_example_row = scenario.instance_of? ::Cucumber::Ast::OutlineTable::ExampleRow 
+          is_example_row = scenario.instance_of? ::Cucumber::Ast::OutlineTable::ExampleRow
           steps = is_example_row ? scenario.instance_variable_get(:@step_invocations) : scenario.steps
 
           steps.each do |step|
@@ -141,6 +143,8 @@ module Sauce
             job.passed = !scenario.failed?
             job.save
           end
+
+          puts "Sauce public job link: #{scenario.sauce_public_link}"
         end
       end
       module_function :around_hook
