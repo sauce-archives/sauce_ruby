@@ -84,6 +84,7 @@ begin
                                                 :browser_version => version,
                                                 :job_name => description})
               Sauce.driver_pool[Thread.current.object_id] = @selenium
+              example.metadata[:sauce_public_link] = SauceWhisk.public_link(@selenium.session_id)
 
               begin
                 the_test.run
@@ -131,7 +132,7 @@ begin
         ::RSpec.configuration.after :suite do
           Sauce::Utilities::Connect.close
           if (defined? @@server) && @@server
-            @@server.stop 
+            @@server.stop
           end
           Sauce::Utilities.warn_if_suspect_misconfiguration
         end
@@ -142,4 +143,21 @@ rescue LoadError, TypeError
   # User doesn't have RSpec 2.x installed
 rescue => e
   STDERR.puts "Exception caught: #{e.to_s}"
+end
+
+begin
+  require 'rspec/core/formatters/base_text_formatter'
+  module RSpec
+    module Core
+      module Formatters
+        class BaseTextFormatter
+          def dump_failure(example, index)
+            output.puts "#{short_padding}#{index.next}) #{example.full_description}"
+            puts "#{short_padding}Sauce public job link: #{example.metadata[:sauce_public_link]}"
+            dump_failure_info(example)
+          end
+        end
+      end
+    end
+  end
 end
