@@ -105,6 +105,9 @@ module Sauce
     end
 
     def []=(key, value)
+      if(key == :browsers)
+        value = [value] unless value.first.instance_of?(Array)
+      end
       @undefaulted_opts.merge!({key => value})
       @opts[key] = value
     end
@@ -122,12 +125,12 @@ module Sauce
         warn "[DEPRECATED] This method (#{meth}) is deprecated, please use the [] and []= accessors instead"
       end
       if meth.to_s =~ /(.*)=$/
-        @opts[$1.to_sym] = args[0]
+        self[$1.to_sym] = args[0]
         return args[0]
       elsif meth.to_s =~ /(.*)\?$/
-        return @opts[$1.to_sym]
+        return self[$1.to_sym]
       else
-        return @opts[meth]
+        return self[meth]
       end
     end
 
