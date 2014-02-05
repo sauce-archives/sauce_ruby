@@ -1,5 +1,14 @@
 # Changelog
 ## 3.3
+## 3.3.1
+Add Sauce Public Job Links to cucumber and rspec integrations (Thanks @imurchie!)
+Tunnel accessor for Sauce::Utilities::Connect
+Updated to (https://github.com/saucelabs/sauce_whisk/tree/v0.0.11)[sauce\_whisk 0.0.11
+Updated to (https://github.com/grosser/parallel_tests/tree/v0.16.6)[parallel_tests 0.16.6]
+Allow flattened Browsers array (Thanks @imurchie)
+Remove reset override (Thanks @mrloop!)
+Error message for unset username and access key (Thanks @imurchie!)
+Fixed name of files argument in Rakefile (Thanks @imurchie!)
 ## 3.3.0
 Added 'parallel\_test\_options' to rake tasks, allows for arbitrary p-tests options:
 `bundle exec rake sauce:spec parallel_test_options='--group-by scenario'
