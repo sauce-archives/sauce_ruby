@@ -13,7 +13,7 @@ namespace :spec do
     s.rspec_opts = rspec_options
   end
 
-  task :integration => [:rspec, :testunit]
+  task :integration => [:rspec, :testunit, :connect]
 
   task :rspec do
     desc "Run an integration test with rspec and capybara"
@@ -25,6 +25,12 @@ namespace :spec do
     desc "Run an integration test with testunit"
     ensure_rvm!
     sh "bash --login -c \"cd spec/helpers && ./run_in_own_rvm.sh ./integration/testunit\""
+  end
+
+  task :connect do
+    desc "Ensure sauce-connect is starting correctly"
+    ensure_rvm!
+    sh "bash --login -c \"cd spec/helpers && ./run_in_own_rvm.sh ./integration/connect\""
   end
 end
 
