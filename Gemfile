@@ -10,7 +10,6 @@ group :test do
   gem 'cucumber'
   gem 'jasmine', '~> 1.3'
   gem 'sauce-connect', :path => './gems/sauce-connect'
-  gem 'simplecov'
 end
 
 group :development do

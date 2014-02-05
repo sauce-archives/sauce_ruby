@@ -18,13 +18,13 @@ namespace :spec do
   task :rspec do
     desc "Run an integration test with rspec and capybara"
     ensure_rvm!
-    sh "(cd spec/integration/rspec && ./run-test.sh)"
+    sh "bash --login -c \"cd spec/helpers && ./run_in_own_rvm.sh ./integration/rspec\""
   end
 
   task :testunit do
     desc "Run an integration test with testunit"
     ensure_rvm!
-    sh "(cd spec/integration/testunit && ./run-test.sh)"
+    sh "bash --login -c \"cd spec/helpers && ./run_in_own_rvm.sh ./integration/testunit\""
   end
 end
 
@@ -39,14 +39,14 @@ namespace :test do
     desc "Run an integration test with the cucumber-capybara code (slow)"
     task :capybara do |t|
       ensure_rvm!
-      sh "(cd examples/cucumber-capybara/ && ./run-test.sh)"
+      sh "bash --login -c  \"cd spec/helpers && ./run_in_own_rvm.sh ../examples/cucumber-capybara\""
     end
   end
   namespace :rails3 do
     desc "Run an integration test with the rails3-demo code (slow)"
     task :testunit do |t|
       ensure_rvm!
-      sh "(cd examples/rails3-demo && ./run-test.sh)"
+      sh "bash --login -c  \"cd spec/helpers && ./run_in_own_rvm.sh ../examples/rails3-demo\""
     end
   end
 end

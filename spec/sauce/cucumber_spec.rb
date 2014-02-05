@@ -61,6 +61,7 @@ module Sauce::Capybara
       let(:session_id) { 'deadbeef' }
       let(:driver) do
         driver = double('Sauce::Selenium2 Driver')
+        driver.stub(:finish!)
         driver.stub_chain(:browser, :quit)
         driver.stub_chain(:browser, :session_id).and_return(session_id)
         driver
@@ -71,6 +72,12 @@ module Sauce::Capybara
         Capybara.stub_chain(:current_session, :driver).and_return(driver)
         SauceWhisk::Job.stub(:new).and_return(nil)
         Sauce::Selenium2.stub(:new).with(anything).and_return Object.new
+        Sauce.config do |c|
+          c[:browsers] = [
+            ["OS X 10.8", "Safari", "6"],
+            ["Linux", "Chrome", nil]
+          ]
+        end
       end
 
       context 'with a scenario outline' do
@@ -92,7 +99,7 @@ module Sauce::Capybara
           """
         end
 
-        it 'should have executed the scenario outline twice' do
+        it 'should have executed the scenario twice for each browser' do
           define_steps do
             Given /^a (\d+)$/ do |number|
               $ran_scenario = $ran_scenario + 1
@@ -109,7 +116,7 @@ module Sauce::Capybara
           end
 
           run_defined_feature feature
-          $ran_scenario.should == 2
+          $ran_scenario.should eq 4 # 2 browsers, two examples
         end
 
       end
@@ -174,15 +181,15 @@ module Sauce::Capybara
           # Using this gnarly global just because it's easier to just use a
           # global than try to fish the scenario results back out of the
           # Cucumber bits
-          $ran_scenario = nil
+          $ran_scenario = 0
         end
 
-        it 'should have executed the feature once' do
+        it 'should have executed the feature once for each browser' do
           define_steps do
             Given /^a scenario$/ do
             end
             When /^I raise no exceptions$/ do
-              $ran_scenario = true
+              $ran_scenario += 1
             end
             # Set up and invoke our defined Around hook
             Around('@selenium') do |scenario, block|
@@ -196,7 +203,7 @@ module Sauce::Capybara
           # Make sure we actually configure ourselves
           Sauce.should_receive(:config)
           run_defined_feature feature
-          $ran_scenario.should be true
+          $ran_scenario.should eq 2 # Two browsers
         end
       end
     end

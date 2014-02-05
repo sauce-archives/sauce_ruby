@@ -160,4 +160,6 @@ begin
       end
     end
   end
+rescue LoadError
+  # User isn't using RSpec
 end

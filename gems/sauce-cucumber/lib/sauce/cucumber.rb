@@ -183,6 +183,16 @@ begin
           @sauce_public_link = link
         end
       end
+
+      class OutlineTable::ExampleRow
+        def sauce_public_link
+          @sauce_public_link ||= ""
+        end
+
+        def sauce_public_link=(link)
+          @sauce_public_link = link
+        end
+      end
     end
   end
 end
