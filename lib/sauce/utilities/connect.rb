@@ -36,6 +36,10 @@ module Sauce
           end
         end
       end
+
+      class << self
+        attr_reader :tunnel
+      end
     end
   end
 end
