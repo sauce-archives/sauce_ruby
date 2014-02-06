@@ -91,7 +91,19 @@ Capybara.javascript_driver = :sauce
 You can now use Capybara as normal, and all actions will be executed against your Sauce session.
 
 #### Inside an RSpec Example (tagged with :sauce => true)
-If you're running from inside an RSpec example, the `@selenium` object and the actual driver object used by the Sauce driver are the same object.  So, if you need access to the Selenium Webdriver when using Capybara, you have it.
+If you're running from inside an RSpec example tagged with :sauce => true, the `@selenium` object and the actual driver object used by the Sauce driver are the same object.  So, if you need access to the Selenium Webdriver when using Capybara, you have it.
+
+You'll get automagic job creation and destruction, job naming and all our nice platform support using Capybara like this.
+
+#### Outside an RSpec Example (tagged with :js => true)
+If you're not using the RSpec  hooks, Capybara will use a single Sauce Labs job until your tests exit.  You can force Capybara to close your session (and then start another):
+
+```ruby
+Capybara.current_session.driver.finish!
+Capybara.reset_sessions!
+```
+
+When used like this, you won't get any of the shiny platform support that the :sauce tag provides;  You'll have to use our [REST API](https://saucelabs.com/docs/rest) to name your jobs (Possibly using [Sauce_Whisk](http://rubygems.org/gems/sauce_whisk) and your specs will only operate on the first platform you've specified.
 
 #### With Sauce Connect
 Sauce Connect automatically proxies content on certain ports;   Capybara.server_port will be set to a value suitable for use with Sauce Connect by default.  If you want to use a specific port, using one of these will allow Sauce Connect to tunnel traffic to your local machine:
