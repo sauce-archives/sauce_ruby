@@ -241,6 +241,7 @@ Check the [Troubleshooting Guide](https://github.com/saucelabs/sauce_ruby/wiki/T
   request more clear.
 * Write some RSpec tests to demonstrate your desired capability or exhibit the
   bug you're fixing.
+* Run the tests - `rake spec:unit` runs the unit tests, `rake spec:` followed by `connect`,`rspec` or `testunit` runs that integration test, `rake test` runs *everything*
 * Make your feature addition or bug fix.
 * Commit
 * Send a pull request! :)
