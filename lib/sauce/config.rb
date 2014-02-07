@@ -24,8 +24,6 @@ module Sauce
         :port => 80,
         :browser_url => "http://saucelabs.com",
         :job_name => "Unnamed Ruby job",
-        :local_application_port => "3001",
-        :capture_traffic => false,
         :start_tunnel => true,
         :start_local_application => true,
         :warn_on_skipped_integration => true
