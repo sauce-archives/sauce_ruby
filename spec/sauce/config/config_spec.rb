@@ -44,7 +44,7 @@ describe Sauce::Config do
     it 'should warn when accessing an old style method' do
       c.stub(:silence_warnings).and_return(false)
       c.should_receive(:warn).with(anything)
-      c.capture_traffic
+      c.start_tunnel
     end
   end
 
