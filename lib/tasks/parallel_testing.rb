@@ -18,6 +18,7 @@ namespace :sauce do
     task :features do
       Rake::Task["sauce:install:create_helper"].execute(:helper_type => :features)
       puts <<-ENDLINE
+  -----------------------------------------------------------------------
   The Sauce gem is now installed!
 
   Next steps:
@@ -25,7 +26,7 @@ namespace :sauce do
   1.  Edit features/support/sauce_helper.rb with your required platforms
   2.  Set the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables
   3.  Run your tests with 'rake sauce:features'
-
+  -----------------------------------------------------------------------
       ENDLINE
     end
     task :spec do
@@ -36,9 +37,10 @@ namespace :sauce do
           f.write "require \"sauce_helper\""
         end
       else
-        puts "WARNING - The Sauce gem is already integrated into your rspec setup"
+        STDERR.puts "WARNING - The Sauce gem is already integrated into your rspec setup"
       end
       puts <<-ENDLINE
+  --------------------------------------------------------------------------------
   The Sauce gem is now installed!
 
   Next steps:
@@ -47,7 +49,7 @@ namespace :sauce do
   2.  Make sure we've not mangled your spec/spec_helper.rb requiring sauce_helper
   3.  Set the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables
   3.  Run your tests with 'rake sauce:spec'
-
+  --------------------------------------------------------------------------------
       ENDLINE
     end
 
@@ -73,9 +75,11 @@ def run_parallel_tests(t, args, command)
       ParallelTests::CLI.new.run(parallel_arguments)
     else
       puts <<-ENDLINE
+    -----------------------------------------------------------------------
     Your Sauce username and/or access key are unavailable. Please:
     1.  Set the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables.
     2.  Rerun your tests.
+    -----------------------------------------------------------------------
       ENDLINE
     end
   else
