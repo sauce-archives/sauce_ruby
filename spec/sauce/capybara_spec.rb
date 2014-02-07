@@ -293,4 +293,31 @@ describe Sauce::Capybara do
 
   describe '#install_hooks' do
   end
+
+  describe 'Standalone' do
+    include Capybara::DSL
+    before :all do
+      app = proc { |env| [200, {}, ["Hello Sauce!"]]}
+      Capybara.app = app
+
+      @existing_run_server = Capybara.run_server
+      Capybara.configure do |config|
+        config.run_server = true
+      end
+      Capybara.javascript_driver = :sauce
+
+      Sauce.driver_pool[Thread.current.object_id] = nil
+    end
+
+    after :all do
+      Capybara.configure do |config|
+        config.run_server = @existing_run_server
+      end
+    end
+
+    it "should use one of the Sauce Connect ports", :js => true do
+      used_port = Capybara.current_session.server.port
+      Sauce::Config::POTENTIAL_PORTS.should include used_port 
+    end
+  end
 end
