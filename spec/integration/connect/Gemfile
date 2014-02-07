@@ -4,3 +4,4 @@ gem "rake"
 gem "rspec"
 gem 'sauce', :path => '../../../'
 gem 'sauce-connect', :path => '../../../gems/sauce-connect'
+gem 'capybara'

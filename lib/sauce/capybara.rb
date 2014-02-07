@@ -78,7 +78,6 @@ module Sauce
         unless existing_browser?
           @browser = rspec_browser
           unless @browser
-
             @browser = Sauce::Selenium2.new
             at_exit do
               finish!
@@ -114,12 +113,41 @@ module Sauce
         browser.save_screenshot path
       end
     end
+
+    def self.configure_capybara
+      ::Capybara.configure do |config|
+        config.server_port = Sauce::Config.get_application_port
+        config.always_include_port = true
+      end
+    end
+
+    def self.configure_capybara_for_rspec
+      begin
+        require "rspec/core"
+        ::RSpec.configure do |config|
+          if config.inclusion_filter[:sauce]
+            config.before(:suite) do     
+              ::Capybara.configure do |config|
+                host = Sauce::Config.new[:application_host] || "127.0.0.1"
+                port = Sauce::Config.new[:application_port]
+                config.app_host = "http://#{host}:#{port}"
+                config.run_server = false
+              end
+            end
+          end
+        end
+      rescue LoadError => e
+        # User is not using RSpec
+      end
+    end
   end
 end
 
 Capybara.register_driver :sauce do |app|
   driver = Sauce::Capybara::Driver.new(app)
 end
+
+Sauce::Capybara.configure_capybara
 
 # Monkeypatch Capybara to not use :selenium driver
 require 'capybara/dsl'
@@ -129,22 +157,10 @@ module Capybara
   end
 end
 
-begin
-  require "rspec/core"
-  module Sauce
-    module RSpec
-      module SeleniumExampleGroup
-        ::RSpec.configuration.before(:suite, :sauce => true) do
-          ::Capybara.configure do |config|
-            host = Sauce::Config.new[:application_host] || "127.0.0.1"
-            port = Sauce::Config.new[:application_port]
-            config.app_host = "http://#{host}:#{port}"
-            config.run_server = false
-          end
-        end
-      end
+module Sauce
+  module RSpec
+    module SeleniumExampleGroup
+      Sauce::Capybara.configure_capybara_for_rspec
     end
   end
-rescue LoadError => e
-  # User is not using RSpec
 end
