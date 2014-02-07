@@ -1,4 +1,4 @@
-require "sauce/parallel/test_broker"
+ require "sauce/parallel/test_broker"
 require "parallel_tests"
 require "parallel_tests/tasks"
 require "parallel_tests/cli_patch"
@@ -7,7 +7,6 @@ require "parallel_tests/cli_patch"
 namespace :sauce do
   task :spec, :files, :concurrency, :test_options, :parallel_options do |t, args|
     ::RSpec::Core::Runner.disable_autorun!
-
     run_parallel_tests(t, args, :rspec)
   end
 
@@ -66,17 +65,30 @@ namespace :sauce do
 end
 
 def run_parallel_tests(t, args, command)
-  username    = ENV["SAUCE_USERNAME"].to_s
-  access_key  = ENV["SAUCE_ACCESS_KEY"].to_s
-  if(!username.empty? && !access_key.empty?)
-    parallel_arguments = parse_task_args(command, args)
-    ParallelTests::CLI.new.run(parallel_arguments)
+  if ParallelTests.number_of_running_processes == 0
+    username    = ENV["SAUCE_USERNAME"].to_s
+    access_key  = ENV["SAUCE_ACCESS_KEY"].to_s
+    if(!username.empty? && !access_key.empty?)
+      parallel_arguments = parse_task_args(command, args)
+      ParallelTests::CLI.new.run(parallel_arguments)
+    else
+      puts <<-ENDLINE
+    Your Sauce username and/or access key are unavailable. Please:
+    1.  Set the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables.
+    2.  Rerun your tests.
+      ENDLINE
+    end
   else
     puts <<-ENDLINE
-  Your Sauce username and/or access key are unavailable. Please:
-  1.  Set the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables.
-  2.  Rerun your tests.
+  ---------------------------------------------------------------------------
+  There are already parallel_tests processes running.  This can interfere
+  with test startup and shutdown.
+
+  If you're not running other parallel tests, this might be caused by zombie
+  processes (The worst kind of processes).  Kill `em off and try again.
+  ---------------------------------------------------------------------------
     ENDLINE
+    exit(1)
   end
 end
 
