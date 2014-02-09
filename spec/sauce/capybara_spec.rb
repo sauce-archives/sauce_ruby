@@ -312,8 +312,13 @@ describe Sauce::Capybara do
       reset_capybara
     end
 
-    it "should use one of the Sauce Connect ports", :js => true do
+    it "should use one of the Sauce Connect ports", :capybara_version => [2, "2.9.9"], :js => true do
       used_port = Capybara.current_session.server.port
+      Sauce::Config::POTENTIAL_PORTS.should include used_port 
+    end
+
+    it "should use one of the Sauce Connect ports", :capybara_version => [1, "1.9.9"], :js => true do
+      used_port = Capybara::DSL.current_session.server.port
       Sauce::Config::POTENTIAL_PORTS.should include used_port 
     end
   end
