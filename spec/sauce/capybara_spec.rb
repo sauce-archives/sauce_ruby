@@ -294,30 +294,46 @@ describe Sauce::Capybara do
   describe '#install_hooks' do
   end
 
-  describe 'Standalone' do
+  describe 'used without rspec hooks' do
     include Capybara::DSL
     before :all do
       app = proc { |env| [200, {}, ["Hello Sauce!"]]}
       Capybara.app = app
 
-      @existing_run_server = Capybara.run_server
-      Capybara.configure do |config|
-        config.run_server = true
-      end
-      Capybara.javascript_driver = :sauce
+      reset_capybara
+
+      Sauce::Capybara.configure_capybara
+      Capybara.default_driver = :sauce
 
       Sauce.driver_pool[Thread.current.object_id] = nil
     end
 
     after :all do
-      Capybara.configure do |config|
-        config.run_server = @existing_run_server
-      end
+      reset_capybara
     end
 
     it "should use one of the Sauce Connect ports", :js => true do
       used_port = Capybara.current_session.server.port
       Sauce::Config::POTENTIAL_PORTS.should include used_port 
+    end
+  end
+
+  def reset_capybara
+    Capybara.reset_sessions!
+
+    Capybara.configure do |config|
+      config.always_include_port = false
+      config.run_server = true
+      config.server {|app, port| Capybara.run_default_server(app, port)}
+      config.default_selector = :css
+      config.default_wait_time = 2
+      config.ignore_hidden_elements = true
+      config.default_host = "http://www.example.com"
+      config.automatic_reload = true
+      config.match = :smart
+      config.exact = false
+      config.raise_server_errors = true
+      config.visible_text_only = false
     end
   end
 end
