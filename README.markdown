@@ -198,6 +198,14 @@ Check out the [Parallisation guide](https://github.com/sauce-labs/sauce_ruby/wik
 ### Run against several browsers in series
 As long as your tests are correctly tagged (See installation, above), running them without the rake task (eg `$ bundle exec rspec`) will run them one at a time, once for every platform requested.
 
+## Network Mocking
+
+If you're mocking out external network requests, say with WebMock or FakeWeb, you'll need to ensure that requests can still be made to our server at `ondemand.saucelabs.com`.
+
+You'll need to ensure you can make requests _to_ your server as well.
+
+We've provided a helper for `WebMock`, which you can include with `require 'sauce/webmock'`.
+
 ## Reporting Results
 
 ### RSpec 2, Test::Unit and Cucumber
