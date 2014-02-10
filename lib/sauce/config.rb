@@ -26,7 +26,8 @@ module Sauce
         :job_name => "Unnamed Ruby job",
         :start_tunnel => true,
         :start_local_application => true,
-        :warn_on_skipped_integration => true
+        :warn_on_skipped_integration => true,
+        :skip_connection_test => false
     }
 
     DEFAULT_BROWSERS = {
