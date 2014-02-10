@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'sauce/capybara'
 require 'sauce/connect'
+#require 'capybara/server'
 
 describe Sauce::Capybara do
 
@@ -10,8 +11,16 @@ describe Sauce::Capybara do
 
   describe Sauce::Capybara::Driver do
 
-    let(:app) { double('Mock App for Driver') }
+    before :each do
+      ::Capybara::Server.any_instance.stub(:boot).and_return(true)
+    end
+
+    let(:app) { proc { |env| [200, {}, ["Hello Sauce!"]]} }
     let(:driver) { Sauce::Capybara::Driver.new(app) }
+
+    after :each do 
+      Capybara.reset_sessions!
+    end
 
     describe "#body" do
       context "With Capybara 1.x", :capybara_version => [1, "1.9.9"] do
@@ -294,30 +303,57 @@ describe Sauce::Capybara do
   describe '#install_hooks' do
   end
 
-  describe 'Standalone' do
+  describe 'used without rspec hooks' do
     include Capybara::DSL
+    
     before :all do
       app = proc { |env| [200, {}, ["Hello Sauce!"]]}
       Capybara.app = app
-
-      @existing_run_server = Capybara.run_server
-      Capybara.configure do |config|
-        config.run_server = true
-      end
-      Capybara.javascript_driver = :sauce
-
       Sauce.driver_pool[Thread.current.object_id] = nil
     end
 
-    after :all do
-      Capybara.configure do |config|
-        config.run_server = @existing_run_server
-      end
-    end
-
-    it "should use one of the Sauce Connect ports", :js => true do
+    it "should use one of the Sauce Connect ports", :capybara_version => [2, "2.9.9"], :js => true do
+      reset_capybara(2)
       used_port = Capybara.current_session.server.port
       Sauce::Config::POTENTIAL_PORTS.should include used_port 
+    end
+
+    it "should use one of the Sauce Connect ports", :capybara_version => [1, "1.9.9"], :js => true do
+      reset_capybara(1)
+      used_port = Capybara.current_session.driver.rack_server.port
+      Sauce::Config::POTENTIAL_PORTS.should include used_port 
+    end
+  end
+
+  def reset_capybara(capy_major_version)
+    if capy_major_version == 1
+      Capybara.reset_sessions!
+    else
+      Capybara.reset_sessions!
+    end
+
+    Capybara.configure do |config|
+      if capy_major_version == 1
+        config.server_boot_timeout = 10
+        config.prefer_visible_elements = true
+      else
+        config.always_include_port = false
+        config.match = :smart
+        config.exact = false
+        config.raise_server_errors = true
+        config.visible_text_only = false
+      end
+
+      config.run_server = true
+      config.server {|app, port| Capybara.run_default_server(app, port)}
+      config.default_selector = :css
+      config.default_wait_time = 2
+      config.ignore_hidden_elements = true
+      config.default_host = "http://www.example.com"
+      config.automatic_reload = true
+
+      Sauce::Capybara.configure_capybara
+      Capybara.default_driver = :sauce
     end
   end
 end

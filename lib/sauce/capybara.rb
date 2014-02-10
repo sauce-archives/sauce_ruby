@@ -1,5 +1,4 @@
 require 'capybara'
-
 require 'sauce/config'
 require 'sauce/selenium'
 require 'sauce/version'
@@ -129,14 +128,12 @@ module Sauce
       begin
         require "rspec/core"
         ::RSpec.configure do |config|
-          if config.inclusion_filter[:sauce]
-            config.before(:suite) do     
-              ::Capybara.configure do |config|
-                host = Sauce::Config.new[:application_host] || "127.0.0.1"
-                port = Sauce::Config.new[:application_port]
-                config.app_host = "http://#{host}:#{port}"
-                config.run_server = false
-              end
+          config.before :suite do 
+            ::Capybara.configure do |config|
+              host = Sauce::Config.new[:application_host] || "127.0.0.1"
+              port = Sauce::Config.new[:application_port]
+              config.app_host = "http://#{host}:#{port}"
+              config.run_server = false
             end
           end
         end
