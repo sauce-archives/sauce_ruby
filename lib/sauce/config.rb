@@ -82,6 +82,12 @@ module Sauce
       @called_from_integrations = true
     end
 
+    # Creates a new instance of Sauce::Config
+    #
+    # @param [Hash, Boolean] opts Any value you'd set with [:option], as a hash.  If false, skip loading default options
+    # @option opts [Boolean] :without_defaults Set true to skip loading default values
+    #
+    # @return [Sauce::Config]
     def initialize(opts={})
       @opts = {}
       @undefaulted_opts = {}
