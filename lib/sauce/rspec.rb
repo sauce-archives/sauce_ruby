@@ -41,9 +41,13 @@ begin
             @selenium = Sauce::Selenium2.new({:os => os, :browser => browser,
                                               :browser_version => version,
                                               :job_name => description})
-            super(*args)
-
-            @selenium.stop
+            
+            begin
+              success = super(*args)
+              SauceWhisk::Jobs.change_status @selenium.session_id, success
+            ensure
+              @selenium.stop
+            end
           end
         end
 
