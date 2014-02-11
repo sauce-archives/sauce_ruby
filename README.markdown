@@ -17,6 +17,15 @@ gem "sauce-connect" # Sauce Connect is required by default.
 ```bash
 $ bundle install
 ```
+
+Configure your access credentials as environment variables:
+```bash
+SAUCE_USERNAME= Your Username
+SAUCE_ACCESS_KEY = Your Access Key, found on the lower left of your Account page (NOT your password)
+```
+
+If environment variables aren't your thing, check out the [(in)Complete guide to Configuration](https://github.com/saucelabs/sauce_ruby/wiki/Configuration----The-\(in\)Complete-Guide) for other options.
+
 ### RSpec
 ```bash
 $ bundle exec rake sauce:install:spec
@@ -230,7 +239,7 @@ For details on named tunnels (including why you might want to use them) check ou
 
 ## Full configuration details
 
-Check out the [(in)Complete guide to Configuration](https://github.com/saucelabs/sauce_ruby/wiki/Configuration----The-\(in\)Complete-Guide) for a full list of configuration options and details.
+Check out the for a full list of configuration options and details.
 
 This also details how to customise application/tunnel setup.
 
@@ -249,6 +258,7 @@ Check the [Troubleshooting Guide](https://github.com/saucelabs/sauce_ruby/wiki/T
   request more clear.
 * Write some RSpec tests to demonstrate your desired capability or exhibit the
   bug you're fixing.
+* Run the tests - `rake spec:unit` runs the unit tests, `rake spec:` followed by `connect`,`rspec` or `testunit` runs that integration test, `rake test` runs *everything*
 * Make your feature addition or bug fix.
 * Commit
 * Send a pull request! :)
