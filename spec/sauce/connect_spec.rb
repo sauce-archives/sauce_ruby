@@ -1,5 +1,4 @@
 require "spec_helper"
-require "webmock/rspec"
 
 describe "Sauce::Connect" do
   describe "#connect" do
