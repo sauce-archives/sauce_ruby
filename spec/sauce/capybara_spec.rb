@@ -331,7 +331,7 @@ describe Sauce::Capybara do
     end
   end
 
-  def reset_capybara(capy_major_version)
+  def reset_capybara(capy_version)
     Capybara.reset_sessions!
 
     Capybara.configure do |config|
