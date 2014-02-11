@@ -1,7 +1,4 @@
-require "rubygems"
-require "bundler/setup"
-require "test/unit"
-require "sauce"
+require 'test_helper'
 
 Sauce.config do |c|
   c[:browsers] = [
