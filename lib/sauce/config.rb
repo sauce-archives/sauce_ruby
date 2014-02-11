@@ -86,14 +86,17 @@ module Sauce
       @opts = {}
       @undefaulted_opts = {}
       if opts != false
-        @opts.merge! DEFAULT_OPTIONS
-        @opts.merge! DEFAULT_BROWSERS
-        @opts.merge!({:application_port => Sauce::Config.get_application_port})
+        if (!opts[:without_defaults]) 
+          @opts.merge! DEFAULT_OPTIONS
+          @opts.merge! DEFAULT_BROWSERS
+          @opts.merge!({:application_port => Sauce::Config.get_application_port})
 
-        @undefaulted_opts.merge! load_options_from_yaml
-        @undefaulted_opts.merge! load_options_from_environment
-        @undefaulted_opts.merge! load_options_from_heroku unless ENV["SAUCE_DISABLE_HEROKU_CONFIG"]
-        @undefaulted_opts.merge! Sauce.get_config.opts rescue {}
+          @undefaulted_opts.merge! load_options_from_yaml
+          @undefaulted_opts.merge! load_options_from_environment
+          @undefaulted_opts.merge! load_options_from_heroku unless ENV["SAUCE_DISABLE_HEROKU_CONFIG"]
+          @undefaulted_opts.merge! Sauce.get_config.opts rescue {}
+        end
+
         @undefaulted_opts.merge! opts
         @opts.merge! @undefaulted_opts
       end
