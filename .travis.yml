@@ -6,6 +6,7 @@ rvm:
   - 1.9.3
 gemfile:
   - Gemfile
+  - gemfiles/capybara-1.0.x.gemfile
   - gemfiles/capybara-1.x.gemfile
   - gemfiles/capybara-2.0.x.gemfile
 env:

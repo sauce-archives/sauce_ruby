@@ -26,7 +26,8 @@ module Sauce
         :job_name => "Unnamed Ruby job",
         :start_tunnel => true,
         :start_local_application => true,
-        :warn_on_skipped_integration => true
+        :warn_on_skipped_integration => true,
+        :skip_connection_test => false
     }
 
     DEFAULT_BROWSERS = {
@@ -81,18 +82,27 @@ module Sauce
       @called_from_integrations = true
     end
 
+    # Creates a new instance of Sauce::Config
+    #
+    # @param [Hash, Boolean] opts Any value you'd set with [:option], as a hash.  If false, skip loading default options
+    # @option opts [Boolean] :without_defaults Set true to skip loading default values
+    #
+    # @return [Sauce::Config]
     def initialize(opts={})
       @opts = {}
       @undefaulted_opts = {}
       if opts != false
-        @opts.merge! DEFAULT_OPTIONS
-        @opts.merge! DEFAULT_BROWSERS
-        @opts.merge!({:application_port => Sauce::Config.get_application_port})
+        if (!opts[:without_defaults]) 
+          @opts.merge! DEFAULT_OPTIONS
+          @opts.merge! DEFAULT_BROWSERS
+          @opts.merge!({:application_port => Sauce::Config.get_application_port})
 
-        @undefaulted_opts.merge! load_options_from_yaml
-        @undefaulted_opts.merge! load_options_from_environment
-        @undefaulted_opts.merge! load_options_from_heroku unless ENV["SAUCE_DISABLE_HEROKU_CONFIG"]
-        @undefaulted_opts.merge! Sauce.get_config.opts rescue {}
+          @undefaulted_opts.merge! load_options_from_yaml
+          @undefaulted_opts.merge! load_options_from_environment
+          @undefaulted_opts.merge! load_options_from_heroku unless ENV["SAUCE_DISABLE_HEROKU_CONFIG"]
+          @undefaulted_opts.merge! Sauce.get_config.opts rescue {}
+        end
+
         @undefaulted_opts.merge! opts
         @opts.merge! @undefaulted_opts
       end

@@ -21,6 +21,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rspec", ["~> 2.14.0"])
   s.add_development_dependency("simplecov")
   s.add_development_dependency("capybara", [">= 2.2.1"])
+  s.add_development_dependency("yard")
+  s.add_development_dependency("redcarpet")
   s.add_dependency('net-http-persistent')
   s.add_dependency('rest-client', [">= 0"])
   s.add_dependency('net-ssh', [">= 0"])

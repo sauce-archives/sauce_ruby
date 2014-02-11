@@ -313,44 +313,53 @@ describe Sauce::Capybara do
     end
 
     it "should use one of the Sauce Connect ports", :capybara_version => [2, "2.9.9"], :js => true do
-      reset_capybara(2)
+      reset_capybara(2.0)
       used_port = Capybara.current_session.server.port
       Sauce::Config::POTENTIAL_PORTS.should include used_port 
     end
 
-    it "should use one of the Sauce Connect ports", :capybara_version => [1, "1.9.9"], :js => true do
-      reset_capybara(1)
+    it "should use one of the Sauce Connect ports", :capybara_version => ["1.0.9", "1.9.9"], :js => true do
+      reset_capybara(1.1)
+      used_port = Capybara.current_session.driver.rack_server.port
+      Sauce::Config::POTENTIAL_PORTS.should include used_port 
+    end
+
+    it "should use one of the Sauce Connect ports", :capybara_version => ["1.0.0", "1.0.9"], :js => true do
+      reset_capybara(1.0)
       used_port = Capybara.current_session.driver.rack_server.port
       Sauce::Config::POTENTIAL_PORTS.should include used_port 
     end
   end
 
-  def reset_capybara(capy_major_version)
-    if capy_major_version == 1
-      Capybara.reset_sessions!
-    else
-      Capybara.reset_sessions!
-    end
+  def reset_capybara(capy_version)
+    Capybara.reset_sessions!
 
     Capybara.configure do |config|
-      if capy_major_version == 1
+      case capy_version
+      when 1.0
         config.server_boot_timeout = 10
         config.prefer_visible_elements = true
-      else
+        config.ignore_hidden_elements = false
+      when 1.1
+        config.server_boot_timeout = 10
+        config.prefer_visible_elements = true
+        config.automatic_reload = true
+        config.ignore_hidden_elements = false
+      when 2.0
         config.always_include_port = false
         config.match = :smart
         config.exact = false
         config.raise_server_errors = true
         config.visible_text_only = false
+        config.automatic_reload = true
+        config.ignore_hidden_elements = true
       end
 
       config.run_server = true
       config.server {|app, port| Capybara.run_default_server(app, port)}
       config.default_selector = :css
       config.default_wait_time = 2
-      config.ignore_hidden_elements = true
       config.default_host = "http://www.example.com"
-      config.automatic_reload = true
 
       Sauce::Capybara.configure_capybara
       Capybara.default_driver = :sauce
