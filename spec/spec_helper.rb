@@ -1,5 +1,10 @@
 require "simplecov"
-SimpleCov.start
+
+SimpleCov.start do
+  command_name 'Unit Tests'
+  use_merging true
+  merge_timeout 6000
+end
 
 require "rspec"
 $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')

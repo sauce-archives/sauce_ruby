@@ -1,3 +1,12 @@
+require "simplecov"
+
+SimpleCov.start do
+  SimpleCov.root "#{Dir.pwd}/../../../"
+  command_name 'RSpec Integration'
+  use_merging true
+  merge_timeout 6000
+end
+
 require "rspec"
 require "capybara/rspec"
 require "sauce"

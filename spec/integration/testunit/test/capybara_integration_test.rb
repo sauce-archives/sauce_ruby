@@ -1,7 +1,5 @@
-require "rubygems"
-require "bundler/setup"
-require "test/unit"
-require "sauce"
+require 'test_helper'
+
 require "sauce/capybara"
 require "mocha/setup"
 
