@@ -136,9 +136,11 @@ begin
       module SeleniumExampleGroup
         ::RSpec.configuration.before(:suite, :sauce => true) do
           ::Capybara.configure do |config|
-            host = Sauce::Config.new[:application_host] || "127.0.0.1"
-            port = Sauce::Config.new[:application_port]
-            config.app_host = "http://#{host}:#{port}"
+            if config.app_host.nil?
+              host = Sauce::Config.new[:application_host] || "127.0.0.1"
+              port = Sauce::Config.new[:application_port]
+              config.app_host = "http://#{host}:#{port}"
+            end
             config.run_server = false
           end
         end
