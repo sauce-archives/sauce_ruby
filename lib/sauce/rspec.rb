@@ -73,8 +73,12 @@ begin
         alias_method :s, :selenium
 
         def page
-          warn Sauce::Utilities.page_deprecation_message
-          @selenium
+          if self.class.included_modules.any? {|m| m.name == 'Capybara::DSL'}
+            ::Capybara.current_session
+          else
+            warn Sauce::Utilities.page_deprecation_message
+            @selenium
+          end
         end
 
         def self.included(othermod)
