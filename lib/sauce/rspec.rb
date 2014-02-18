@@ -72,6 +72,7 @@ begin
         attr_reader :selenium
         alias_method :s, :selenium
 
+        # TODO V4 -- Remove this entirely
         def page
           warn Sauce::Utilities.page_deprecation_message
           @selenium
