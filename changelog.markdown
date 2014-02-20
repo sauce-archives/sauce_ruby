@@ -1,5 +1,14 @@
 # Changelog
 ## 3.3
+## 3.3.2
+Change behaviour of Capybara; having `:start_local_application = false` in your Sauce.config will now let Capybara control whether or not it should start a server.
+Made the #page method smarter at figuring out if it should return the Selenium object or the Capybara object.
+RSpec < 2 will now report job success or failure
+You can pass a hash to Sauce::Config.new including `:without_defaults => true` and uh, defaults won't be loaded.
+Added a check if Sauce Connect can't connect to Sauce's servers.
+Added check if parallel\_tests is already running/didn't quit.
+Make Capybara always include the port for local rack applications.
+Defaulted Capybara to using a Sauce Connect port.
 ## 3.3.1
 Add Sauce Public Job Links to cucumber and rspec integrations (Thanks @imurchie!)
 Tunnel accessor for Sauce::Utilities::Connect
