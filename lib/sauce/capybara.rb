@@ -117,7 +117,7 @@ module Sauce
       ::Capybara.configure do |config|
         config.server_port = Sauce::Config.get_application_port
         begin
-          config.always_include_port = true
+          #config.always_include_port = true
         rescue
           # This option is only in Capybara 2+
         end
@@ -130,10 +130,13 @@ module Sauce
         ::RSpec.configure do |config|
           config.before :suite do 
             ::Capybara.configure do |config|
-              host = Sauce::Config.new[:application_host] || "127.0.0.1"
-              port = Sauce::Config.new[:application_port]
-              config.app_host = "http://#{host}:#{port}"
-              config.run_server = false
+              sauce_config = Sauce::Config.new
+              if sauce_config[:start_local_application]
+                host = sauce_config[:application_host] || "127.0.0.1"
+                port = sauce_config[:application_port]
+                config.app_host = "http://#{host}:#{port}"
+                config.run_server = false
+              end
             end
           end
         end
