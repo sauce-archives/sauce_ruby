@@ -129,13 +129,15 @@ module Sauce
         require "rspec/core"
         ::RSpec.configure do |config|
           config.before :suite do 
-            ::Capybara.configure do |config|
+            ::Capybara.configure do |capy_config|
               sauce_config = Sauce::Config.new
-              if sauce_config[:start_local_application]
-                host = sauce_config[:application_host] || "127.0.0.1"
-                port = sauce_config[:application_port]
-                config.app_host = "http://#{host}:#{port}"
-                config.run_server = false
+              if capy_config.app_host.nil?
+                if sauce_config[:start_local_application]
+                  host = sauce_config[:application_host] || "127.0.0.1"
+                  port = sauce_config[:application_port]
+                  capy_config.app_host = "http://#{host}:#{port}"
+                  capy_config.run_server = false
+                end
               end
             end
           end
