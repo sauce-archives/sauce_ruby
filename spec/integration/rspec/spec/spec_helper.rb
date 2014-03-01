@@ -8,7 +8,6 @@ SimpleCov.start do
 end
 
 require "rspec"
-require "capybara/rspec"
 require "sauce"
 
 def page_deprecation_warning
