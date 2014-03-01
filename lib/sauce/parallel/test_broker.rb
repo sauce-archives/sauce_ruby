@@ -28,7 +28,7 @@ module Sauce
           browsers[file] << test_groups[file].next_platform
         end
 
-        return {:SAUCE_PERFILE_BROWSERS => "'" + JSON.generate(browsers) + "'"}
+        return {:SAUCE_PERFILE_BROWSERS => "#{JSON.generate(browsers)}"}
       end
     end
 
