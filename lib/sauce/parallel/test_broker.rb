@@ -28,7 +28,11 @@ module Sauce
           browsers[file] << test_groups[file].next_platform
         end
 
-        return {:SAUCE_PERFILE_BROWSERS => "#{JSON.generate(browsers)}"}
+        on_windows = RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|mingw|bccwin|wince|emx/
+        format_string = on_windows ? "%s" : "'%s'"
+        perfile_browsers = format_string % [JSON.generate(browsers)]
+
+        return {:SAUCE_PERFILE_BROWSERS => perfile_browsers}
       end
     end
 
