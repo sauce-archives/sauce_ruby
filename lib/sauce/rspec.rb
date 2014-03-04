@@ -72,6 +72,23 @@ begin
         attr_reader :selenium
         alias_method :s, :selenium
 
+        def self.rspec_current_example
+          lambda { |context| ::RSpec.current_example }
+        end
+
+        def self.context_example
+          STDERR.puts "RSPEC: #{::RSpec.respond_to?(:current_example)}"
+          lambda { |context| context.example }
+        end
+
+        def self.find_example_method
+          ::RSpec.respond_to?(:current_example) ? rspec_current_example : context_example 
+        end
+
+        def self.current_example
+          @@current_example_fetcher ||= find_example_method
+        end
+
         # TODO V4 -- Remove this entirely
         def page
           if self.class.included_modules.any? {|m| m.name == 'Capybara::DSL'}
@@ -93,6 +110,7 @@ begin
                                                 :browser_version => version,
                                                 :job_name => description})
               Sauce.driver_pool[Thread.current.object_id] = @selenium
+              example = SeleniumExampleGroup.current_example.call(self)
               example.metadata[:sauce_public_link] = SauceWhisk.public_link(@selenium.session_id)
 
               begin
