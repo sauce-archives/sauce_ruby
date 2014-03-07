@@ -62,6 +62,7 @@ rescue LoadError
   # User doesn't have RSpec 1.x installed
 rescue => e
   STDERR.puts "Exception occured: #{e.to_s}"
+  exit 1
 end
 
 begin
@@ -169,6 +170,7 @@ rescue LoadError, TypeError
   # User doesn't have RSpec 2.x installed
 rescue => e
   STDERR.puts "Exception caught: #{e.to_s}"
+  exit 1
 end
 
 begin
