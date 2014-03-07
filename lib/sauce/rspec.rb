@@ -69,6 +69,62 @@ begin
   require 'rspec/core'
   module Sauce
     module RSpec
+      @@server = nil
+
+      def self.server
+        return @@server
+      end
+
+      def self.server=(server)
+        @@server = server
+      end
+
+      def self.setup_environment
+        ::RSpec.configuration.before(:suite, :sauce => true) do
+          Sauce::RSpec.start_tools_for_sauce_tag
+        end
+
+        ::RSpec.configuration.before :suite do
+          Sauce::RSpec.start_tools_for_selenium_directory
+        end
+        ::RSpec.configuration.after :suite do
+          Sauce::RSpec.stop_tools
+        end
+      end
+
+      def self.start_tools_for_sauce_tag
+        config = Sauce::Config.new
+        if config[:application_host]
+          Sauce::Utilities::Connect.start_from_config(config)
+        end
+
+        server = Sauce::Utilities::RailsServer.start_if_required(config)
+      end
+
+      def self.start_tools_for_selenium_directory
+        config = Sauce::Config.new
+        # TODO: Check which rspec version this changed in -- If < 2, change.
+        files_to_run = ::RSpec.configuration.respond_to?(:files_to_run) ? ::RSpec.configuration.files_to_run :
+          ::RSpec.configuration.settings[:files_to_run]
+
+        running_selenium_specs = files_to_run.any? {|file| file =~ /spec\/selenium\//}
+        need_tunnel = running_selenium_specs && config[:application_host]
+
+        if need_tunnel || config[:start_tunnel]
+          Sauce::Utilities::Connect.start_from_config(config)
+        end
+
+        if running_selenium_specs
+          server = Sauce::Utilities::RailsServer.start_if_required(config)
+        end
+      end
+      
+      def self.stop_tools
+        Sauce::Utilities::Connect.close
+        server.stop if server
+        Sauce::Utilities.warn_if_suspect_misconfiguration
+      end
+
       module SeleniumExampleGroup
         attr_reader :selenium
         alias_method :s, :selenium
@@ -129,40 +185,7 @@ begin
             })
         ::RSpec.configuration.include(self, :sauce => true)
 
-        ::RSpec.configuration.before(:suite, :sauce => true) do
-          config = Sauce::Config.new
-          if config[:application_host]
-            Sauce::Utilities::Connect.start_from_config(config)
-          end
-
-          @@server = Sauce::Utilities::RailsServer.start_if_required(config)
-        end
-
-        ::RSpec.configuration.before :suite do
-          config = Sauce::Config.new
-          # TODO: Check which rspec version this changed in -- If < 2, change.
-          files_to_run = ::RSpec.configuration.respond_to?(:files_to_run) ? ::RSpec.configuration.files_to_run :
-            ::RSpec.configuration.settings[:files_to_run]
-
-          running_selenium_specs = files_to_run.any? {|file| file =~ /spec\/selenium\//}
-          need_tunnel = running_selenium_specs && config[:application_host]
-
-          if need_tunnel || config[:start_tunnel]
-            Sauce::Utilities::Connect.start_from_config(config)
-          end
-
-          if running_selenium_specs
-            @@server = Sauce::Utilities::RailsServer.start_if_required(config)
-          end
-        end
-
-        ::RSpec.configuration.after :suite do
-          Sauce::Utilities::Connect.close
-          if (defined? @@server) && @@server
-            @@server.stop
-          end
-          Sauce::Utilities.warn_if_suspect_misconfiguration
-        end
+        Sauce::RSpec.setup_environment
       end
     end
   end
