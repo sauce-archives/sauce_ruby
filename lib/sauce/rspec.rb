@@ -75,16 +75,16 @@ begin
         return @@server
       end
 
-      def self.server=(server)
-        @@server = server
+      def self.server=(s)
+        @@server = s
       end
 
       def self.setup_environment
-        ::RSpec.configuration.before(:suite, :sauce => true) do
+        ::RSpec.configuration.before(:all, :sauce => true) do
           Sauce::RSpec.start_tools_for_sauce_tag
         end
 
-        ::RSpec.configuration.before :suite do
+        ::RSpec.configuration.before :all do
           Sauce::RSpec.start_tools_for_selenium_directory
         end
         ::RSpec.configuration.after :suite do
@@ -98,7 +98,9 @@ begin
           Sauce::Utilities::Connect.start_from_config(config)
         end
 
-        server = Sauce::Utilities::RailsServer.start_if_required(config)
+        unless self.server
+          self.server= Sauce::Utilities::RailsServer.start_if_required(config)
+        end
       end
 
       def self.start_tools_for_selenium_directory
@@ -115,13 +117,15 @@ begin
         end
 
         if running_selenium_specs
-          server = Sauce::Utilities::RailsServer.start_if_required(config)
+          unless self.server
+            self.server= Sauce::Utilities::RailsServer.start_if_required(config)
+          end
         end
       end
       
       def self.stop_tools
         Sauce::Utilities::Connect.close
-        server.stop if server
+        server.stop if self.server
         Sauce::Utilities.warn_if_suspect_misconfiguration
       end
 
