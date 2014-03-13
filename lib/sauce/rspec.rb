@@ -112,7 +112,7 @@ begin
         running_selenium_specs = files_to_run.any? {|file| file =~ /spec\/selenium\//}
         need_tunnel = running_selenium_specs && config[:application_host]
 
-        if need_tunnel || config[:start_tunnel]
+        if need_tunnel && config[:start_tunnel]
           Sauce::Utilities::Connect.start_from_config(config)
         end
 
