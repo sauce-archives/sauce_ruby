@@ -94,7 +94,7 @@ begin
 
       def self.start_tools_for_sauce_tag
         config = Sauce::Config.new
-        if config[:application_host]
+        if config[:start_tunnel]
           Sauce::Utilities::Connect.start_from_config(config)
         end
 
