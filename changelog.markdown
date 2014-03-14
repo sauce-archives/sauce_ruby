@@ -1,6 +1,12 @@
 # Changelog
-## 3.3
-## 3.3.2
+## 3.4.0
+Changed behaviour of server startup; Now relies on presense of a selenium directory OR a :sauce tag
+Changed behaviour of sauce connect integration; Ignore :application_host when starting a server
+Correctly format JSON for Windows (Closes #210) (Thanks @UATcendyn!)
+Never set app_host if it is already set (Closes #207) (Thanks @vgrigoruk!)
+Support for RSpec 3 example metadata (Closes #178)
+
+### 3.3.2
 Change behaviour of Capybara; having `:start_local_application = false` in your Sauce.config will now let Capybara control whether or not it should start a server.
 Made the #page method smarter at figuring out if it should return the Selenium object or the Capybara object.
 RSpec < 2 will now report job success or failure
@@ -9,7 +15,8 @@ Added a check if Sauce Connect can't connect to Sauce's servers.
 Added check if parallel\_tests is already running/didn't quit.
 Make Capybara always include the port for local rack applications.
 Defaulted Capybara to using a Sauce Connect port.
-## 3.3.1
+
+### 3.3.1
 Add Sauce Public Job Links to cucumber and rspec integrations (Thanks @imurchie!)
 Tunnel accessor for Sauce::Utilities::Connect
 Updated to (https://github.com/saucelabs/sauce_whisk/tree/v0.0.11)[sauce\_whisk 0.0.11
@@ -18,7 +25,8 @@ Allow flattened Browsers array (Thanks @imurchie)
 Remove reset override (Thanks @mrloop!)
 Error message for unset username and access key (Thanks @imurchie!)
 Fixed name of files argument in Rakefile (Thanks @imurchie!)
-## 3.3.0
+
+### 3.3.0
 Added 'parallel\_test\_options' to rake tasks, allows for arbitrary p-tests options:
 `bundle exec rake sauce:spec parallel_test_options='--group-by scenario'
 Update parallel_tests to 0.16.5
