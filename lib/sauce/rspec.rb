@@ -134,7 +134,7 @@ begin
         alias_method :s, :selenium
 
         def self.rspec_current_example
-          lambda { |context| RSpec.current_example }
+          lambda { |context| ::RSpec.current_example }
         end
 
         def self.context_example
