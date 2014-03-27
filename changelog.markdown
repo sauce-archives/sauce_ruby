@@ -1,5 +1,9 @@
 # Changelog
-## 3.4.0
+## 3.4
+### 3.4.1
+Changed behaviour of Capybara integraton:  if start_local_application is false, Capybara will no longer set the app_port to a SauceConnect port
+
+### 3.4.0
 Changed behaviour of server startup; Now relies on presense of a selenium directory OR a :sauce tag
 Changed behaviour of sauce connect integration; Ignore :application_host when starting a server
 Correctly format JSON for Windows (Closes #210) (Thanks @UATcendyn!)
