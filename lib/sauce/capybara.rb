@@ -115,7 +115,9 @@ module Sauce
 
     def self.configure_capybara
       ::Capybara.configure do |config|
-        config.server_port = Sauce::Config.get_application_port
+        if Sauce::Config.new[:start_local_application]
+          config.server_port = Sauce::Config.get_application_port
+        end
         begin
           #config.always_include_port = true
         rescue

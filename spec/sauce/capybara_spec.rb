@@ -329,6 +329,23 @@ describe Sauce::Capybara do
       used_port = Capybara.current_session.driver.rack_server.port
       Sauce::Config::POTENTIAL_PORTS.should include used_port 
     end
+
+    describe "when start_local_application is false" do
+      before do
+        @start_local_application = Sauce::Config.new[:start_local_application]
+      end
+
+      after do
+        Sauce.config do |c|
+          c[:start_local_application] = @start_local_application
+        end
+      end
+      it "should not use Sauce Connect ports if start_local_application is true" do
+        Sauce.config { |c| c[:start_local_application] = false }
+        reset_capybara(2.0)
+        Capybara.server_port.should eq nil
+      end
+    end
   end
 
   def reset_capybara(capy_version)
@@ -353,6 +370,7 @@ describe Sauce::Capybara do
         config.visible_text_only = false
         config.automatic_reload = true
         config.ignore_hidden_elements = true
+        config.server_port = nil
       end
 
       config.run_server = true
