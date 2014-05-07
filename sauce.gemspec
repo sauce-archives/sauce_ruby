@@ -5,7 +5,7 @@ require File.expand_path('../lib/sauce/version', __FILE__)
 Gem::Specification.new do |s|
   s.name = 'sauce'
   s.version = "#{Sauce.version}"
-  s.authors = ["Dylan Lacey", "Steven Hazel", "R. Tyler Croy", "Santiago Suarez Ordoñez", "Eric Allen", "Sean Grove", "Isaac Murchie"]
+  s.authors = ["Dylan Lacey", "Steven Hazel", "R. Tyler Croy", "Santiago Suarez Ordonez", "Eric Allen", "Sean Grove", "Isaac Murchie"]
   s.homepage = 'http://github.com/sauce-labs/sauce_ruby'
   s.email = 'help@saucelabs.com'
   s.summary = "A Ruby helper for running tests in Sauce Labs"
