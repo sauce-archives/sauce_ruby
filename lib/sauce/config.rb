@@ -344,23 +344,24 @@ module Sauce
     end
 
     def extract_options_from_hash(env)
+      hash = Hash[env]
       opts = {}
 
-      on_demand = env.delete "SAUCE_ONDEMAND_BROWSERS"
-      env_browsers = env.delete "SAUCE_BROWSERS"
+      on_demand = hash.delete "SAUCE_ONDEMAND_BROWSERS"
+      env_browsers = hash.delete "SAUCE_BROWSERS"
 
-      env.select {|k,v| k.start_with? "SAUCE_"}.each do |k,v|
+      hash.select {|k,v| k.start_with? "SAUCE_"}.each do |k,v|
         opts[k.downcase.sub("sauce_", "").to_sym] = v
       end
 
-      opts[:job_name] = env['SAUCE_JOB_NAME'] || env['JOB_NAME']
-      opts[:build] = (env['BUILD_TAG'] ||
-                      env['BUILD_NUMBER'] ||
-                      env['TRAVIS_BUILD_NUMBER'] ||
-                      env['CIRCLE_BUILD_NUM'])
+      opts[:job_name] = hash['SAUCE_JOB_NAME'] || hash['JOB_NAME']
+      opts[:build] = (hash['BUILD_TAG'] ||
+                      hash['BUILD_NUMBER'] ||
+                      hash['TRAVIS_BUILD_NUMBER'] ||
+                      hash['CIRCLE_BUILD_NUM'])
 
-      if env.include? 'URL'
-        opts['SAUCE_BROWSER_URL'] = "http://#{env['URL']}/"
+      if hash.include? 'URL'
+        opts['SAUCE_BROWSER_URL'] = "http://#{hash['URL']}/"
       end
 
       if on_demand
@@ -373,8 +374,8 @@ module Sauce
         opts[:browsers] = browsers.map { |x| [x['os'], x['browser'], x['version']] }
       end
 
-      if env.include? 'SAUCE_PERFILE_BROWSERS'
-        opts[:perfile_browsers] = JSON.parse(env['SAUCE_PERFILE_BROWSERS'])
+      if hash.include? 'SAUCE_PERFILE_BROWSERS'
+        opts[:perfile_browsers] = JSON.parse(hash['SAUCE_PERFILE_BROWSERS'])
       end
 
       return opts.delete_if {|key, value| value.nil?}
