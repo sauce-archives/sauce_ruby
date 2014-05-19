@@ -330,7 +330,7 @@ describe Sauce::Capybara do
       Sauce::Config::POTENTIAL_PORTS.should include used_port 
     end
 
-    describe "when start_local_application is false" do
+    describe "with start_local_application set false", :capybara_version => ["2.0.0", "2.9.9"] do
       before do
         @start_local_application = Sauce::Config.new[:start_local_application]
       end
@@ -340,7 +340,7 @@ describe Sauce::Capybara do
           c[:start_local_application] = @start_local_application
         end
       end
-      it "should not use Sauce Connect ports if start_local_application is true" do
+      it "should not use Sauce Connect ports" do
         Sauce.config { |c| c[:start_local_application] = false }
         reset_capybara(2.0)
         Capybara.server_port.should eq nil
