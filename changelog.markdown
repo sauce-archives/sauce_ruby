@@ -1,5 +1,10 @@
 # Changelog
 ## 3.4
+### 3.4.2
+Added Railtie to (hopefully) solve rake tasks not being available (Thanks @adambarthelson!)
+Updated sauce:spec details in README (Thanks @seanknox!)
+Don't stuff up the ENV hash when extracting options (Thanks @forest!)
+
 ### 3.4.1
 Changed behaviour of Capybara integraton:  if start_local_application is false, Capybara will no longer set the app_port to a SauceConnect port
 
