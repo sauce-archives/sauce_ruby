@@ -1,19 +1,20 @@
 if defined?(Rails)
   require "sauce/railtie"
 else
-  require 'sauce/version'
-  require 'sauce/utilities'
-  require 'sauce/utilities/rake'
-  require 'sauce/job'
-  require 'sauce/client'
-  require 'sauce/config'
-  require 'sauce/selenium'
-  require 'sauce/rspec'
-  require 'sauce/test_unit'
   require 'tasks/parallel_testing'
-  require 'parallel_tests/saucerspec/runner'
-  require 'parallel_tests/saucecucumber/runner'
 end
+
+require 'sauce/version'
+require 'sauce/utilities'
+require 'sauce/utilities/rake'
+require 'sauce/job'
+require 'sauce/client'
+require 'sauce/config'
+require 'sauce/selenium'
+require 'sauce/rspec'
+require 'sauce/test_unit'
+require 'parallel_tests/saucerspec/runner'
+require 'parallel_tests/saucecucumber/runner'
 
 
 # Ruby before 1.9.3-p382 does not handle exit codes correctly when nested
