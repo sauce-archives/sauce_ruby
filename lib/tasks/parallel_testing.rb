@@ -1,20 +1,22 @@
- require "sauce/parallel/test_broker"
+require "sauce/parallel/test_broker"
 require "parallel_tests"
 require "parallel_tests/tasks"
 require "parallel_tests/cli_patch"
 
-
 namespace :sauce do
+  desc "Run specs in parallel on Sauce Labs"
   task :spec, :files, :concurrency, :test_options, :parallel_options do |t, args|
     ::RSpec::Core::Runner.disable_autorun!
     run_parallel_tests(t, args, :rspec)
   end
 
+  desc "Run features in parallel on Sauce Labs"
   task :features, :files, :concurrency, :test_options, :parallel_options do |t, args|
     run_parallel_tests(t, args, :cucumber)
   end
 
   namespace :install do
+    desc "Set up your Cucumber features to run in parallel on Sauce Labs"
     task :features do
       Rake::Task["sauce:install:create_helper"].execute(:helper_type => :features)
       puts <<-ENDLINE
@@ -29,6 +31,8 @@ namespace :sauce do
   -----------------------------------------------------------------------
       ENDLINE
     end
+
+    desc "Set up your specs to run in parallel on Sauce Labs"
     task :spec do
       Rake::Task["sauce:install:create_helper"].execute(:helper_type => :spec)
       spec_helper_path = "spec/spec_helper.rb"
