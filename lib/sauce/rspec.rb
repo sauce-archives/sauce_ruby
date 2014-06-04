@@ -177,6 +177,7 @@ begin
                 the_test.run
                 SauceWhisk::Jobs.change_status @selenium.session_id, example.exception.nil?
               ensure
+                puts "SauceOnDemandSessionID=#{@selenium.session_id} job-name=#{description}"
                 @selenium.stop
                 Sauce.driver_pool.delete Thread.current.object_id
               end
