@@ -349,6 +349,8 @@ module Sauce
 
       on_demand = hash.delete "SAUCE_ONDEMAND_BROWSERS"
       env_browsers = hash.delete "SAUCE_BROWSERS"
+      username = hash.delete("SAUCE_USERNAME") || hash.delete("SAUCE_USER_NAME")
+      access_key = hash.delete("SAUCE_ACCESS_KEY") || hash.delete("SAUCE_API_KEY")
 
       hash.select {|k,v| k.start_with? "SAUCE_"}.each do |k,v|
         opts[k.downcase.sub("sauce_", "").to_sym] = v
@@ -377,6 +379,9 @@ module Sauce
       if hash.include? 'SAUCE_PERFILE_BROWSERS'
         opts[:perfile_browsers] = JSON.parse(hash['SAUCE_PERFILE_BROWSERS'])
       end
+
+      opts[:username] = username if username
+      opts[:access_key] = access_key if access_key
 
       return opts.delete_if {|key, value| value.nil?}
     end
