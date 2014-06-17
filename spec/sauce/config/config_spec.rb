@@ -201,6 +201,14 @@ describe Sauce::Config do
 
         it { should have_key :'prerun'}
       end
+
+      context 'iedriver-version' do
+        subject do
+          Sauce::Config.new('iedriver-version' => '2.30.1').to_desired_capabilities
+        end
+
+        it { should have_key :'iedriver-version' }
+      end
     end
 
     context 'with a :name set' do
