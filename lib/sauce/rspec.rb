@@ -86,7 +86,10 @@ begin
 
         ::RSpec.configuration.before :all do
           Sauce::RSpec.start_tools_for_selenium_directory
+          Sauce::RSpec.register_default_hook
+          Sauce::RSpec.register_jenkins_hook if ENV['JENKINS_SERVER_COOKIE']
         end
+        
         ::RSpec.configuration.after :suite do
           Sauce::RSpec.stop_tools
         end
@@ -119,6 +122,22 @@ begin
         if running_selenium_specs
           unless self.server
             self.server= Sauce::Utilities::RailsServer.start_if_required(config)
+          end
+        end
+      end
+
+      def self.register_default_hook
+        Sauce.config do |c|
+          c.after_job :rspec do |id, name, success|
+            SauceWhisk::Jobs.change_status id, success
+          end
+        end
+      end
+
+      def self.register_jenkins_hook
+        Sauce.config do |c|
+          c.after_job :jenkins do |id, name, success|
+            puts "SauceOnDemandSessionID=#{id} job-name=#{name}"
           end
         end
       end
@@ -175,10 +194,15 @@ begin
 
               begin
                 the_test.run
-                SauceWhisk::Jobs.change_status @selenium.session_id, example.exception.nil?
+                success = example.exception.nil?
               ensure
-                puts "SauceOnDemandSessionID=#{@selenium.session_id} job-name=#{description}"
                 @selenium.stop
+                begin
+                  config.run_post_job_hooks(@selenium.session_id, description, success)
+                rescue Exception => e
+                  STDERR.puts "Error running post job hooks"
+                  STDERR.puts e
+                end
                 Sauce.driver_pool.delete Thread.current.object_id
               end
             end

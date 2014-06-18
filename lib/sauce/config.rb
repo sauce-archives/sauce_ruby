@@ -269,6 +269,18 @@ module Sauce
       @opts[:port]
     end
 
+    def after_job(hook, &block)
+      hooks = @opts[:after_job_hooks] || {}
+      hooks[hook] = block
+      @opts[:after_job_hooks] = hooks
+    end
+
+    def run_post_job_hooks(job_id, job_name, job_success)
+      @opts[:after_job_hooks].each do |key, hook|
+        hook.call job_id, job_name, job_success
+      end
+    end
+
     def tools
       tools = []
       tools << "Rspec" if is_defined? "RSpec"
@@ -349,6 +361,8 @@ module Sauce
 
       on_demand = hash.delete "SAUCE_ONDEMAND_BROWSERS"
       env_browsers = hash.delete "SAUCE_BROWSERS"
+      username = hash.delete("SAUCE_USERNAME") || hash.delete("SAUCE_USER_NAME")
+      access_key = hash.delete("SAUCE_ACCESS_KEY") || hash.delete("SAUCE_API_KEY")
 
       hash.select {|k,v| k.start_with? "SAUCE_"}.each do |k,v|
         opts[k.downcase.sub("sauce_", "").to_sym] = v
@@ -377,6 +391,9 @@ module Sauce
       if hash.include? 'SAUCE_PERFILE_BROWSERS'
         opts[:perfile_browsers] = JSON.parse(hash['SAUCE_PERFILE_BROWSERS'])
       end
+
+      opts[:username] = username if username
+      opts[:access_key] = access_key if access_key
 
       return opts.delete_if {|key, value| value.nil?}
     end

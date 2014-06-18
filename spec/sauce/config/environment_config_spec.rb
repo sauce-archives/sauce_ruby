@@ -21,6 +21,29 @@ describe "Sauce::Config" do
       opts[:application_host].should eq "application_host"
     end
 
+    context "when passed the jenkins authentication parameters" do
+      let(:jenkins_options) {
+        {
+          "SAUCE_USER_NAME" => "jenkins_user",
+          "SAUCE_API_KEY" => "jenkins_access_key"
+        }
+      }
+
+      it "should parse the SAUCE_USER_NAME value" do
+        test_config
+        opts = test_config.send(:extract_options_from_hash, jenkins_options)
+
+        opts[:username].should eq "jenkins_user"
+      end
+
+      it "should parse the SAUCE_USER_NAME value" do
+        test_config
+        opts = test_config.send(:extract_options_from_hash, jenkins_options)
+
+        opts[:access_key].should eq "jenkins_access_key"
+      end
+    end
+
     context "when passed build numbers" do
       it "should accept BUILD_NUMBER" do
         opts = test_config.send(:extract_options_from_hash, {"BUILD_NUMBER" => "build"})
