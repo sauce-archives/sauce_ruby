@@ -269,6 +269,18 @@ module Sauce
       @opts[:port]
     end
 
+    def after_job(hook, &block)
+      hooks = @opts[:after_job_hooks] || {}
+      hooks[hook] = block
+      @opts[:after_job_hooks] = hooks
+    end
+
+    def run_post_job_hooks(job_id, job_name, job_success)
+      @opts[:after_job_hooks].each do |key, hook|
+        hook.call job_id, job_name, job_success
+      end
+    end
+
     def tools
       tools = []
       tools << "Rspec" if is_defined? "RSpec"
