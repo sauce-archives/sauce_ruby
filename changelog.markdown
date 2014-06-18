@@ -1,5 +1,10 @@
 # Changelog
 ## 3.4
+### 3.4.3
+Add the iedriver-version to the capability whitelist (Thanks @QuantumGeordie!)
+Allow for the use of `SAUCE_USER_NAME` and `SAUCE_API_KEY` environment variables
+Add output for Jenkins job reporting (Conditional on JENKINS_SERVER_COOKIE env var)
+Add post job hooks allowing for custom actions after Sauce sessions
 ### 3.4.2
 Added Railtie to (hopefully) solve rake tasks not being available (Thanks @adambarthelson!)
 Updated sauce:spec details in README (Thanks @seanknox!)
