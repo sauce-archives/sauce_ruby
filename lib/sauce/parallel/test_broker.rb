@@ -6,6 +6,7 @@ require "thread"
 
 module Sauce
   class TestBroker
+    POSSIBLE_CONFIGURATION_FILES = ["./spec/sauce_helper.rb", "./spec/spec_helper.rb", "./features/support/sauce_helper.rb"]
 
     def self.reset
       if defined? @@platforms
@@ -74,25 +75,14 @@ module Sauce
     end
 
     def self.load_sauce_config
-      begin
-        if File.exists? "./spec/sauce_helper.rb"
-          require "./spec/sauce_helper"
-        else
-          require "./spec/spec_helper"
-        end
-      rescue LoadError => e
-        # Gross, but maybe theyre using Cuke
-        begin
-          if File.exists? "./features/support/sauce_helper.rb"
-            require "./features/support/sauce_helper"
-          else
-            raise LoadError "Can't find sauce_helper, please add it in ./features/support/sauce_helper.rb"
-          end
-        rescue LoadError => e
-          #WHO KNOWS
-        end
+      configuration_file = POSSIBLE_CONFIGURATION_FILES.find { |file_path| File.exists?(file_path) }
+      if configuration_file
+        require configuration_file
+      else
+        error_message = "Could not find Sauce configuration. Please make sure one of the following files exists:\n"
+        error_message << POSSIBLE_CONFIGURATION_FILES.map { |file_path| "  - #{file_path}" }.join("\n")
+        raise error_message
       end
-
     end
 
     SAUCE_USERNAME = ENV["SAUCE_USERNAME"]
