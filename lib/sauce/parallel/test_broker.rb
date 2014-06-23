@@ -6,7 +6,8 @@ require "thread"
 
 module Sauce
   class TestBroker
-    POSSIBLE_CONFIGURATION_FILES = ["./spec/sauce_helper.rb", "./spec/spec_helper.rb", "./features/support/sauce_helper.rb"]
+    CUCUMBER_CONFIG_FILES = ["./features/support/sauce_helper.rb"]
+    RSPEC_CONFIG_FILES = ["./spec/sauce_helper.rb", "./spec/spec_helper.rb"]
 
     def self.reset
       if defined? @@platforms
@@ -57,9 +58,9 @@ module Sauce
       @group_indexes[group].shift
     end
 
-    def self.test_platforms
+    def self.test_platforms(tool=:rspec)
       unless defined? @@platforms
-        load_sauce_config
+        load_sauce_config(tool)
         @@platforms ||= Sauce.get_config[:browsers]
       end
       @@platforms
@@ -74,15 +75,31 @@ module Sauce
       "https://#{AUTH_DETAILS}@saucelabs.com/rest/v1"
     end
 
-    def self.load_sauce_config
-      configuration_file = POSSIBLE_CONFIGURATION_FILES.find { |file_path| File.exists?(file_path) }
-      if configuration_file
-        require configuration_file
-      else
+    def self.load_sauce_config(tool=:rspec)
+      case tool
+        when :rspec
+          primary_files = RSPEC_CONFIG_FILES
+          secondary_files = CUCUMBER_CONFIG_FILES
+        when :cucumber
+          primary_files = CUCUMBER_CONFIG_FILES
+          secondary_files = RSPEC_CONFIG_FILES
+      end
+
+      configuration_file = self.find_config_file(primary_files, secondary_files)
+      unless configuration_file
         error_message = "Could not find Sauce configuration. Please make sure one of the following files exists:\n"
         error_message << POSSIBLE_CONFIGURATION_FILES.map { |file_path| "  - #{file_path}" }.join("\n")
         raise error_message
       end
+      require configuration_file
+    end
+
+    def self.find_config_file(primary_files, secondary_files)
+      find_in_file_list(primary_files) || find_in_file_list(secondary_files)
+    end
+
+    def self.find_in_file_list(list)
+      list.find { |file_path| File.exists?(file_path) }
     end
 
     SAUCE_USERNAME = ENV["SAUCE_USERNAME"]
