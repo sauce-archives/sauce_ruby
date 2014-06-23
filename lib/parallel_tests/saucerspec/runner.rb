@@ -18,7 +18,7 @@ module ParallelTests
 
 
       def self.tests_in_groups(tests, num_groups, options={})
-        all_tests = super.flatten * Sauce::TestBroker.test_platforms.length
+        all_tests = super.flatten * Sauce::TestBroker.test_platforms(:rspec).length
         base_group_size = all_tests.length / num_groups
         num_full_groups = all_tests.length - (base_group_size * num_groups)
 

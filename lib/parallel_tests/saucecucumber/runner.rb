@@ -19,11 +19,9 @@ module ParallelTests
         execute_command(cmd, process_number, num_processes, options)
       end
 
-
-
       def self.tests_in_groups(tests, num_groups, options={})
         originals = (options[:group_by] == :steps) ? Grouper.by_steps(find_tests(tests, options), num_groups, options) : super
-        all_tests = originals.flatten * Sauce::TestBroker.test_platforms.length
+        all_tests = originals.flatten * Sauce::TestBroker.test_platforms(:cucumber).length
         base_group_size = all_tests.length / num_groups
         num_full_groups = all_tests.length - (base_group_size * num_groups)
 
