@@ -5,7 +5,7 @@ config = WebMock::Config.instance
 unless config.allow_net_connect
   allow_localhost = config.allow_localhost
   allow = config.allow || []
-  allow << /ondemand.saucelabs.com/
+  allow << /saucelabs.com/
   connect_on_start = config.net_http_connect_on_start
 
   WebMock.disable_net_connect!(
