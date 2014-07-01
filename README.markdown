@@ -79,6 +79,16 @@ end
 
 We recommend, however, the use of Capybara for your tests.
 
+#### Server Startup
+
+If it guesses you're in a Rails project, the gem will spin up your Rails server (because it's needed for tests);  If you're using a separate server, or your specs already start one, you can prevent this in your Sauce Config:
+
+```ruby
+Sauce.config do |c|
+  c[:start_local_application => false]
+end
+```
+
 #### Run tests locally or remotely
 
 A suggestion of how to run tests locally or remotely is available at the [Swappable Sauce](https://github.com/saucelabs/sauce_ruby/wiki/_preview) wiki page.
@@ -112,7 +122,7 @@ Capybara.current_session.driver.finish!
 Capybara.reset_sessions!
 ```
 
-When used like this, you won't get any of the shiny platform support that the :sauce tag provides;  You'll have to use our [REST API](https://saucelabs.com/docs/rest) to name your jobs (Possibly using [Sauce_Whisk](http://rubygems.org/gems/sauce_whisk) and your specs will only operate on the first platform you've specified.
+When used like this, you won't get any of the shiny serial platform support that the :sauce tag provides;  You'll have to use our [REST API](https://saucelabs.com/docs/rest) to name your jobs (Possibly using [Sauce_Whisk](http://rubygems.org/gems/sauce_whisk) and your specs will only operate on the first platform you've specified.
 
 #### With Sauce Connect
 Sauce Connect automatically proxies content on certain ports;   Capybara.server_port will be set to a value suitable for use with Sauce Connect by default.  If you want to use a specific port, using one of these will allow Sauce Connect to tunnel traffic to your local machine:
@@ -209,11 +219,19 @@ As long as your tests are correctly tagged (See installation, above), running th
 
 ## Network Mocking
 
-If you're mocking out external network requests, say with WebMock or FakeWeb, you'll need to ensure that requests can still be made to our server at `ondemand.saucelabs.com`.
+If you're mocking out external network requests, say with WebMock or FakeWeb, you'll need to ensure that requests can still be made to `saucelabs.com`, as well as any subdomains.
 
 You'll need to ensure you can make requests _to_ your server as well.
 
-We've provided a helper for `WebMock`, which you can include with `require 'sauce/webmock'`.
+### WebMock
+
+We've provided a helper for `WebMock`, which you can include with `require 'sauce/webmock'`.  This will preserve all the existing config passed to `WebMock.disable_net_connect!`, while setting an exception for Sauce's servers.  You'll need to include this helper *after* any other WebMock configuration
+
+If you want full control of your mocking, just include saucelabs.com when allowing domains:
+
+```ruby
+WebMock.disable_net_connect!(:allow => [/saucelabs.com/], "www.example.com")
+```
 
 ## Reporting Results
 
