@@ -183,13 +183,15 @@ begin
             config = Sauce::Config.new
             description = the_test.metadata[:full_description]
             file = the_test.metadata[:file_path]
+            exceptions = {}
             config.browsers_for_location(file).each do |os, browser, version|
+              example = SeleniumExampleGroup.current_example.call(self)
+              example.instance_variable_set(:@exception, nil)
               @selenium = Sauce::Selenium2.new({:os => os,
                                                 :browser => browser,
                                                 :browser_version => version,
                                                 :job_name => description})
               Sauce.driver_pool[Thread.current.object_id] = @selenium
-              example = SeleniumExampleGroup.current_example.call(self)
               example.metadata[:sauce_public_link] = SauceWhisk.public_link(@selenium.session_id)
 
               begin
@@ -198,6 +200,9 @@ begin
               ensure
                 @selenium.stop
                 begin
+                  unless success
+                    exceptions["#{os} - #{browser} #{version}"] = example.exception
+                  end
                   config.run_post_job_hooks(@selenium.session_id, description, success)
                 rescue Exception => e
                   STDERR.puts "Error running post job hooks"
