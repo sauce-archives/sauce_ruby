@@ -1,5 +1,10 @@
 # Changelog
 ## 3.4
+### 3.4.5
+Include Capybara driver settings when generating sauce_helper, if required
+Correctly reference example groups for RSpec 2.99.0 and up (Closes #241)
+Expand the webmock helper to include all saucelabs.com domains (Closes #244)
+
 ### 3.4.4
 Search for config files during parallel tasks more sensibly (Thanks @Casey Howard)
 Prefer config files from the current tool, during parallel tests.
