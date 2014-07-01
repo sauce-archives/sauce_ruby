@@ -214,9 +214,19 @@ begin
           end
         end
 
-        ::RSpec.configuration.include(self, :example_group => {
-              :file_path => Regexp.compile('spec[\\\/]selenium')
-            })
+        def self.inclusion_params
+          params = [self]
+          gem_version = Gem::Version.new ::RSpec::Core::Version::STRING
+          file_path_hash = {:file_path => Regexp.compile('spec[\\\/]selenium')}
+          if (gem_version >= Gem::Version.new('2.99.0'))
+            params = params + [file_path_hash]
+          else
+            params = params + [{:example_group => file_path_hash}]
+          end
+          params
+        end
+
+        ::RSpec.configuration.include(*self.inclusion_params)
         ::RSpec.configuration.include(self, :sauce => true)
 
         Sauce::RSpec.setup_environment
