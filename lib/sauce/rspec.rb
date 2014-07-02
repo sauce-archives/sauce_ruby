@@ -210,6 +210,9 @@ begin
                 end
                 Sauce.driver_pool.delete Thread.current.object_id
               end
+              if (exceptions.length > 0)
+                example.instance_variable_set(:@exception, exceptions.first[1])
+              end
             end
           end
         end
