@@ -1,5 +1,8 @@
 # Changelog
 ## 3.4
+### 3.4.6
+If it exists, return the first exception thrown when executing in serial across platforms
+
 ### 3.4.5
 Include Capybara driver settings when generating sauce_helper, if required
 Correctly reference example groups for RSpec 2.99.0 and up (Closes #241)
