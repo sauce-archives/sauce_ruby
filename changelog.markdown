@@ -1,5 +1,8 @@
 # Changelog
 ## 3.4
+### 3.4.7
+Handle cases where Sauce returns an incorrectly escaped JSON string for 'proxy' by parsing it out again.
+
 ### 3.4.6
 If it exists, return the first exception thrown when executing in serial across platforms
 
