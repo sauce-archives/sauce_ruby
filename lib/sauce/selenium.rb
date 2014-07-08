@@ -12,6 +12,12 @@ module Selenium
         alias :existing_json_create :json_create
 
         def json_create(data)
+          # Some platforms derp up JSON encoding proxy details,
+          # notably Appium.
+          if (data.class == String)
+            data = JSON.parse data if data.start_with? "{\"proxyType"
+          end
+
           dup = data.dup.delete_if {|k,v| v.nil?}
           dup.delete_if {|k,v| k == "autodetect" && v == false}
           existing_json_create(dup)
