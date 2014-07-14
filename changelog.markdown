@@ -1,5 +1,8 @@
 # Changelog
 ## 3.4
+### 3.4.8
+Correct hooking of post job actions.
+
 ### 3.4.7
 Handle cases where Sauce returns an incorrectly escaped JSON string for 'proxy' by parsing it out again.
 
