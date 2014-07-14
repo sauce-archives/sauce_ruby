@@ -128,7 +128,7 @@ begin
 
       def self.register_default_hook
         Sauce.config do |c|
-          c.after_job :rspec do |id, name, success|
+          c.after_job :rspec do |id, platform, name, success|
             SauceWhisk::Jobs.change_status id, success
           end
         end
@@ -136,7 +136,7 @@ begin
 
       def self.register_jenkins_hook
         Sauce.config do |c|
-          c.after_job :jenkins do |id, name, success|
+          c.after_job :jenkins do |id, platform, name, success|
             puts "SauceOnDemandSessionID=#{id} job-name=#{name}"
           end
         end
@@ -203,7 +203,8 @@ begin
                   unless success
                     exceptions["#{os} - #{browser} #{version}"] = example.exception
                   end
-                  config.run_post_job_hooks(@selenium.session_id, description, success)
+                  platform = {:os => os, :browser => browser, :version => version}
+                  config.run_post_job_hooks(@selenium.session_id, platform, description, success)
                 rescue Exception => e
                   STDERR.puts "Error running post job hooks"
                   STDERR.puts e
