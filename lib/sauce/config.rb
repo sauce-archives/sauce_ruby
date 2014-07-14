@@ -271,13 +271,13 @@ module Sauce
 
     def after_job(hook, &block)
       hooks = @opts[:after_job_hooks] || {}
-      hooks[hook] = block
+      hooks[hook] = block unless hooks[hook]
       @opts[:after_job_hooks] = hooks
     end
 
-    def run_post_job_hooks(job_id, job_name, job_success)
+    def run_post_job_hooks(job_id, platform, job_name, job_success)
       @opts[:after_job_hooks].each do |key, hook|
-        hook.call job_id, job_name, job_success
+        hook.call job_id, platform, job_name, job_success
       end
     end
 
