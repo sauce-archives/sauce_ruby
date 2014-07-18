@@ -30,7 +30,11 @@ end
 
 module Sauce
   class Selenium2
+    extend Forwardable
+
     attr_reader :config, :driver
+
+    def_delegator :@driver, :execute_script
 
     def self.used_at_least_once?
       @used_at_least_once || false
