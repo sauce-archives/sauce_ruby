@@ -142,6 +142,16 @@ module Sauce
       end
     end
 
+    def whitelisted_capabilities
+      @whitelisted_capabilities ||= Set.new 
+    end
+
+    def whitelist capability
+      cap = capability.to_s
+      wl = whitelisted_capabilities || Set.new
+      @whitelisted_capabilities = wl.add cap
+    end
+
     def to_browser_string
       browser_options = {
         'username' => @opts[:username],
@@ -168,7 +178,9 @@ module Sauce
         :client_version => client_version
       }
 
-      SAUCE_OPTIONS.each do |opt|
+      allowed_options = whitelisted_capabilities + SAUCE_OPTIONS
+
+      allowed_options.each do |opt|
         [opt, opt.gsub("-", "_")].map(&:to_sym).each do |sym|
           if @opts.include? sym
             desired_capabilities[opt.to_sym] = @opts[sym]

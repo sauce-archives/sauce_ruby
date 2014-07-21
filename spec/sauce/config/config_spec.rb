@@ -255,46 +255,72 @@ describe Sauce::Config do
       end
     end
 
-    describe "#tools" do
+    context 'with unusual options' do
       let(:config) {Sauce::Config.new}
 
-      before :each do
-        config.stub(:is_defined?).and_call_original
+      it 'should ignore them by default' do
+        config[:new_option] = 'caramel'
+        config.to_desired_capabilities[:new_option].should be_nil
       end
 
-      it "should include rspec if present" do
-        config.tools.should include "Rspec"
+      it 'should include them when configured with exceptions' do
+        config[:new_option] = 'elderflower'
+        config.whitelist :new_option
+        config.to_desired_capabilities[:new_option].should include 'elderflower'
       end
 
-      it "should include capybara" do
-        config.stub(:is_defined?).with("Capybara") {true}
-        config.tools.should include "Capybara"
+      it 'should allow multiple exceptions' do
+        config[:new_option] = 'elderflower'
+        config[:another_option] = 'mint'
+        config.whitelist :new_option
+        config.whitelist :another_option
+          
+        config.to_desired_capabilities[:new_option].should include 'elderflower'
+        config.to_desired_capabilities[:another_option].should include 'mint'
+        config.to_desired_capabilities[:not_an_option].should be_nil
       end
+    end
+  end
 
-      it "should not include capybara when absent" do
-        config.stub(:is_defined?).with("Capybara") {false}
-        config.tools.should_not include "Capybara"
-      end
+  describe "#tools" do
+    let(:config) {Sauce::Config.new}
 
-      it "should not include cucumber when not present" do
-        config.stub(:is_defined?).with("Cucumber") {false}
-        config.tools.should_not include "Cucumber"
-      end
+    before :each do
+      config.stub(:is_defined?).and_call_original
+    end
 
-      it "should include cucumber when present" do
-        config.stub(:is_defined?).with("Cucumber") {true}
-        config.tools.should include "Cucumber"
-      end
+    it "should include rspec if present" do
+      config.tools.should include "Rspec"
+    end
 
-      it "should include test::unit if present" do
-        config.stub(:is_defined?).with("Test","Unit") {true}
-        config.tools.should include "Test::Unit"
-      end
+    it "should include capybara" do
+      config.stub(:is_defined?).with("Capybara") {true}
+      config.tools.should include "Capybara"
+    end
 
-      it "should not include test::unit if absent" do
-        config.stub(:is_defined?).with("Test", "Unit") {false}
-        config.tools.should_not include "Test::Unit"
-      end
+    it "should not include capybara when absent" do
+      config.stub(:is_defined?).with("Capybara") {false}
+      config.tools.should_not include "Capybara"
+    end
+
+    it "should not include cucumber when not present" do
+      config.stub(:is_defined?).with("Cucumber") {false}
+      config.tools.should_not include "Cucumber"
+    end
+
+    it "should include cucumber when present" do
+      config.stub(:is_defined?).with("Cucumber") {true}
+      config.tools.should include "Cucumber"
+    end
+
+    it "should include test::unit if present" do
+      config.stub(:is_defined?).with("Test","Unit") {true}
+      config.tools.should include "Test::Unit"
+    end
+
+    it "should not include test::unit if absent" do
+      config.stub(:is_defined?).with("Test", "Unit") {false}
+      config.tools.should_not include "Test::Unit"
     end
   end
 
@@ -316,6 +342,8 @@ describe Sauce::Config do
       c.browser_version.should == 'BROWSER_VERSION2'
     end
   end
+
+  describe "#"
 end
 
 describe Sauce do
