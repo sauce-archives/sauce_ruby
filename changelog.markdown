@@ -1,5 +1,8 @@
 # Changelog
 ## 3.4
+### 3.4.9
+Fixed delegation of execute_script to Selenium webdriver
+
 ### 3.4.8
 Correct hooking of post job actions.
 
