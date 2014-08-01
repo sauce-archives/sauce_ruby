@@ -16,8 +16,8 @@ module Sauce
       @status = "uninitialized"
       @error = nil
       @quiet = options[:quiet]
-      @timeout = options.fetch(:timeout) { TIMEOUT }
       @config = Sauce::Config.new(options)
+      @timeout = @config[:sauce_connect_timeout] || TIMEOUT
       @skip_connection_test = @config[:skip_connection_test]
 
       if @config.username.nil?
