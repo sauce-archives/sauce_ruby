@@ -48,9 +48,12 @@ module Sauce
       @config = Sauce::Config.new(opts)
       http_client = ::Selenium::WebDriver::Remote::Http::Default.new
       http_client.timeout = 300 # Browser launch can take a while
+      profile = Selenium::WebDriver::Firefox::Profile.new
+      profile['webdriver.load.strategy'] = 'unstable'
       @driver = ::Selenium::WebDriver.for(:remote,
                       :url => "http://#{@config.username}:#{@config.access_key}@#{@config.host}:#{@config.port}/wd/hub",
                       :desired_capabilities => @config.to_desired_capabilities,
+                      :profile => profile,
                       :http_client => http_client)
       http_client.timeout = 120 # Once the browser is up, commands should time out reasonably
 
