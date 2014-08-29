@@ -184,7 +184,7 @@ begin
             description = the_test.metadata[:full_description]
             file = the_test.metadata[:file_path]
             exceptions = {}
-            config.browsers_for_location(file).each do |os, browser, version|
+            config.caps_for_location(file).each do |os, browser, version|
               example = SeleniumExampleGroup.current_example.call(self)
               example.instance_variable_set(:@exception, nil)
               @selenium = Sauce::Selenium2.new({:os => os,

@@ -89,7 +89,7 @@ module Sauce
         fn = file_name_from_scenario(scenario)
         config = Sauce::Config.new
 
-        config.browsers_for_location("./#{fn[:file]}", fn[:line]).each do |os, browser, version|
+        config.caps_for_location("./#{fn[:file]}", fn[:line]).each do |os, browser, version|
           @selenium = Sauce::Selenium2.new({:os => os,
                                             :browser => browser,
                                             :browser_version => version,

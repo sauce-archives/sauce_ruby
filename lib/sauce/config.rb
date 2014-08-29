@@ -205,7 +205,7 @@ module Sauce
       return [[os, browser, browser_version]]
     end
 
-    def browsers_for_location(file, linenumber=nil)
+    def caps_for_location(file, linenumber=nil)
       Sauce::Config.called_from_integrations
       perfile_browsers = @opts[:perfile_browsers]
       

@@ -24,7 +24,7 @@ describe "Sauce::Config" do
       filename = "./features/duckduck.feature"
       fn = 14
 
-      Sauce::Config.new.browsers_for_location(filename, fn).should eq expected_browsers
+      Sauce::Config.new.caps_for_location(filename, fn).should eq expected_browsers
     end
 
     it "should return the browsers for the requested location" do
@@ -49,7 +49,7 @@ describe "Sauce::Config" do
       filename = "./features/duckduck.feature"
       fn = 14
 
-      Sauce::Config.new.browsers_for_location(filename, fn).should eq expected_browsers
+      Sauce::Config.new.caps_for_location(filename, fn).should eq expected_browsers
     end
 
     it "returns the line number location if present" do
@@ -74,7 +74,7 @@ describe "Sauce::Config" do
       filename = "./features/duckduck.feature"
       fn = 11
 
-      Sauce::Config.new.browsers_for_location(filename, fn).should eq expected_browsers
+      Sauce::Config.new.caps_for_location(filename, fn).should eq expected_browsers
     end
 
         it "ignores line number if it can't find it" do
@@ -99,7 +99,7 @@ describe "Sauce::Config" do
       filename = "./features/duckduck.feature"
       fn = 6
 
-      Sauce::Config.new.browsers_for_location(filename, fn).should eq expected_browsers
+      Sauce::Config.new.caps_for_location(filename, fn).should eq expected_browsers
     end
   end
 end
