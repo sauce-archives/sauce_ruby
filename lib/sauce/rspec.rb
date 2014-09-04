@@ -149,6 +149,7 @@ begin
       end
 
       module SeleniumExampleGroup
+        include Sauce::TestBase
         attr_reader :selenium
         alias_method :s, :selenium
 
@@ -184,13 +185,12 @@ begin
             description = the_test.metadata[:full_description]
             file = the_test.metadata[:file_path]
             exceptions = {}
-            config.browsers_for_location(file).each do |os, browser, version|
+            test_each config.caps_for_location(file), description do |selenium, caps|
+
               example = SeleniumExampleGroup.current_example.call(self)
               example.instance_variable_set(:@exception, nil)
-              @selenium = Sauce::Selenium2.new({:os => os,
-                                                :browser => browser,
-                                                :browser_version => version,
-                                                :job_name => description})
+              
+              @selenium = selenium
               Sauce.driver_pool[Thread.current.object_id] = @selenium
               example.metadata[:sauce_public_link] = SauceWhisk.public_link(@selenium.session_id)
 
@@ -200,6 +200,9 @@ begin
               ensure
                 @selenium.stop
                 begin
+                  os = caps[:os]
+                  browser = caps[:browser]
+                  version = caps[:version]
                   unless success
                     exceptions["#{os} - #{browser} #{version}"] = example.exception
                   end

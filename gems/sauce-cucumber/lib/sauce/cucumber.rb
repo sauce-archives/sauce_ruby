@@ -8,6 +8,8 @@ require 'sauce_whisk'
 module Sauce
   module Capybara
     module Cucumber
+      extend Sauce::TestBase
+
       def use_sauce_driver
         ::Capybara.current_driver = :sauce
       end
@@ -88,12 +90,10 @@ module Sauce
 
         fn = file_name_from_scenario(scenario)
         config = Sauce::Config.new
+        platforms = config.caps_for_location("./#{fn[:file]}", fn[:line])
 
-        config.browsers_for_location("./#{fn[:file]}", fn[:line]).each do |os, browser, version|
-          @selenium = Sauce::Selenium2.new({:os => os,
-                                            :browser => browser,
-                                            :browser_version => version,
-                                            :job_name => job_name})
+        test_each platforms, job_name do |selenium, caps|
+          @selenium = selenium
 
           Sauce.driver_pool[Thread.current.object_id] = @selenium
 

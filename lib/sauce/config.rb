@@ -205,7 +205,7 @@ module Sauce
       return [[os, browser, browser_version]]
     end
 
-    def browsers_for_location(file, linenumber=nil)
+    def caps_for_location(file, linenumber=nil)
       Sauce::Config.called_from_integrations
       perfile_browsers = @opts[:perfile_browsers]
       
@@ -217,7 +217,7 @@ module Sauce
         else
           platforms = perfile_browsers[file]
         end
-        platforms.map { |p| [p['os'], p['browser'], p['version']] }
+        platforms.map { |p| [p['os'], p['browser'], p['version'], (p['caps'] || {})] }
       else
         browsers
       end
@@ -397,7 +397,7 @@ module Sauce
 
       if env_browsers
         browsers = JSON.parse(env_browsers)
-        opts[:browsers] = browsers.map { |x| [x['os'], x['browser'], x['version']] }
+        opts[:browsers] = browsers.map { |x| [x['os'], x['browser'], x['version'], x['caps']] }
       end
 
       if hash.include? 'SAUCE_PERFILE_BROWSERS'

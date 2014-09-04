@@ -9,11 +9,13 @@ module Sauce
       platform = @platforms[@index]
       @index += 1
       begin
-        {
+        caps ={
           'os' => platform[0],
           'browser' => platform[1],
           'version' => platform[2]
         }
+        caps.merge!({:caps => platform[3]}) if platform[3]
+        caps
       rescue NoMethodError => e
         puts "I don't have any config"
       end

@@ -2,6 +2,7 @@ require "sauce/parallel/test_broker"
 require "parallel_tests"
 require "parallel_tests/tasks"
 require "parallel_tests/cli_patch"
+require "shellwords"
 
 namespace :sauce do
   desc "Run specs in parallel on Sauce Labs"
@@ -141,7 +142,7 @@ def parse_task_args(test_tool=:rspec, args)
   end
 
   return_args.push *(parallel_options.split(' ')) if parallel_options
-  return_args.push files
+  return_args.concat files.split
 
   return return_args
 end
