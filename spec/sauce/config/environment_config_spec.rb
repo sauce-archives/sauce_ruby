@@ -97,8 +97,8 @@ describe "Sauce::Config" do
       it "should extract the browsers" do
         opts = test_config.send(:extract_options_from_hash, browsers)
         opts[:browsers].should eq([
-          ["os1", "ie1", "version1"],
-          ["os2", "ie2", "version2"]
+          ["os1", "ie1", "version1", nil],
+          ["os2", "ie2", "version2", nil]
         ])
       end
     end

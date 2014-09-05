@@ -3,6 +3,7 @@ require 'cucumber'
 require 'sauce/job'
 require 'sauce/capybara'
 require 'sauce/utilities'
+require 'sauce/test_base'
 require 'sauce_whisk'
 
 module Sauce

@@ -103,7 +103,7 @@ describe 'parse_task_args' do
         end
 
         it 'defaults to not being present for cucumber' do
-          actual_args = parse_task_args(:cucmber, {}).join ' '
+          actual_args = parse_task_args(:cucumber, {}).join ' '
           actual_args.should_not include '-o'
         end
       end

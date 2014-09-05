@@ -29,12 +29,12 @@ describe "Sauce::Config" do
 
     it "should return the browsers for the requested location" do
       expected_browsers = [
-        ["Linux", "Chrome", "nil"],
-        ["Mac", "Safari", "5"]
+        ["Linux", "Chrome", "nil", {}],
+        ["Mac", "Safari", "5", {}]
       ]
 
       browser_hash = expected_browsers.map { |a| 
-       {"os" => a[0], "browser" => a[1], "version" => a[2]}
+       {"os" => a[0], "browser" => a[1], "version" => a[2], "caps" => a[3]}
       }
 
       env_hash = {
@@ -54,8 +54,8 @@ describe "Sauce::Config" do
 
     it "returns the line number location if present" do
       expected_browsers = [
-        ["Linux", "Chrome", "nil"],
-        ["Mac", "Safari", "5"]
+        ["Linux", "Chrome", "nil", {}],
+        ["Mac", "Safari", "5", {}]
       ]
 
       browser_hash = expected_browsers.map { |a| 
@@ -77,10 +77,10 @@ describe "Sauce::Config" do
       Sauce::Config.new.caps_for_location(filename, fn).should eq expected_browsers
     end
 
-        it "ignores line number if it can't find it" do
+    it "ignores line number if it can't find it" do
       expected_browsers = [
-        ["Linux", "Chrome", "nil"],
-        ["Mac", "Safari", "5"]
+        ["Linux", "Chrome", "nil", {}],
+        ["Mac", "Safari", "5", {}]
       ]
 
       browser_hash = expected_browsers.map { |a| 
