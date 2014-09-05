@@ -192,6 +192,32 @@ Sauce.config do |c|
 end
 ```
 
+### Setting Capabilities
+#### For every platform
+All the standard Selenium & Sauce capabilities are accessible from the Sauce.config block.  Some filtering is done to exclude nonsense caps.  If you need to add a capability that's not already allowed (those in `Sauce::Config::SAUCE_OPTIONS`), you can add it to the whitelist:
+
+```ruby
+Sauce.config do |c|
+  # Build is already allowed
+  c[:build] => "9001AMeme"
+
+  # Shiny is not allowed yet
+  c.whitelist 'shiny'
+  c['shiny'] => "Something"
+end
+```
+
+#### For a single platform
+To set a capability for a single platform, add it as a hash to the end of the platform's array:
+
+```ruby
+Sauce.config do |c|
+  c.browsers = [
+    ["Windows 7", "Firefox", "18"],
+    ["Windows 7", "Chrome", 30, {:build => 'ChromeTastic'}]
+  ]
+```
+
 ### Run tests in Parallel (Highly recommended)
 
 ```bash
