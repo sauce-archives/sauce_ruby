@@ -7,7 +7,7 @@ module Sauce
         capabilities = {
           :os => platform[0],
           :browser => platform[1],
-          :version => platform[2],
+          :browser_version => platform[2],
           :job_name => description
         }
 

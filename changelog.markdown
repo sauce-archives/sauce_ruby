@@ -1,5 +1,8 @@
 # Changelog
 ## 3.5
+### 3.5.1
+Correctly set version
+
 ### 3.5.0
 Allowed for individual platforms to have desired capabilities
 Allow multiple files to be passed to Rake tasks
