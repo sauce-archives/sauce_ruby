@@ -1,4 +1,11 @@
 # Changelog
+## 3.5
+### 3.5.0
+Allowed for individual platforms to have desired capabilities
+Allow multiple files to be passed to Rake tasks
+Upgrade parallel_tests to 1.0.1
+Allow for special capabilities to be added by end users
+
 ## 3.4
 ### 3.4.9
 Fixed delegation of execute_script to Selenium webdriver
