@@ -250,7 +250,7 @@ module Sauce
 
     def browser_version
       if single_browser_set?
-        return @undefaulted_opts[:browser_version]
+        return @undefaulted_opts[:browser_version] || @undefaulted_opts[:version]
       end
       if !ENV["TEST_ENV_NUMBER"] && @opts[:browsers]
         @opts[:browsers][0][2]

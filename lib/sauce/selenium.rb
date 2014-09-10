@@ -48,6 +48,7 @@ module Sauce
       @config = Sauce::Config.new(opts)
       http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new
       http_client.timeout = 300 # Browser launch can take a while
+
       @driver = ::Selenium::WebDriver.for(:remote,
                       :url => "http://#{@config.username}:#{@config.access_key}@#{@config.host}:#{@config.port}/wd/hub",
                       :desired_capabilities => @config.to_desired_capabilities,

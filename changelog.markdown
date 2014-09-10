@@ -1,6 +1,7 @@
 # Changelog
 ## 3.5
 ### 3.5.2
+Unbreak single versions
 Persist whitelist across Config instances
 
 ### 3.5.1
