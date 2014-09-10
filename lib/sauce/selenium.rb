@@ -15,7 +15,7 @@ module Selenium
           # Some platforms derp up JSON encoding proxy details,
           # notably Appium.
           if (data.class == String)
-            data = JSON.parse data if data.start_with? "{\"proxyType"
+            data = JSON.parse data if data.include? "\"proxyType\""
           end
 
           dup = data.dup.delete_if {|k,v| v.nil?}
