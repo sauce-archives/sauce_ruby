@@ -1,5 +1,8 @@
 # Changelog
 ## 3.5
+### 3.5.2
+Persist whitelist across Config instances
+
 ### 3.5.1
 Correctly set version
 

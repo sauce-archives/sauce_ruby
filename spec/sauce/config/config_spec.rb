@@ -269,6 +269,13 @@ describe Sauce::Config do
         config.to_desired_capabilities[:new_option].should include 'elderflower'
       end
 
+      it 'should include them when created anew' do
+        config.whitelist :new_option
+        config_two = Sauce::Config.new({})
+        config_two[:new_option] = 'elderflower'
+        config_two.to_desired_capabilities[:new_option].should include 'elderflower'
+      end
+
       it 'should allow multiple exceptions' do
         config[:new_option] = 'elderflower'
         config[:another_option] = 'mint'
