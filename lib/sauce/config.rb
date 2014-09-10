@@ -100,7 +100,10 @@ module Sauce
           @undefaulted_opts.merge! load_options_from_yaml
           @undefaulted_opts.merge! load_options_from_environment
           @undefaulted_opts.merge! load_options_from_heroku unless ENV["SAUCE_DISABLE_HEROKU_CONFIG"]
-          @undefaulted_opts.merge! Sauce.get_config.opts rescue {}
+          
+          global_config = Sauce.get_config
+          @undefaulted_opts.merge! global_config.opts if global_config.opts
+          @whitelisted_capabilities = global_config.whitelisted_capabilities
         end
 
         @undefaulted_opts.merge! opts
