@@ -20,8 +20,8 @@ Sauce.config do |config|
 end
         ENDFILE
         if Object.const_defined? "Capybara"
-          helper_text << "Capybara.default_driver = :sauce "
-          helper_text << "Capybara.javascript_driver = :sauce "
+          helper_text << "Capybara.default_driver = :sauce \n"
+          helper_text << "Capybara.javascript_driver = :sauce"
         end
         
         return helper_text
