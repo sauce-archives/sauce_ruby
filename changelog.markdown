@@ -1,5 +1,8 @@
 # Changelog
 ## 3.5
+### 3.5.3
+Correct JSON encoding when strings are sent with incorrect proxy data (Like from Appium).
+
 ### 3.5.2
 Unbreak single versions
 Persist whitelist across Config instances
