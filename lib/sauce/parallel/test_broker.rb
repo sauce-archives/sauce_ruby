@@ -87,8 +87,9 @@ module Sauce
 
       configuration_file = self.find_config_file(primary_files, secondary_files)
       unless configuration_file
+        possible_config_files = primary_files + secondary_files
         error_message = "Could not find Sauce configuration. Please make sure one of the following files exists:\n"
-        error_message << POSSIBLE_CONFIGURATION_FILES.map { |file_path| "  - #{file_path}" }.join("\n")
+        error_message << possible_config_files.map { |file_path| "  - #{file_path}" }.join("\n")
         raise error_message
       end
       require configuration_file
