@@ -36,11 +36,13 @@ module Sauce
           end
         end
 
-        config[:browsers].each do |os, browser, version|
+        config[:browsers].each do |os, browser, version, caps|
           options = self.class.sauce_config
-          options.merge!({:os => os, :browser => browser,
+          options.merge!({:os              => os,
+                          :browser         => browser,
                           :browser_version => version,
-                          :job_name => my_name.to_s})
+                          :job_name        => my_name.to_s,
+                          :caps            => caps})
           @browser = Sauce::Selenium2.new(options)
           Sauce.driver_pool[Thread.current.object_id] = @browser
 

@@ -189,6 +189,12 @@ module Sauce
             desired_capabilities[opt.to_sym] = @opts[sym]
           elsif @opts.include? sym.to_s
             desired_capabilities[opt.to_sym] = @opts[sym.to_s]
+          elsif @opts.include?(:caps) && !@opts[:caps].nil?
+            if @opts[:caps].include? sym
+              desired_capabilities[opt.to_sym] = @opts[:caps][sym]
+            elsif @opts[:caps].include? sym.to_s
+              desired_capabilities[opt.to_sym] = @opts[:caps][sym.to_s]
+            end
           end
         end
       end
