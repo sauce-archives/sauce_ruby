@@ -37,13 +37,11 @@ begin
         def execute(*args)
           config = Sauce::Config.new
           description = [self.class.description, self.description].join(" ")
-          config[:browsers].each do |os, browser, version, caps|
-            @selenium = Sauce::Selenium2.new({:os              => os,
-                                              :browser         => browser,
+          config[:browsers].each do |os, browser, version|
+            @selenium = Sauce::Selenium2.new({:os => os, :browser => browser,
                                               :browser_version => version,
-                                              :job_name        => description,
-                                              :caps            => caps})
-            
+                                              :job_name => description})
+
             begin
               success = super(*args)
               SauceWhisk::Jobs.change_status @selenium.session_id, success
