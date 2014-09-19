@@ -74,6 +74,7 @@ module Sauce
           sleep 1
         end
       end
+
       Thread.new {
         while( (line = @pipe.gets) )
           if line =~ /Tunnel remote VM is (.*) (\.\.|at)/
@@ -84,6 +85,7 @@ module Sauce
           end
           if line =~ /- (Problem.*)$/
             @error = $1
+            @quiet = false
           end
           if line =~ /== Missing requirements ==/
             @error = "Missing requirements"
