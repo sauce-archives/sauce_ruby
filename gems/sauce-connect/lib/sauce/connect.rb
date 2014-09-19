@@ -60,43 +60,49 @@ module Sauce
         ensure_connection_is_possible
       end
 
-      puts "[Connecting to Sauce Labs...]"
+      if java_is_present?
+        puts "[Connecting to Sauce Labs...]"
 
-      formatted_cli_options = array_of_formatted_cli_options_from_hash(cli_options)
-      command_args = [@config.username, @config.access_key] + formatted_cli_options
-      command = "exec #{Sauce::Connect.connect_command} #{command_args.join(' ')} 2>&1"
-      @pipe = IO.popen(command)
+        formatted_cli_options = array_of_formatted_cli_options_from_hash(cli_options)
+        command_args = [@config.username, @config.access_key] + formatted_cli_options
+        command = "exec #{Sauce::Connect.connect_command} #{command_args.join(' ')} 2>&1"
+        @pipe = IO.popen(command)
 
-      @process_status = $?
-      at_exit do
-        Process.kill("INT", @pipe.pid)
-        while @ready
-          sleep 1
+        @process_status = $?
+        at_exit do
+          Process.kill("INT", @pipe.pid)
+          while @ready
+            sleep 1
+          end
         end
+
+        Thread.new {
+          while( (line = @pipe.gets) )
+            if line =~ /Tunnel remote VM is (.*) (\.\.|at)/
+              @status = $1
+            end
+            if line =~/You may start your tests\./
+              @ready = true
+            end
+            if line =~ /- (Problem.*)$/
+              @error = $1
+              @quiet = false
+            end
+            if line =~ /== Missing requirements ==/
+              @error = "Missing requirements"
+              @quiet = false
+            end
+            if line =~/Invalid API_KEY provided/
+              @error = "Invalid API_KEY provided"
+              @quiet = false
+            end
+            $stderr.puts line unless @quiet
+          end
+          @ready = false
+        }
+      else
+        raise "Java doesn't seem to be installed.  Sauce Connect requires a working install of Java to proceed."
       end
-      Thread.new {
-        while( (line = @pipe.gets) )
-          if line =~ /Tunnel remote VM is (.*) (\.\.|at)/
-            @status = $1
-          end
-          if line =~/You may start your tests\./
-            @ready = true
-          end
-          if line =~ /- (Problem.*)$/
-            @error = $1
-          end
-          if line =~ /== Missing requirements ==/
-            @error = "Missing requirements"
-            @quiet = false
-          end
-          if line =~/Invalid API_KEY provided/
-            @error = "Invalid API_KEY provided"
-            @quiet = false
-          end
-          $stderr.puts line unless @quiet
-        end
-        @ready = false
-      }
     end
 
     def cli_options
@@ -164,6 +170,11 @@ module Sauce
         opt_name = key.to_s.gsub("_", "-")
         "--#{opt_name}=#{value}"
       end
+    end
+
+    def java_is_present?
+      # This is nieve;  Can we be better?
+      system 'java -version'
     end
 
     def self.port_not_open_message
