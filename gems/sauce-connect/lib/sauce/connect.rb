@@ -41,7 +41,7 @@ module Sauce
 
       unless response.kind_of? Net::HTTPOK
         $stderr.puts Sauce::Connect.cant_access_rest_api_message
-        raise TunnelNotPossibleException "Couldn't access REST API"
+        raise TunnelNotPossibleException, "Couldn't access REST API"
       end
 
       begin
