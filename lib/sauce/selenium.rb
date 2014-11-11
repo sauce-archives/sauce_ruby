@@ -46,9 +46,7 @@ module Sauce
 
     def initialize(opts={})
       @config = Sauce::Config.new(opts)
-
-      # We don't need a name but want to use the ENV proxy if it exists
-      http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new nil, :ENV
+      http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new
       http_client.timeout = 300 # Browser launch can take a while
 
       @driver = ::Selenium::WebDriver.for(:remote,
