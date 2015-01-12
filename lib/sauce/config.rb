@@ -67,7 +67,7 @@ module Sauce
         sauce-advisor single-window user-extensions-url firefox-profile-url
         max-duration idle-timeout build custom-data tunnel-identifier
         selenium-version command-timeout prerun prerun-args screen-resolution
-        disable-popup-handler avoid-proxy public name iedriver-version}
+        disable-popup-handler avoid-proxy public name iedriver-version parent-tunnel}
 
     def self.get_application_port
       port_index = ENV["TEST_ENV_NUMBER"].to_i
