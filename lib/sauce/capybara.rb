@@ -106,6 +106,7 @@ module Sauce
       def finish!
         @browser.quit if existing_browser?
         @browser = nil
+        Sauce.driver_pool[Thread.current.object_id] = nil
       end
 
       def render(path)
