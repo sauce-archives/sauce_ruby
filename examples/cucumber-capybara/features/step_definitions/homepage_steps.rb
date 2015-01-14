@@ -19,3 +19,7 @@ Then /^I should (not )?be delighted$/ do |inverse|
   end
 end
 
+Then /^the page should contain a '([\w]+)' link$/ do |expected|
+  link = page.first('a', :text => expected)
+  link.visible?.should == true
+end
