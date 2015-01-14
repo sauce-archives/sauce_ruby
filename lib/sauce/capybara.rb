@@ -73,8 +73,16 @@ module Sauce
         end
       end
 
+      # Oh gods why didn't I comment these when I wrote them?
+      # These are what I think I'm doing.
+      #
+      # Returns the browser currently being used or fetches a new
+      # browser, either from the RSpec integration or by creating
+      # one.
       def browser
+        # Return the existing browser if we have it
         unless existing_browser?
+          # Try to get a driver from the driver pool
           @browser = rspec_browser
           unless @browser
             @browser = Sauce::Selenium2.new
@@ -86,6 +94,7 @@ module Sauce
         @browser
       end
 
+      # Returns the rspec created browser if it exists
       def rspec_browser
         if browser = Sauce.driver_pool[Thread.current.object_id]
           @using_rspec_browser = true
@@ -95,6 +104,8 @@ module Sauce
         browser
       end
 
+      # If a browser has been created OR RSpec has put one in the diriver pool
+      # and we're using that browser, returns true.
       def existing_browser?
         if @using_rspec_browser
           @browser == Sauce.driver_pool[Thread.current.object_id]
@@ -106,7 +117,10 @@ module Sauce
       def finish!
         @browser.quit if existing_browser?
         @browser = nil
+
+        # Rethink how to do this.  RSpec still references the driver pool.
         Sauce.driver_pool[Thread.current.object_id] = nil
+        @using_rspec_browser = nil
       end
 
       def render(path)
