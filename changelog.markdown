@@ -1,5 +1,9 @@
 # Changelog
 ## 3.5
+### 3.5.4
+Driver pool objects are now nullified by Capybara in finish! (Thanks @sponte)
+Parent-tunnel added to the capability whitelist
+
 ### 3.5.3
 Correct JSON encoding when strings are sent with incorrect proxy data (Like from Appium).
 
