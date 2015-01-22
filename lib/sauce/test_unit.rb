@@ -3,6 +3,7 @@ require "sauce_whisk"
 
 module Sauce
   module SeleniumForTestUnit
+    include Sauce::TestBase
     attr_reader :browser
 
     alias_method :page, :browser
@@ -36,18 +37,11 @@ module Sauce
           end
         end
 
-        config[:browsers].each do |os, browser, version|
-          options = self.class.sauce_config
-          options.merge!({:os => os, :browser => browser,
-                          :browser_version => version,
-                          :job_name => my_name.to_s})
-          @browser = Sauce::Selenium2.new(options)
-          Sauce.driver_pool[Thread.current.object_id] = @browser
-
+        test_each config[:browsers], my_name.to_s do |selenium, caps|
+          Sauce.driver_pool[Thread.current.object_id] = selenium
           super(*args, &blk)
-
-          SauceWhisk::Jobs.change_status @browser.session_id, passed?
-          @browser.stop
+          SauceWhisk::Jobs.change_status selenium.session_id, passed?
+          selenium.stop
           Sauce.driver_pool.delete Thread.current.object_id
         end
       end
