@@ -1,3 +1,4 @@
+require "forwardable"
 require "sauce/driver_pool"
 
 require "selenium/client"
