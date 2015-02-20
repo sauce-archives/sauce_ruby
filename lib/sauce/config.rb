@@ -427,7 +427,7 @@ It seems you're trying to run your tests in parallel, but haven't configured you
 
 To fix this, add :sauce => true to your specs or make your tests subclasses of Sauce::TestCase or Sauce::RailsTestCase.
 
-For more details check the gem readme at https://github.com/DylanLacey/sauce_ruby/blob/master/README.markdown
+For more details check the gem readme at https://github.com/saucelabs/sauce_ruby/blob/master/README.markdown
       MESSAGE
     end
   end
