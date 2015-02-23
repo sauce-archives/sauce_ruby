@@ -19,6 +19,8 @@ module Sauce
       @timeout = options.fetch(:timeout) { TIMEOUT }
       @config = Sauce::Config.new(options)
       @skip_connection_test = @config[:skip_connection_test]
+      @cli_options = @config[:connect_options]
+      @sc4_executable = @config[:sauce_connect_4_executable]
 
       if @config.username.nil?
         raise ArgumentError, "Username required to launch Sauce Connect. Please set the environment variable $SAUCE_USERNAME"
@@ -64,8 +66,22 @@ module Sauce
         puts "[Connecting to Sauce Labs...]"
 
         formatted_cli_options = array_of_formatted_cli_options_from_hash(cli_options)
-        command_args = [@config.username, @config.access_key] + formatted_cli_options
-        command = "exec #{Sauce::Connect.connect_command} #{command_args.join(' ')} 2>&1"
+
+        command_args = []
+        if @sc4_executable
+          command_args = ['-u', @config.username, '-k', @config.access_key]
+        else
+          command_args = [@config.username, @config.access_key]
+        end
+
+        command_args << formatted_cli_options
+        command = "exec #{connect_command} #{command_args.join(' ')} 2>&1"
+
+        unless @quiet
+          string_arguments = formatted_cli_options.join(' ')
+          puts "[Sauce Connect arguments: '#{string_arguments}' ]"
+        end
+
         @pipe = IO.popen(command)
 
         @process_status = $?
@@ -107,7 +123,7 @@ module Sauce
 
     def cli_options
       cli_options = { readyfile: "sauce_connect.ready" }
-      cli_options.merge!(@config[:connect_options]) if @config.has_key?(:connect_options)
+      cli_options.merge!(@cli_options) if @cli_options
       cli_options
     end
 
@@ -135,12 +151,42 @@ module Sauce
       end
     end
 
-    def self.find_sauce_connect
-      File.expand_path(File.dirname(__FILE__) + '/../../support/Sauce-Connect.jar')
+    # Check the absolute version of the provided path.
+    # Returns true only if the path exists and is executable by the
+    # effective current user.
+    def find_sauce_connect
+      if @sc4_executable and path_is_connect_executable? @sc4_executable
+        File.absolute_path @sc4_executable
+      else
+        File.expand_path(File.dirname(__FILE__) + '/../../support/Sauce-Connect.jar')
+      end
     end
 
-    def self.connect_command
-      "java -jar #{Sauce::Connect.find_sauce_connect}"
+    def connect_command
+      command = "#{command_prefix}#{find_sauce_connect}"
+      return command
+    end
+
+    # SC4 doesn't require a prefix
+    def command_prefix
+      unless @sc4_executable
+        "java -jar "
+      end
+
+      ""
+    end
+
+    def path_is_connect_executable? path
+      absolute_path = File.absolute_path path
+      if File.exist? absolute_path
+        if File.executable? absolute_path
+          true
+        else
+          raise TunnelNotPossibleException "#{absolute_path} is not executable by #{Process.euid}"
+        end
+      else
+        raise TunnelNotPossibleException "#{absolute_path} does not exist"
+      end
     end
 
     # Global Sauce Connect-ness
@@ -168,7 +214,12 @@ module Sauce
     def array_of_formatted_cli_options_from_hash(hash)
       hash.collect do |key, value|
         opt_name = key.to_s.gsub("_", "-")
-        "--#{opt_name}=#{value}"
+        
+        if !@sc4_executable
+          "--#{opt_name}=#{value}"
+        else
+          "--#{opt_name} #{value}"
+        end
       end
     end
 
