@@ -97,7 +97,7 @@ module Sauce
             if line =~ /Tunnel remote VM is (.*) (\.\.|at)/
               @status = $1
             end
-            if line =~/You may start your tests\./
+            if line =~/You may start your tests\./i
               @ready = true
             end
             if line =~ /- (Problem.*)$/
