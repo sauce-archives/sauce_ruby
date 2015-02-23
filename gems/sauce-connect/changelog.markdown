@@ -1,3 +1,6 @@
+# 3.5.1
+Allow for the `sauce_connect_4_executable` config value, allowing a SC 4 executable downloaded separately to be run.
+
 # 3.2.2
 Check if the Sauce Connect servers are accessible before connecting
 
