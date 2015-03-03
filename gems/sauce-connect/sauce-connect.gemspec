@@ -2,7 +2,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../lib/sauce/version')
 Gem::Specification.new do |gem|
   gem.name          = "sauce-connect"
-  gem.version       = "#{Sauce::MAJOR_VERSION}.1"
+  gem.version       = "#{Sauce::MAJOR_VERSION}.2"
   gem.authors       = ["R. Tyler Croy", "Steve Hazel", "Dylan Lacey", "Rick Martínez"]
   gem.email         = ["tyler@monkeypox.org"]
   gem.description   = ""

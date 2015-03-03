@@ -1,3 +1,6 @@
+# 3.5.2
+Modify the successful start regex to be case insensitive.  Thanks @Ricardonacif!
+
 # 3.5.1
 Allow for the `sauce_connect_4_executable` config value, allowing a SC 4 executable downloaded separately to be run.
 
