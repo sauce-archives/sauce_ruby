@@ -7,3 +7,4 @@ gem "rack-test"
 gem 'sauce', :path => '../../../'
 gem 'sauce-connect', :path => '../../../gems/sauce-connect'
 gem 'simplecov'
+gem 'test-unit'
