@@ -63,7 +63,7 @@ module Sauce
       end
 
       if java_is_present?
-        puts "[Connecting to Sauce Labs...]"
+        puts "[Sauce Connect is connecting to Sauce Labs...]"
 
         formatted_cli_options = array_of_formatted_cli_options_from_hash(cli_options)
 
