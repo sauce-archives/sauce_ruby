@@ -25,6 +25,7 @@ Sauce.config do |c|
       ["Windows 2008", "iexplore", "9"]
   ]
 
+  c[:sauce_connect_4_executable] = ENV["SAUCE_CONNECT_4_EXECUTABLE"]
   c[:application_host] = "localhost"
 end
 
