@@ -138,7 +138,9 @@ module Sauce
       end
 
       if !@ready
-        raise "Sauce Connect failed to connect after #{@timeout} seconds"
+        error_message = "Sauce Connect failed to connect after #{@timeout} seconds"
+        error_message << "\n(Using Sauce Connect at #{@sc4_executable}" if @sc4_executable
+        raise error_message
       end
     end
 
