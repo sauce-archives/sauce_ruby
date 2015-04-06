@@ -15,4 +15,6 @@ begin
   end
 rescue LoadError
   # User isn't using RSpec
+rescue NameError
+  # User is using RSpec 3
 end
