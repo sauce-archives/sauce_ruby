@@ -43,7 +43,7 @@ module Sauce
 
       unless response.kind_of? Net::HTTPOK
         $stderr.puts Sauce::Connect.cant_access_rest_api_message
-        raise TunnelNotPossibleException "Couldn't access REST API"
+        raise TunnelNotPossibleException, "Couldn't access REST API"
       end
 
       begin
@@ -184,10 +184,10 @@ module Sauce
         if File.executable? absolute_path
           true
         else
-          raise TunnelNotPossibleException "#{absolute_path} is not executable by #{Process.euid}"
+          raise TunnelNotPossibleException, "#{absolute_path} is not executable by #{Process.euid}"
         end
       else
-        raise TunnelNotPossibleException "#{absolute_path} does not exist"
+        raise TunnelNotPossibleException, "#{absolute_path} does not exist"
       end
     end
 
