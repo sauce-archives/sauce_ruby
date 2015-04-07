@@ -1,5 +1,9 @@
 Changelog
 =========
+3.5.0
+-----
+* Restricted to Cucumber 1.x
+
 3.3.0
 -----
 * Changes to be compatible with latest version of Sauce gem

@@ -17,5 +17,5 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency('sauce', "~> #{Sauce.version}")
   gem.add_dependency('sauce_whisk', "~>0.0.10")
-  gem.add_dependency('cucumber', '>= 1.2.0')
+  gem.add_dependency('cucumber', ['>= 1.2.0', "<2.0.0"])
 end
