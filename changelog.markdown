@@ -1,5 +1,13 @@
 # Changelog
 ## 3.5
+
+### 3.5.5
+Require "Forwardable" in Sauce::Selenium2 (Thanks @biril)
+Drop support for 1.9.3 on Travis and in tests
+Restrict RSpec formatter to RSpec 2 (Must update to support RSpec 3, https://github.com/saucelabs/sauce_ruby/issues/298)
+Edited all tests to use SC4 when run (Specify SAUCE_CONNECT_4_EXECUTABLE on the commandline)
+Update Parallel Tests version to support 1.3.7
+
 ### 3.5.4
 Driver pool objects are now nullified by Capybara in finish! (Thanks @sponte)
 Parent-tunnel added to the capability whitelist
