@@ -1,6 +1,7 @@
 #!/bin/bash --login
-RAKE="bundle exec rake"
+rvm current
 
-bundle install
+RAKE="bundle exec rake"
+bundle update
 
 ${RAKE} spec

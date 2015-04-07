@@ -4,6 +4,7 @@ Sauce.config do |c|
   c[:browsers] = [
       ["Windows 7", "Firefox", "18"]
   ]
+  c[:sauce_connect_4_executable] = ENV["SAUCE_CONNECT_4_EXECUTABLE"]
 end
 
 class IntegrationTest < Sauce::TestCase
