@@ -3,7 +3,7 @@ script: "bundle exec rake"
 test_script: "bundle exec rake test"
 
 rvm:
-  - 1.9.3
+  - 2.0.0
 gemfile:
   - Gemfile
   - gemfiles/capybara-1.0.x.gemfile
