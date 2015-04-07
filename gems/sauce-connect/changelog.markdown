@@ -1,3 +1,6 @@
+# 3.5.3
+Include comma when throwing exception.  Thanks @hawknewton!
+
 # 3.5.2
 Modify the successful start regex to be case insensitive.  Thanks @Ricardonacif!
 
