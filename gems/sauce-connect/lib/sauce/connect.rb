@@ -171,11 +171,7 @@ module Sauce
 
     # SC4 doesn't require a prefix
     def command_prefix
-      unless @sc4_executable
-        "java -jar "
-      end
-
-      ""
+      @sc4_executable ? '' : 'java -jar '
     end
 
     def path_is_connect_executable? path
