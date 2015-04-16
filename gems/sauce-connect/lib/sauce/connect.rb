@@ -172,9 +172,8 @@ module Sauce
     # SC4 doesn't require a prefix
     def command_prefix
       unless @sc4_executable
-        "java -jar "
+        return "java -jar "
       end
-
       ""
     end
 
