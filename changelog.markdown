@@ -1,5 +1,7 @@
 # Changelog
 ## 3.5
+### 3.5.6
+Edit rails_helper.rb instead of spec_helper.rb when present
 
 ### 3.5.5
 Require "Forwardable" in Sauce::Selenium2 (Thanks @biril)
