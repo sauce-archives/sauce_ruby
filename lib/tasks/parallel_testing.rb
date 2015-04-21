@@ -36,9 +36,9 @@ namespace :sauce do
     desc "Set up your specs to run in parallel on Sauce Labs"
     task :spec do
       Rake::Task["sauce:install:create_helper"].execute(:helper_type => :spec)
-      spec_helper_path = "spec/spec_helper.rb"
-      unless File.open(spec_helper_path) { |f| f.read.match "require \"sauce_helper\""}
-        File.open("spec/spec_helper.rb", "a") do |f|
+      helper_path = File.exist?("spec/rails_helper.rb") ? "spec/rails_helper.rb" : "spec/spec_helper.rb"
+      unless File.open(helper_path) { |f| f.read.match "require \"sauce_helper\""}
+        File.open(helper_path, "a") do |f|
           f.write "require \"sauce_helper\""
         end
       else
@@ -50,8 +50,8 @@ namespace :sauce do
 
   Next steps:
 
-  1.  Edit spec/sauce_helper.rb with your required platforms
-  2.  Make sure we've not mangled your spec/spec_helper.rb requiring sauce_helper
+  1.  Edit spec/sauce_helper.rb with your required platforms & Sauce Connect 4 path
+  2.  Make sure we've not mangled your spec/*_helper.rb requiring sauce_helper
   3.  Set the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables
   3.  Run your tests with 'rake sauce:spec'
   --------------------------------------------------------------------------------

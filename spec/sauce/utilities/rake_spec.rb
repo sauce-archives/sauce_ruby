@@ -39,6 +39,7 @@ Sauce.config do |config|
     ["OS", "BROWSER", "VERSION"],
     ["OS", "BROWSER", "VERSION"]
   ]
+  config[:sauce_connect_4_executable] = # path to Sauce Connect 4 executable
 end
     ENDFILE
   end
