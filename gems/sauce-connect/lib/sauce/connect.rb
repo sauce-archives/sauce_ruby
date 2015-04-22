@@ -29,6 +29,10 @@ module Sauce
       if @config.access_key.nil?
         raise ArgumentError, "Access key required to launch Sauce Connect. Please set the environment variable $SAUCE_ACCESS_KEY"
       end
+
+      if @sc4_executable.nil?
+        raise TunnelNotPossibleException, Sauce::Connect.plzGetSC4
+      end
     end
 
     def ensure_connection_is_possible
@@ -54,7 +58,6 @@ module Sauce
         $stderr.puts Sauce::Connect.port_not_open_message
         raise TunnelNotPossibleException, "Couldn't use port 443"
       end
-
     end
 
     def connect
@@ -62,63 +65,54 @@ module Sauce
         ensure_connection_is_possible
       end
 
-      if java_is_present?
-        puts "[Sauce Connect is connecting to Sauce Labs...]"
+      puts "[Sauce Connect is connecting to Sauce Labs...]"
 
-        formatted_cli_options = array_of_formatted_cli_options_from_hash(cli_options)
+      formatted_cli_options = array_of_formatted_cli_options_from_hash(cli_options)
 
-        command_args = []
-        if @sc4_executable
-          command_args = ['-u', @config.username, '-k', @config.access_key]
-        else
-          command_args = [@config.username, @config.access_key]
-        end
+      command_args = ['-u', @config.username, '-k', @config.access_key]
+      command_args << formatted_cli_options
 
-        command_args << formatted_cli_options
-        command = "exec #{connect_command} #{command_args.join(' ')} 2>&1"
+      command = "exec #{find_sauce_connect} #{command_args.join(' ')} 2>&1"
 
-        unless @quiet
-          string_arguments = formatted_cli_options.join(' ')
-          puts "[Sauce Connect arguments: '#{string_arguments}' ]"
-        end
-
-        @pipe = IO.popen(command)
-
-        @process_status = $?
-        at_exit do
-          Process.kill("INT", @pipe.pid)
-          while @ready
-            sleep 1
-          end
-        end
-
-        Thread.new {
-          while( (line = @pipe.gets) )
-            if line =~ /Tunnel remote VM is (.*) (\.\.|at)/
-              @status = $1
-            end
-            if line =~/You may start your tests\./i
-              @ready = true
-            end
-            if line =~ /- (Problem.*)$/
-              @error = $1
-              @quiet = false
-            end
-            if line =~ /== Missing requirements ==/
-              @error = "Missing requirements"
-              @quiet = false
-            end
-            if line =~/Invalid API_KEY provided/
-              @error = "Invalid API_KEY provided"
-              @quiet = false
-            end
-            $stderr.puts line unless @quiet
-          end
-          @ready = false
-        }
-      else
-        raise "Java doesn't seem to be installed.  Sauce Connect requires a working install of Java to proceed."
+      unless @quiet
+        string_arguments = formatted_cli_options.join(' ')
+        puts "[Sauce Connect arguments: '#{string_arguments}' ]"
       end
+
+      @pipe = IO.popen(command)
+
+      @process_status = $?
+      at_exit do
+        Process.kill("INT", @pipe.pid)
+        while @ready
+          sleep 1
+        end
+      end
+
+      Thread.new {
+        while( (line = @pipe.gets) )
+          if line =~ /Tunnel remote VM is (.*) (\.\.|at)/
+            @status = $1
+          end
+          if line =~/You may start your tests\./i
+            @ready = true
+          end
+          if line =~ /- (Problem.*)$/
+            @error = $1
+            @quiet = false
+          end
+          if line =~ /== Missing requirements ==/
+            @error = "Missing requirements"
+            @quiet = false
+          end
+          if line =~/Invalid API_KEY provided/
+            @error = "Invalid API_KEY provided"
+            @quiet = false
+          end
+          $stderr.puts line unless @quiet
+        end
+        @ready = false
+        }
     end
 
     def cli_options
@@ -139,7 +133,7 @@ module Sauce
 
       if !@ready
         error_message = "Sauce Connect failed to connect after #{@timeout} seconds"
-        error_message << "\n(Using Sauce Connect at #{@sc4_executable}" if @sc4_executable
+        error_message << "\n(Using Sauce Connect at #{@sc4_executable}"
         raise error_message
       end
     end
@@ -153,41 +147,24 @@ module Sauce
       end
     end
 
-    # Check the absolute version of the provided path.
-    # Returns true only if the path exists and is executable by the
-    # effective current user.
+    # Check whether the path, or it's bin/sc descendant, exists and is executable
     def find_sauce_connect
-      if @sc4_executable and path_is_connect_executable? @sc4_executable
-        File.absolute_path @sc4_executable
-      else
-        File.expand_path(File.dirname(__FILE__) + '/../../support/Sauce-Connect.jar')
-      end
-    end
+      paths = [@sc4_executable, File.join("#{@sc4_executable}", "bin", "sc")]
 
-    def connect_command
-      command = "#{command_prefix}#{find_sauce_connect}"
-      return command
-    end
-
-    # SC4 doesn't require a prefix
-    def command_prefix
-      unless @sc4_executable
-        return "java -jar "
+      sc_path = paths.find do |path|
+        path_is_connect_executable? path
       end
-      ""
+
+      if sc_path.nil?
+        raise TunnelNotPossibleException, "No executable found at #{sc_path}, or it can't be executed by #{Process.euid}"
+      end
+
+      return File.absolute_path sc_path
     end
 
     def path_is_connect_executable? path
       absolute_path = File.absolute_path path
-      if File.exist? absolute_path
-        if File.executable? absolute_path
-          true
-        else
-          raise TunnelNotPossibleException, "#{absolute_path} is not executable by #{Process.euid}"
-        end
-      else
-        raise TunnelNotPossibleException, "#{absolute_path} does not exist"
-      end
+      return (File.exist? absolute_path) && (File.executable? absolute_path) && !(Dir.exist? absolute_path)
     end
 
     # Global Sauce Connect-ness
@@ -215,18 +192,8 @@ module Sauce
     def array_of_formatted_cli_options_from_hash(hash)
       hash.collect do |key, value|
         opt_name = key.to_s.gsub("_", "-")
-        
-        if !@sc4_executable
-          "--#{opt_name}=#{value}"
-        else
-          "--#{opt_name} #{value}"
-        end
+        return "--#{opt_name} #{value}"
       end
-    end
-
-    def java_is_present?
-      # This is nieve;  Can we be better?
-      system 'java -version'
     end
 
     def self.port_not_open_message
@@ -258,6 +225,17 @@ module Sauce
         
         You can disable network tests by setting :skip_connection_test to true in
         your Sauce.config block.
+      ENDLINE
+    end
+
+    def self.plzGetSC4
+      <<-ENDLINE
+        Using Sauce Connect 3 has been deprecated.  Please set the :sauce_connect_4_executable
+        option in your Sauce.config block to the path of an installation of
+        Sauce Connect 4.
+
+        You can download Sauce Connect 4 for free at
+        http://docs.saucelabs.com/sauce_connect
       ENDLINE
     end
   end
