@@ -30,7 +30,7 @@ module Sauce
         raise ArgumentError, "Access key required to launch Sauce Connect. Please set the environment variable $SAUCE_ACCESS_KEY"
       end
 
-      if @config.sauce_connect_4_executable.nil?
+      if @sc4_executable.nil?
         raise TunnelNotPossibleException, Sauce::Connect.plzGetSC4
       end
     end
@@ -71,7 +71,7 @@ module Sauce
 
       command_args = ['-u', @config.username, '-k', @config.access_key]
       command_args << formatted_cli_options
-      
+
       command = "exec #{find_sauce_connect} #{command_args.join(' ')} 2>&1"
 
       unless @quiet
@@ -147,28 +147,24 @@ module Sauce
       end
     end
 
-    # Check the absolute version of the provided path.
-    # Returns true only if the path exists and is executable by the
-    # effective current user.
+    # Check whether the path, or it's bin/sc descendant, exists and is executable
     def find_sauce_connect
-      if path_is_connect_executable? @sc4_executable
-        File.absolute_path @sc4_executable
-      else
-        rails TunnelNotPossibleException, Sauce::Connect.plzGetSC4
+      paths = [@sc4_executable, File.join("#{@sc4_executable}", "bin", "sc")]
+
+      sc_path = paths.find do |path|
+        path_is_connect_executable? path
       end
+
+      if sc_path.nil?
+        raise TunnelNotPossibleException, "No executable found at #{sc_path}, or it can't be executed by #{Process.euid}"
+      end
+
+      return File.absolute_path sc_path
     end
 
     def path_is_connect_executable? path
       absolute_path = File.absolute_path path
-      if File.exist? absolute_path
-        if File.executable? absolute_path
-          true
-        else
-          raise TunnelNotPossibleException, "#{absolute_path} is not executable by #{Process.euid}"
-        end
-      else
-        raise TunnelNotPossibleException, "#{absolute_path} does not exist"
-      end
+      return (File.exist? absolute_path) && (File.executable? absolute_path) && !(Dir.exist? absolute_path)
     end
 
     # Global Sauce Connect-ness
