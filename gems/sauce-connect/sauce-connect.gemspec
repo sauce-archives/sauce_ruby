@@ -23,7 +23,7 @@ Gem::Specification.new do |gem|
 
   Then, set the 'sauce_connect_4_executable' key in your Sauce.config block, to
   the path of the unzipped file's /bin/sc.
-  <<ENDLINE
+  ENDLINE
 
   gem.requirements << 'An account at http://www.saucelabs.com'
   gem.requirements << 'A working copy of Sauce Connect from https://docs.saucelabs.com/reference/sauce-connect'
