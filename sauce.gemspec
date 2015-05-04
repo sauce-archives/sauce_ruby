@@ -3,13 +3,13 @@
 require File.expand_path('../lib/sauce/version', __FILE__)
 
 Gem::Specification.new do |s|
-  s.name = 'sauce'
+  s.name = 'sauce_ruby'
   s.version = "#{Sauce.version}"
   s.authors = ["Dylan Lacey", "Steven Hazel", "R. Tyler Croy", "Santiago Suarez Ordoñez", "Eric Allen", "Sean Grove", "Isaac Murchie"]
   s.homepage = 'http://github.com/sauce-labs/sauce_ruby'
   s.email = 'help@saucelabs.com'
-  s.summary = "A Ruby helper for running tests in Sauce Labs"
-  s.description = "A Ruby helper for running tests in Sauce Labs' browser testing cloud service"
+  s.summary = "Fork of the sauce Ruby gem"
+  s.description = "Fork of the sauce Ruby gem"
   s.license = 'Apache 2.0'
   # Include pretty much everything in Git except the examples/ directory
   s.files = Dir['lib/**/*.rb'] + Dir['lib/**/**/*.rb']
