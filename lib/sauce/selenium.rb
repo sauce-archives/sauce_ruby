@@ -28,12 +28,18 @@ module Selenium
   end
 end
 
+module Sauce
+  class << self
+    attr_accessor :webdriver_method
+  end
+  @webdriver_method = lambda { |*args| ::Selenium::WebDriver.for *args }
+end
 
 module Sauce
   class Selenium2
     extend Forwardable
 
-    attr_reader :config, :driver
+    attr_reader :config, :driver, :watir, :raw_driver
 
     def_delegator :@driver, :execute_script
 
@@ -50,13 +56,16 @@ module Sauce
       http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new
       http_client.timeout = 300 # Browser launch can take a while
 
-      @driver = ::Selenium::WebDriver.for(:remote,
+      @driver = Sauce.webdriver_method.call(:remote,
                       :url => "http://#{@config.username}:#{@config.access_key}@#{@config.host}:#{@config.port}/wd/hub",
                       :desired_capabilities => @config.to_desired_capabilities,
                       :http_client => http_client)
       http_client.timeout = 90 # Once the browser is up, commands should time out reasonably
 
-      @driver.file_detector = lambda do |args|
+      @watir = defined?(Watir::Browser) && @driver.is_a?(Watir::Browser)
+      @raw_driver = watir ? @driver.driver : @driver
+
+      raw_driver.file_detector = lambda do |args|
         file_path = args.first.to_s
         File.exist?(file_path) ? file_path : false
       end
@@ -69,11 +78,11 @@ module Sauce
     end
 
     def session_id
-      @driver.send(:bridge).session_id
+      raw_driver.send(:bridge).session_id
     end
 
     def current_url
-      @driver.current_url
+      raw_driver.current_url
     end
 
     def stop
