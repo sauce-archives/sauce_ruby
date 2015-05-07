@@ -1,4 +1,4 @@
-require 'webmock/config'
+require 'webmock'
 
 config = WebMock::Config.instance
 
