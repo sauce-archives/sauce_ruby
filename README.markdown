@@ -84,14 +84,14 @@ We recommend, however, the use of Capybara for your tests.
 If it guesses you're in a Rails project, the gem will spin up your Rails server (because it's needed for tests);  If you're using a separate server, or your specs already start one, you can prevent this in your Sauce Config:
 
 ```ruby
-Sauce.config do |c|
-  c[:start_local_application => false]
+Sauce.config do |config|
+  config[:start_local_application] = false
 end
 ```
 
 #### Run tests locally or remotely
 
-A suggestion of how to run tests locally or remotely is available at the [Swappable Sauce](https://github.com/saucelabs/sauce_ruby/wiki/_preview) wiki page.
+A suggestion of how to run tests locally or remotely is available at the [Swappable Sauce](https://github.com/saucelabs/sauce_ruby/wiki/Swappable-Sauce) wiki page.
 
 ### Capybara
 The gem provides a Capybara driver that functions mostly the same as the existing Selenium driver.
@@ -186,8 +186,8 @@ The `browsers` array from `Sauce.config` takes individual arrays, each represent
 
 ```ruby
 ## Somewhere loaded by your test harness -- spec/sauce_helper or features/support/sauce_helper.rb
-Sauce.config do |c|
-  c.browsers = [
+Sauce.config do |config|
+  config[:browsers] = [
     ["Windows 7","Firefox","18"],
     ["Windows 7","Opera","11"]
   ]
@@ -212,13 +212,13 @@ caps['version'] = '39.0'
 All the standard Selenium & Sauce capabilities are accessible from the Sauce.config block.  Some filtering is done to exclude nonsense caps.  If you need to add a capability that's not already allowed (those in `Sauce::Config::SAUCE_OPTIONS`), you can add it to the whitelist:
 
 ```ruby
-Sauce.config do |c|
+Sauce.config do |config|
   # Build is already allowed
-  c[:build] => "9001AMeme"
+  config[:build] => "9001AMeme"
 
   # Shiny is not allowed yet
   c.whitelist 'shiny'
-  c['shiny'] => "Something"
+  config['shiny'] = "Something"
 end
 ```
 
@@ -226,8 +226,8 @@ end
 To set a capability for a single platform, add it as a hash to the end of the platform's array:
 
 ```ruby
-Sauce.config do |c|
-  c.browsers = [
+Sauce.config do |config|
+  config.browsers = [
     ["Windows 7", "Firefox", "18"],
     ["Windows 7", "Chrome", 30, {:build => 'ChromeTastic'}]
   ]
@@ -289,8 +289,8 @@ Sauce Connect is started by default, spinning up a tunnel prior to your tests an
 To disable Sauce Connect, set `start-tunnel` to false in your Sauce.config block:
 
 ```ruby
-Sauce.config do |c|
-  c[:start_tunnel] = false
+Sauce.config do |config|
+  config[:start_tunnel] = false
 end
 ```
 
@@ -340,6 +340,14 @@ Running the full test suite will require [RVM](http://rvm.beginrescueend.com)
   integration tests, but requires the Sauce credentials to be set up properly
   as these tests will run actual jobs on Sauce.
 
+### Rakefile
+
+If you see `Exception occured: uninitialized constant Sauce::RSpec::Spec` when requiring the sauce gem in the Rakefile, make sure to require bundler/setup.
+
+```ruby
+require 'bundler/setup'
+require 'sauce'
+```
 
 ## References
 * [Cucumber](https://www.cukes.info)     -- Cucumber, the only BDD Framework that doesn't suck.
