@@ -192,7 +192,7 @@ module Sauce
     def array_of_formatted_cli_options_from_hash(hash)
       hash.collect do |key, value|
         opt_name = key.to_s.gsub("_", "-")
-        return "--#{opt_name} #{value}"
+        "--#{opt_name} #{value}"
       end
     end
 
