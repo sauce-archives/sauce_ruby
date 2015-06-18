@@ -3,7 +3,7 @@ Changelog
 3.5
 -----
 
-3.5.1
+3.5.2
 -----
 * Corrected platform output under Jenkins with Parallel Testing.
 
