@@ -1,5 +1,12 @@
 Changelog
 =========
+3.5
+-----
+
+3.5.1
+-----
+* Corrected platform output under Jenkins with Parallel Testing.
+
 3.5.0
 -----
 * Restricted to Cucumber 1.x

@@ -114,10 +114,14 @@ module Sauce
             # JUnit formatter seems to do the same, so in order to get the sauce
             # OnDemand plugin for Jenkins to co-operate, we need to double it up as
             # well
+            browser = caps[:browser]
+            version = caps[:browser_version]
+            os = caps[:os]
+
             job_name = "job-name=#{Sauce::Capybara::Cucumber.jenkins_name_from_scenario(scenario)}"
-            job_name << " (#{browser} #{version} on #{os}" if ENV["TEST_ENV_NUMBER"]
             output << job_name
             puts output.join(' ')
+            puts " (#{browser} #{version} on #{os})" if ENV["TEST_ENV_NUMBER"]
           end
 
           job = SauceWhisk::Job.new('id' => session_id,
