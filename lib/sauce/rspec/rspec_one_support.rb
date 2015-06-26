@@ -3,6 +3,9 @@ require "sauce_whisk"
 
 begin
   require 'spec'
+  # any gem could export a require as 'spec' so we must explicitly check
+  # to see if the expected rspec 1 class has loaded.
+  raise LoadError unless defined?(Spec::Example::ExampleGroup)
   module Sauce
     module RSpec
       class SeleniumExampleGroup < Spec::Example::ExampleGroup
@@ -41,7 +44,7 @@ begin
             @selenium = Sauce::Selenium2.new({:os => os, :browser => browser,
                                               :browser_version => version,
                                               :job_name => description})
-            
+
             begin
               success = super(*args)
               SauceWhisk::Jobs.change_status @selenium.session_id, success
