@@ -179,7 +179,8 @@ end
 begin
   cucumber_ast_module = Cucumber::VERSION >= '2.0.0' ? Cucumber::Core::Ast : Cucumber::Ast
   cucumber_ast_module.module_exec do
-    class Scenario
+
+    const_get(:Scenario).class_exec do
       def sauce_public_link
         @sauce_public_link ||= ""
       end
@@ -189,7 +190,7 @@ begin
       end
     end
 
-    class OutlineTable::ExampleRow
+    const_get(:OutlineTable).const_get(:ExampleRow).class_exec do
       def sauce_public_link
         @sauce_public_link ||= ""
       end
