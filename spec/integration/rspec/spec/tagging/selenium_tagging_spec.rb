@@ -3,7 +3,7 @@ require "sauce"
 require "sauce/connect"
 
 Sauce.config do |c|
-  c.browsers = [
+  c:[browsers] = [
       ["Windows 2008", "iexplore", "9"],
       ["Linux", "opera", 12]
   ]
