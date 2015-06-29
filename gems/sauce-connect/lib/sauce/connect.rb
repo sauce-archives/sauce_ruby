@@ -91,7 +91,7 @@ module Sauce
 
       Thread.new {
         while( (line = @pipe.gets) )
-          if line =~ /Tunnel remote VM is (.*) (\.\.|at)/
+          if line =~ /remote tunnel VM is now: (.*)/
             @status = $1
           end
           if line =~/You may start your tests\./i
