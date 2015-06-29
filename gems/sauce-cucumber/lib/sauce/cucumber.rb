@@ -177,26 +177,25 @@ end
 
 
 begin
-  module Cucumber
-    module Ast
-      class Scenario
-        def sauce_public_link
-          @sauce_public_link ||= ""
-        end
-
-        def sauce_public_link=(link)
-          @sauce_public_link = link
-        end
+  cucumber_ast_module = Cucumber::VERSION >= '2.0.0' ? Cucumber::Core::Ast : Cucumber::Ast
+  cucumber_ast_module.module_exec do
+    class Scenario
+      def sauce_public_link
+        @sauce_public_link ||= ""
       end
 
-      class OutlineTable::ExampleRow
-        def sauce_public_link
-          @sauce_public_link ||= ""
-        end
+      def sauce_public_link=(link)
+        @sauce_public_link = link
+      end
+    end
 
-        def sauce_public_link=(link)
-          @sauce_public_link = link
-        end
+    class OutlineTable::ExampleRow
+      def sauce_public_link
+        @sauce_public_link ||= ""
+      end
+
+      def sauce_public_link=(link)
+        @sauce_public_link = link
       end
     end
   end
