@@ -1,5 +1,5 @@
 #!/bin/bash --login
-rvm current
+gem install bundler
 
 RAKE="bundle exec rake"
 bundle update
