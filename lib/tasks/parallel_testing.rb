@@ -72,6 +72,7 @@ namespace :sauce do
 end
 
 def run_parallel_tests(t, args, command)
+  WebMock.disable! if ENV['DISABLE_WEBMOCK'] == 'true'
   if ParallelTests.number_of_running_processes == 0
     username    = ENV["SAUCE_USERNAME"].to_s
     access_key  = ENV["SAUCE_ACCESS_KEY"].to_s
