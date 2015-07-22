@@ -3,6 +3,10 @@ Changelog
 3.5
 -----
 
+3.5.3
+-----
+* Allow Cucumber 2 (Thanks @felixclack!)
+
 3.5.2
 -----
 * Corrected platform output under Jenkins with Parallel Testing.
