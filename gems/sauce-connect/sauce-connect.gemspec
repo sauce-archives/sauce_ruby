@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency('sauce', "~> #{Sauce::MAJOR_VERSION}")
+  gem.add_development_dependency('rspec', "~>3.3.0")
 
   gem.post_install_message = <<-ENDLINE
   To use the Sauce Connect gem, you'll need to download the appropriate
