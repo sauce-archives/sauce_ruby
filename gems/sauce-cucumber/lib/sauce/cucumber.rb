@@ -145,7 +145,15 @@ module Sauce
           driver.finish!
 
           unless job.nil?
-            job.passed = !scenario.failed?
+            if scenario.failed?
+              job.passed = false
+            
+            # Cuke scenarios with 'Pending' steps are marked 'Passed' by Cucumber
+            # So if they're not 'failed' but are excepted, they're 'pending' so we 
+            # don't want to change the status.
+            elsif !scenario.exception
+              job.passed = true
+            end
             job.save
           end
 
