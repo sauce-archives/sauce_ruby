@@ -70,7 +70,7 @@ module Sauce
       formatted_cli_options = array_of_formatted_cli_options_from_hash(cli_options)
 
       command_args = ['-u', @config.username, '-k', @config.access_key]
-      command_args << formatted_cli_options
+      command_args += formatted_cli_options
 
       command = "exec #{find_sauce_connect} #{command_args.join(' ')} 2>&1"
 
@@ -192,7 +192,7 @@ module Sauce
     def array_of_formatted_cli_options_from_hash(hash)
       hash.collect do |key, value|
         opt_name = key.to_s.gsub("_", "-")
-        return "--#{opt_name} #{value}"
+        "--#{opt_name} '#{value}'"
       end
     end
 
