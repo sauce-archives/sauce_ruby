@@ -2,7 +2,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../lib/sauce/version')
 Gem::Specification.new do |gem|
   gem.name          = "sauce-connect"
-  gem.version       = "3.6.0"
+  gem.version       = "3.6.1"
   gem.authors       = ["R. Tyler Croy", "Steve Hazel", "Dylan Lacey", "Rick Martínez"]
   gem.email         = ["tyler@monkeypox.org"]
   gem.description   = "A wrapper to start and stop a Sauce Connect tunnel programatically."

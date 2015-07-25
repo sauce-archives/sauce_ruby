@@ -1,4 +1,7 @@
 # 3.6
+## 3.6.1
+Allow for non-argument SC flags by passing :flag => nil
+
 ## 3.6.0
 Removed SC3 functionality entirely.
 
