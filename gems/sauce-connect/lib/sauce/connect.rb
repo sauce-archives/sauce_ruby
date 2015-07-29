@@ -16,9 +16,6 @@ module Sauce
       @ready = false
       @status = "uninitialized"
       @error = nil
-      @quiet = options[:quiet]
-      @timeout = options.fetch(:timeout) { TIMEOUT }
-      @skip_connection_test = @config[:skip_connection_test]
 
       error_on_missing_creds
       error_on_missing_executable
@@ -31,6 +28,9 @@ module Sauce
       @access_key = options[:access_key]
       @cli_options = options[:cli_options]
       @sc4_executable = options[:sauce_connect_4_executable]
+      @skip_connection_test = options[:skip_connection_test]
+      @quiet = options[:quiet]
+      @timeout = options.fetch(:timeout) { TIMEOUT }
 
       if options.fetch(:skip_sauce_config, false)
         @config = Sauce::Config.new(options)
@@ -38,6 +38,7 @@ module Sauce
         @access_key ||= @config.access_key
         @cli_options ||= @config[:connect_options]
         @sc4_executable ||= @config[:sauce_connect_4_executable]
+        @skip_connection_test = @config[:skip_connection_test]  
       end
     end
 
