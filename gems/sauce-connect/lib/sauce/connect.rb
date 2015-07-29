@@ -20,13 +20,7 @@ module Sauce
       @timeout = options.fetch(:timeout) { TIMEOUT }
       @skip_connection_test = @config[:skip_connection_test]
 
-      if @username.nil?
-        raise ArgumentError, "Username required to launch Sauce Connect. Please set the environment variable $SAUCE_USERNAME"
-      end
-
-      if @access_key.nil?
-        raise ArgumentError, "Access key required to launch Sauce Connect. Please set the environment variable $SAUCE_ACCESS_KEY"
-      end
+      warn_on_missing_creds
 
       if @sc4_executable.nil?
         raise TunnelNotPossibleException, Sauce::Connect.plzGetSC4
@@ -47,6 +41,16 @@ module Sauce
         @access_key ||= @config.access_key
         @cli_options ||= @config[:connect_options]
         @sc4_executable ||= @config[:sauce_connect_4_executable]
+      end
+    end
+
+    def warn_on_missing_creds
+      if @username.nil?
+        raise ArgumentError, "Username required to launch Sauce Connect. Please set the environment variable $SAUCE_USERNAME"
+      end
+
+      if @access_key.nil?
+        raise ArgumentError, "Access key required to launch Sauce Connect. Please set the environment variable $SAUCE_ACCESS_KEY"
       end
     end
 
