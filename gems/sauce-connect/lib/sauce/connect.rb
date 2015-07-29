@@ -10,6 +10,7 @@ module Sauce
     TIMEOUT = 90
 
     attr_reader :status, :error
+    attr_accessor :username, :access_key
 
     def initialize(options={})
       @ready = false
@@ -17,21 +18,35 @@ module Sauce
       @error = nil
       @quiet = options[:quiet]
       @timeout = options.fetch(:timeout) { TIMEOUT }
-      @config = Sauce::Config.new(options)
       @skip_connection_test = @config[:skip_connection_test]
-      @cli_options = @config[:connect_options]
-      @sc4_executable = @config[:sauce_connect_4_executable]
 
-      if @config.username.nil?
+      if @username.nil?
         raise ArgumentError, "Username required to launch Sauce Connect. Please set the environment variable $SAUCE_USERNAME"
       end
 
-      if @config.access_key.nil?
+      if @access_key.nil?
         raise ArgumentError, "Access key required to launch Sauce Connect. Please set the environment variable $SAUCE_ACCESS_KEY"
       end
 
       if @sc4_executable.nil?
         raise TunnelNotPossibleException, Sauce::Connect.plzGetSC4
+      end
+    end
+
+    # extract options from the options hash with highest priority over Sauce.config
+    # but fall back on Sauce.config otherwise
+    def extract_config options
+      @username = options[:username]
+      @access_key = options[:access_key]
+      @cli_options = options[:cli_options]
+      @sc4_executable = options[:sauce_connect_4_executable]
+
+      if options.fetch(:skip_sauce_config, false)
+        @config = Sauce::Config.new(options)
+        @username ||= @config.username
+        @access_key ||= @config.access_key
+        @cli_options ||= @config[:connect_options]
+        @sc4_executable ||= @config[:sauce_connect_4_executable]
       end
     end
 
