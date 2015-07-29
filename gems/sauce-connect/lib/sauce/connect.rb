@@ -20,7 +20,7 @@ module Sauce
       @timeout = options.fetch(:timeout) { TIMEOUT }
       @skip_connection_test = @config[:skip_connection_test]
 
-      warn_on_missing_creds
+      error_on_missing_creds
       error_on_missing_executable
     end
 
@@ -41,7 +41,7 @@ module Sauce
       end
     end
 
-    def warn_on_missing_creds
+    def error_on_missing_creds
       if @username.nil?
         raise ArgumentError, "Username required to launch Sauce Connect. Please set the environment variable $SAUCE_USERNAME"
       end
