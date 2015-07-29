@@ -59,11 +59,11 @@ module Sauce
 
     def ensure_connection_is_possible
       $stderr.puts "[Checking REST API is contactable...]" unless @quiet
-      uri = URI("http://saucelabs.com/rest/v1/#{@config[:username]}/tunnels")
+      uri = URI("http://saucelabs.com/rest/v1/#{@username}/tunnels")
       
       response = Net::HTTP.start(uri.host, uri.port) do |http|
         request = Net::HTTP::Get.new uri.request_uri
-        request.basic_auth(@config[:username], @config[:access_key])
+        request.basic_auth(@username, @access_key)
         response = http.request request
       end
 
@@ -91,7 +91,7 @@ module Sauce
 
       formatted_cli_options = array_of_formatted_cli_options_from_hash(cli_options)
 
-      command_args = ['-u', @config.username, '-k', @config.access_key]
+      command_args = ['-u', @username, '-k', @access_key]
       command_args << formatted_cli_options
 
       command = "exec #{find_sauce_connect} #{command_args.join(' ')} 2>&1"
