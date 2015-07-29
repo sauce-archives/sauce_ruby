@@ -21,10 +21,7 @@ module Sauce
       @skip_connection_test = @config[:skip_connection_test]
 
       warn_on_missing_creds
-
-      if @sc4_executable.nil?
-        raise TunnelNotPossibleException, Sauce::Connect.plzGetSC4
-      end
+      error_on_missing_executable
     end
 
     # extract options from the options hash with highest priority over Sauce.config
@@ -51,6 +48,12 @@ module Sauce
 
       if @access_key.nil?
         raise ArgumentError, "Access key required to launch Sauce Connect. Please set the environment variable $SAUCE_ACCESS_KEY"
+      end
+    end
+
+    def error_on_missing_executable
+      if @sc4_executable.nil?
+        raise TunnelNotPossibleException, Sauce::Connect.plzGetSC4
       end
     end
 
