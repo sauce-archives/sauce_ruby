@@ -1,4 +1,7 @@
 # 3.6
+## 3.6.2
+Allow for Sauce gem to not be present.  Sadly still required as a dependency.
+
 ## 3.6.1
 Allow for non-argument SC flags by passing :flag => nil
 
