@@ -2,6 +2,9 @@ Changelog
 =========
 3.5
 -----
+3.5.4
+-----
+* Don't report unfinished tests as "passed".
 
 3.5.3
 -----
