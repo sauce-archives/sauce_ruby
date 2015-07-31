@@ -26,6 +26,9 @@ SAUCE_ACCESS_KEY = Your Access Key, found on the lower left of your Account page
 
 If environment variables aren't your thing, check out the [(in)Complete guide to Configuration](https://github.com/saucelabs/sauce_ruby/wiki/Configuration----The-\(in\)Complete-Guide) for other options.
 
+### Appium Tests
+The Sauce gem does not currently support WebDriver 3.0 style capabilities correctly.  This means that the gem can not be used to run tests against sessions using Appium 1.0 and above, including mobile browser tests.
+
 ### RSpec
 ```bash
 $ bundle exec rake sauce:install:spec
