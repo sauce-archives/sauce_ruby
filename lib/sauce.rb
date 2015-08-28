@@ -17,6 +17,8 @@ require 'sauce/test_unit'
 require 'parallel_tests/saucerspec/runner'
 require 'parallel_tests/saucecucumber/runner'
 
+require 'logger'
+
 
 # Ruby before 1.9.3-p382 does not handle exit codes correctly when nested
 if RUBY_VERSION == "1.9.3" && RUBY_PATCHLEVEL < 392
@@ -30,4 +32,20 @@ if RUBY_VERSION == "1.9.3" && RUBY_PATCHLEVEL < 392
       end
     end
   end
+end
+
+def self.logger=(logger)
+  @logger = logger
+end
+
+def self.logger
+  @logger ||= default_logger
+end
+
+private
+
+def self.default_logger
+  log = ::Logger.new(STDOUT)
+  log.level = Logger::WARN
+  log
 end
