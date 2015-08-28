@@ -8,6 +8,8 @@ module Sauce
 
       def self.start_if_required(config)
         if config[:start_local_application] && self.is_rails_app?
+          Sauce.logger.debug "App is a Rails app and config[:start_local_application] was trueish."
+          Sauce.logger.info "#{Thread.current.object_id} - Starting Rails app server."
           server = new
           server.start
 
@@ -75,19 +77,22 @@ module Sauce
         wait_for_server_on_port(@port)
 
         at_exit do
+          Sauce.logger.debug "#{Thread.current.object_id} - At exit hook called in Sauce::Utilities::RailsServer."
+          Sauce.logger.info "Stopping Rails App Server."
           @server.stop(3, "INT")
           RailsServer.server_pool.delete Thread.current.object_id
         end
-        STDERR.puts "Rails server running!"
+        Sauce.logger.info "Rails server running!"
 
         RailsServer.server_pool[Thread.current.object_id] = @server
       end
 
       def stop
+        Sauce.logger.debug "#{Thread.current.object_id} - Stopping Rails app server with #stop method."
         begin
           @server.stop(3, "INT")
         rescue
-          STDERR.puts "Rails server could not be killed. Did it fail to start?"
+          Sauce.logger.error "#{Thread.current.object_id} - Rails server could not be killed. Did it fail to start?"
         end
       end
     end

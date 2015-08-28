@@ -34,12 +34,15 @@ begin
       end
 
       def self.start_tools_for_sauce_tag
+        Sauce.logger.debug "Starting Tooling for 'sauce' tagged tests"
         config = Sauce::Config.new
         if config[:start_tunnel]
+          Sauce.logger.debug " - Sauce Connect"
           Sauce::Utilities::Connect.start_from_config(config)
         end
 
         unless self.server
+          Sauce.logger.debug " - Rails Server"
           self.server= Sauce::Utilities::RailsServer.start_if_required(config)
         end
       end

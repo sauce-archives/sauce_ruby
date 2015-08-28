@@ -12,6 +12,7 @@ module Sauce
 
       def self.start(options={})
         begin
+          Sauce.logger.debug "Requiring Sauce Connect gem."
           require "sauce/connect"
         rescue LoadError => e
           STDERR.puts 'Please install the `sauce-connect` gem if you intend on using Sauce Connect with your tests!'
@@ -20,13 +21,17 @@ module Sauce
 
         options[:timeout] = TIMEOUT unless options[:timeout]
         if ParallelTests.first_process?
+          Sauce.logger.debug "#{Thread.current.object_id} - First parallel process attempting to start Sauce Connect."
           unless @tunnel
             @tunnel = Sauce::Connect.new options
             @tunnel.connect
             @tunnel.wait_until_ready
+          else
+            Sauce.logger.warn "#{Thread.current.object_id} - Tunnel already existed somehow."
           end
           @tunnel
         else
+          Sauce.logger.debug "#{Thread.current.object_id} - Waiting for a Sauce Connect tunnel to be ready."
           timeout_after = Time.now + options[:timeout]
           # Ensure first process has a change to start up
           sleep 5
@@ -42,7 +47,9 @@ module Sauce
       def self.close
         if @tunnel
           if ParallelTests.first_process?
+            Sauce.logger.debug "#{Thread.current.object_id} - First parallel process waiting for other processes before closing Sauce Connect."
             ParallelTests.wait_for_other_processes_to_finish
+            Sauce.logger.debug "#{Thread.current.object_id} - All other parallel processes closed - Closing Sauce Connect tunnel #{@tunnel}."
             @tunnel.disconnect
             @tunnel = nil
           end
