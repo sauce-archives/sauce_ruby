@@ -56,12 +56,18 @@ begin
         running_selenium_specs = files_to_run.any? {|file| file =~ /spec\/selenium\//}
         need_tunnel = running_selenium_specs && config[:application_host]
 
+        if running_selenium_specs
+          Sauce.logger.debug "Starting Tooling for Selenium directory tests"
+        end
+
         if need_tunnel && config[:start_tunnel]
+          Sauce.logger.debug " - Sauce Connect"
           Sauce::Utilities::Connect.start_from_config(config)
         end
 
         if running_selenium_specs
           unless self.server
+            Sauce.logger.debug " - Rails Server"
             self.server= Sauce::Utilities::RailsServer.start_if_required(config)
           end
         end
@@ -121,6 +127,7 @@ begin
         end
 
         def self.included(othermod)
+          Sauce.logger.debug "Sauce RSpec module was included by #{othermod.id}"
           othermod.around do |the_test|
             config = Sauce::Config.new
             description = the_test.metadata[:full_description]
@@ -128,6 +135,7 @@ begin
             exceptions = {}
             test_each config.caps_for_location(file), description do |selenium, caps|
 
+              Sauce.logger.debug "Running RSpec test for #{file} with #{caps}."
               example = SeleniumExampleGroup.current_example.call(self)
               example.instance_variable_set(:@exception, nil)
               
@@ -136,6 +144,7 @@ begin
               example.metadata[:sauce_public_link] = SauceWhisk.public_link(@selenium.session_id)
 
               begin
+                Sauce.logger.debug "About to initiate test #{the_test}"
                 the_test.run
                 success = example.exception.nil?
               ensure
@@ -150,8 +159,8 @@ begin
                   platform = {:os => os, :browser => browser, :version => version}
                   config.run_post_job_hooks(@selenium.session_id, platform, description, success)
                 rescue Exception => e
-                  STDERR.puts "Error running post job hooks"
-                  STDERR.puts e
+                  Sauce.logger.error "Error running post job hooks"
+                  Sauce.logger.error e
                 end
                 Sauce.driver_pool.delete Thread.current.object_id
               end
@@ -182,8 +191,9 @@ begin
     end
   end
 rescue LoadError, TypeError
+  Sauce.logger.debug "Failed to require #{__FILE__} - Likely RSpec 2+ isn't present."
   # User doesn't have RSpec 2.x installed
 rescue => e
-  STDERR.puts "Exception caught: #{e.to_s}"
+  Sauce.logger.debug "Exception caught when including #{__FILE__}: #{e.to_s}"
   exit 1
 end
