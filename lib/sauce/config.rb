@@ -294,7 +294,11 @@ module Sauce
     end
 
     def run_post_job_hooks(job_id, platform, job_name, job_success)
+      Sauce.logger.debug "Running post job hook for #{job_id}"
+      Sauce.logger.debug " - Job name #{job_name}"
+      Sauce.logger.debug " - Successful? #{job_success}"
       @opts[:after_job_hooks].each do |key, hook|
+        Sauce.logger.debug "Running #{hook}"
         hook.call job_id, platform, job_name, job_success
       end
     end
