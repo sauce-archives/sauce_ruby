@@ -60,6 +60,7 @@ module Sauce
                       :url => "http://#{@config.username}:#{@config.access_key}@#{@config.host}:#{@config.port}/wd/hub",
                       :desired_capabilities => @config.to_desired_capabilities,
                       :http_client => http_client)
+      Sauce.logger.debug "Thread {Thread.current.object_id} created driver #{@driver.session_id}"
       http_client.timeout = 90 # Once the browser is up, commands should time out reasonably
 
       @watir = defined?(Watir::Browser) && @driver.is_a?(Watir::Browser)
@@ -86,7 +87,9 @@ module Sauce
     end
 
     def stop
+      Sauce.logger.debug "Thread {Thread.current.object_id} quitting driver #{@driver.session_id}"
       @driver.quit
+      Sauce.logger.debug "Thread {Thread.current.object_id} has quit driver #{@driver.session_id}"
     end
   end
 end

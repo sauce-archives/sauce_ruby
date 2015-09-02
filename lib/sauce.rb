@@ -34,18 +34,20 @@ if RUBY_VERSION == "1.9.3" && RUBY_PATCHLEVEL < 392
   end
 end
 
-def self.logger=(logger)
-  @logger = logger
-end
+module Sauce
+  def self.logger=(logger)
+    @logger = logger
+  end
 
-def self.logger
-  @logger ||= default_logger
-end
+  def self.logger
+    @logger ||= default_logger
+  end
 
-private
+  private
 
-def self.default_logger
-  log = ::Logger.new(STDOUT)
-  log.level = Logger::WARN
-  log
+  def self.default_logger
+    log = ::Logger.new(STDOUT)
+    log.level = Logger::WARN
+    log
+  end
 end
