@@ -55,7 +55,7 @@ If you are using Capybara and are seeing this message, check the Capybara README
           tests = 'features'
           runner = 'Cucumber'
           tag = '@selenium'
-        else :rspec
+        else
           tests = 'specs'
           runner = 'RSpec'
           tag = ':sauce => true'
