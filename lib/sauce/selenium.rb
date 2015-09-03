@@ -70,7 +70,6 @@ module Sauce
         File.exist?(file_path) ? file_path : false
       end
 
-      STDERR.puts "Class of double is #{@driver.class}"
       Sauce.logger.debug "Thread {Thread.current.object_id} created driver #{raw_driver.session_id}"
       Sauce::Selenium2.used_at_least_once
     end
