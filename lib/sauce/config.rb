@@ -74,7 +74,9 @@ module Sauce
 
     def self.get_application_port
       port_index = ENV["TEST_ENV_NUMBER"].to_i
-      return POTENTIAL_PORTS[port_index]
+      port_to_use = POTENTIAL_PORTS[port_index]
+      Sauce.logger.info "Requesting server use port #{port_to_use}"
+      return port_to_use
     end
 
     def self.called_from_integrations?
@@ -82,6 +84,7 @@ module Sauce
     end
 
     def self.called_from_integrations
+      Sauce.logger.debug "Sauce config accessed from an integration"
       @called_from_integrations = true
     end
 
@@ -153,6 +156,7 @@ module Sauce
     end
 
     def whitelist capability
+      Sauce.logger.info "Whitelisting #{capability}"
       cap = capability.to_s
       wl = whitelisted_capabilities || Set.new
       @whitelisted_capabilities = wl.add cap
@@ -337,6 +341,7 @@ module Sauce
     def load_options_from_heroku
       @@heroku_environment ||= begin
         if File.exists?(File.expand_path('~/.heroku'))
+          Sauce.logger.debug "Heroku config found."
           heroku_app = ENV['SAUCE_HEROKU_APP']
           cmd = "heroku config #{heroku_app ? "--app #{heroku_app}": ''}"
           cmd += "--shell 2>/dev/null"
@@ -370,6 +375,7 @@ module Sauce
 
         paths.each do |path|
             if File.exist? path
+                Sauce.debug.info "Loading Sauce config from yaml file at #{path}"
                 conf = YAML.load_file(path)
                 return conf.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
             end
