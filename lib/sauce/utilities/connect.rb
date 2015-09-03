@@ -35,12 +35,13 @@ module Sauce
           timeout_after = Time.now + options[:timeout]
           # Ensure first process has a change to start up
           sleep 5
+          readyfile_found = File.exist? "sauce_connect.ready" 
           until (Time.now > timeout_after) || readyfile_found
             readyfile_found = File.exist? "sauce_connect.ready"
             sleep 1
           end
 
-          raise(TunnelNeverStarted, "Sauce Connect was not started within #{TIMOUT} seconds") unless readyfile_found
+          raise(TunnelNeverStarted, "Sauce Connect was not started within #{TIMEOUT} seconds") unless readyfile_found
         end
       end
 
