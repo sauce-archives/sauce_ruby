@@ -16,7 +16,7 @@ module Sauce
         }
         caps.merge!({:caps => platform[3]}) if platform[3]
         caps
-      rescue NoMethodError => e
+      rescue NoMethodError
         puts "I don't have any config"
       end
     end
