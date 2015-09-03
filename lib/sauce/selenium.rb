@@ -60,7 +60,6 @@ module Sauce
                       :url => "http://#{@config.username}:#{@config.access_key}@#{@config.host}:#{@config.port}/wd/hub",
                       :desired_capabilities => @config.to_desired_capabilities,
                       :http_client => http_client)
-      Sauce.logger.debug "Thread {Thread.current.object_id} created driver #{@driver.session_id}"
       http_client.timeout = 90 # Once the browser is up, commands should time out reasonably
 
       @watir = defined?(Watir::Browser) && @driver.is_a?(Watir::Browser)
@@ -71,6 +70,8 @@ module Sauce
         File.exist?(file_path) ? file_path : false
       end
 
+      STDERR.puts "Class of double is #{@driver.class}"
+      Sauce.logger.debug "Thread {Thread.current.object_id} created driver #{raw_driver.session_id}"
       Sauce::Selenium2.used_at_least_once
     end
 

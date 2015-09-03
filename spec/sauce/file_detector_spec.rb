@@ -4,6 +4,7 @@ describe Sauce::Selenium2 do
   describe "#file_detector" do
     it "should return the path of files when they exist" do
       Selenium::WebDriver::Remote::Bridge.any_instance.stub(:create_session).and_return({})
+      Selenium::WebDriver::Remote::Bridge.any_instance.stub(:session_id).and_return("FSDSDFSDF")
 
       path = __FILE__
 

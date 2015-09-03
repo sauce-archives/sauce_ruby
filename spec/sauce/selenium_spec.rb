@@ -6,6 +6,7 @@ describe Sauce::Selenium2 do
     before :each do
       mock_driver = double(::Selenium::WebDriver::Driver)
       mock_driver.stub(:file_detector=)
+      mock_driver.stub(:session_id)
       ::Selenium::WebDriver.should_receive(:for).and_return(mock_driver)
     end
 
