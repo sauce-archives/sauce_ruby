@@ -127,7 +127,7 @@ begin
         end
 
         def self.included(othermod)
-          Sauce.logger.debug "Sauce RSpec module was included by #{othermod.id}"
+          Sauce.logger.debug "Sauce RSpec module was included by #{othermod.name}"
           othermod.around do |the_test|
             config = Sauce::Config.new
             description = the_test.metadata[:full_description]
