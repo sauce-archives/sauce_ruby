@@ -1,6 +1,7 @@
 require 'json'
 require 'yaml'
 require 'uri'
+require 'sauce/logging'
 
 module Sauce
   def self.config

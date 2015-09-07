@@ -1,5 +1,6 @@
 require "yaml"
 require "parallel_tests/rspec/runner"
+require "sauce/logging"
 
 module ParallelTests
   module Saucerspec
@@ -13,6 +14,9 @@ module ParallelTests
         env = Sauce::TestBroker.next_environment(test_files)
         env << " #{rspec_1_color}" if version == 1
         our_options.merge!(:env => env)
+        Sauce.logger.debug "Starting parallel process #{process_number} of #{num_processes}"
+        Sauce.logger.debug "  #{cmd}"
+        Sauce.logger.debug "  #{our_options}"
         execute_command(cmd, process_number, num_processes, our_options)
       end
 

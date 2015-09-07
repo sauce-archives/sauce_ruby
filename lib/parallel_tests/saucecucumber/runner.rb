@@ -1,4 +1,5 @@
 require "parallel_tests/cucumber/runner"
+require "sauce/logging"
 
 module ParallelTests
   module Saucecucumber
@@ -16,6 +17,9 @@ module ParallelTests
             cucumber_opts(options[:test_options]),
             *sanitized_test_files
         ].compact.join(" ")
+        Sauce.logger.debug "Starting parallel process #{process_number} of #{num_processes}"
+        Sauce.logger.debug "  #{cmd}"
+        Sauce.logger.debug "  #{our_options}"
         execute_command(cmd, process_number, num_processes, options)
       end
 

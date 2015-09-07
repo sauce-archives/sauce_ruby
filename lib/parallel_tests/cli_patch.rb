@@ -14,6 +14,7 @@ module ParallelTests
           run_tests(group, Sauce::TestBroker.group_index(group), num_processes, options)
         end
 
+        Sauce.logger.debug "Parallel Tests reporting results."
         report_results(test_results)
       end
 

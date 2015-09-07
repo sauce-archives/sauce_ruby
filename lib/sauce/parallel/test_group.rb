@@ -1,3 +1,5 @@
+require "sauce/logging"
+
 module Sauce
   class TestGroup
     def initialize(platforms)

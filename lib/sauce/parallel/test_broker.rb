@@ -92,6 +92,7 @@ module Sauce
         error_message << possible_config_files.map { |file_path| "  - #{file_path}" }.join("\n")
         raise error_message
       end
+      Sauce.logger.info "Reading configuration from #{configuration_file}"
       require configuration_file
     end
 
