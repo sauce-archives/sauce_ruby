@@ -1,5 +1,8 @@
 # Changelog
 ## 3.5
+### 3.5.7
+Added logger.
+
 ### 3.5.6
 Edit rails_helper.rb instead of spec_helper.rb when present
 
