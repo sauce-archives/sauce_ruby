@@ -2,6 +2,7 @@ require 'capybara'
 require 'sauce/config'
 require 'sauce/selenium'
 require 'sauce/version'
+require 'sauce/logging'
 
 
 $sauce_tunnel = nil
@@ -85,6 +86,7 @@ module Sauce
           # Try to get a driver from the driver pool
           @browser = rspec_browser
           unless @browser
+            Sauce.logger.debug "Capybara creating new Selenium driver."
             @browser = Sauce::Selenium2.new
             at_exit do
               finish!
@@ -97,6 +99,7 @@ module Sauce
       # Returns the rspec created browser if it exists
       def rspec_browser
         if browser = Sauce.driver_pool[Thread.current.object_id]
+          Sauce.logger.debug "Using browser from driver_pool (browser.session_id)."
           @using_rspec_browser = true
         else
           @using_rspec_browser = false
@@ -115,6 +118,7 @@ module Sauce
       end
 
       def finish!
+        Sauce.logger.debug "Capybara integration called #finish!"
         @browser.quit if existing_browser?
         @browser = nil
 
