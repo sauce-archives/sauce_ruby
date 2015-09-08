@@ -327,6 +327,18 @@ Check the [Troubleshooting Guide](https://github.com/saucelabs/sauce_ruby/wiki/T
 
 There is a [Mailing List](https://groups.google.com/forum/#!newtopic/sauce-ruby-developers) for developers.
 
+## Logging
+
+The gem contains a logging facility.  If left alone, it defaults to creating a `Ruby::Logger` that logs at `WARN` level to Standard Out.  You can inject your own logger:
+
+```ruby
+Sauce.logger= your_logger
+```
+
+Or, if you set the `SAUCE_LOGFILE` and `SAUCE_LOGLEVEL` environment variables, the gem will create a file logger which logs at that level.  Logfiles will be created, appended too and rotated after 10Mb.
+
+In parallel, each logfile will have the number of the parallel process appended to the filename; The rake task will log to the first file.  Because of a quirk with how Parallel Tests numbers processes, the 'first' file will have no number, and the second will be numbered 2.
+
 ### Testing the Gem
 
 Running the full test suite will require [RVM](http://rvm.beginrescueend.com)
