@@ -70,7 +70,7 @@ module Sauce
         File.exist?(file_path) ? file_path : false
       end
 
-      Sauce.logger.debug "Thread {Thread.current.object_id} created driver #{raw_driver.session_id}"
+      Sauce.logger.debug "Thread #{Thread.current.object_id} created driver #{raw_driver.session_id}"
       Sauce::Selenium2.used_at_least_once
     end
 
@@ -87,9 +87,9 @@ module Sauce
     end
 
     def stop
-      Sauce.logger.debug "Thread {Thread.current.object_id} quitting driver #{@driver.session_id}"
+      Sauce.logger.debug "Thread #{Thread.current.object_id} quitting driver #{@driver.session_id}"
       @driver.quit
-      Sauce.logger.debug "Thread {Thread.current.object_id} has quit driver #{@driver.session_id}"
+      Sauce.logger.debug "Thread #{Thread.current.object_id} has quit driver #{@driver.session_id}"
     end
   end
 end

@@ -33,7 +33,7 @@ module Sauce
         logfile = "#{logfile}#{ENV["TEST_ENV_NUMBER"]}"
 
       end
-      log = File.open logfile, File::APPEND
+      log = File.open logfile, File::WRONLY | File::APPEND | File::CREAT
       return [log, 10, 10240]
     else
       return [STDOUT]

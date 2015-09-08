@@ -76,7 +76,6 @@ module Sauce
     def self.get_application_port
       port_index = ENV["TEST_ENV_NUMBER"].to_i
       port_to_use = POTENTIAL_PORTS[port_index]
-      Sauce.logger.info "Requesting server use port #{port_to_use}"
       return port_to_use
     end
 

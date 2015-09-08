@@ -144,7 +144,7 @@ begin
               example.metadata[:sauce_public_link] = SauceWhisk.public_link(@selenium.session_id)
 
               begin
-                Sauce.logger.debug "About to initiate test #{the_test}"
+                Sauce.logger.debug "About to initiate test #{description}"
                 the_test.run
                 success = example.exception.nil?
               ensure
