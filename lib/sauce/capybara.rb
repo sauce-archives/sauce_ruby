@@ -99,7 +99,7 @@ module Sauce
       # Returns the rspec created browser if it exists
       def rspec_browser
         if browser = Sauce.driver_pool[Thread.current.object_id]
-          Sauce.logger.debug "Using browser from driver_pool (browser.session_id)."
+          Sauce.logger.debug "Capybara using browser from driver_pool (browser.session_id)."
           @using_rspec_browser = true
         else
           @using_rspec_browser = false
@@ -123,6 +123,7 @@ module Sauce
         @browser = nil
 
         # Rethink how to do this.  RSpec still references the driver pool.
+        Sauce.logger.debug "Capybara - Removing driver for #{Thread.current.object_id} from driver pool."
         Sauce.driver_pool[Thread.current.object_id] = nil
         @using_rspec_browser = nil
       end

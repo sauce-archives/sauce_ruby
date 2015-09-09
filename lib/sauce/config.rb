@@ -216,6 +216,8 @@ module Sauce
     end
 
     def caps_for_location(file, linenumber=nil)
+      Sauce.logger.debug "Finding capabilities for #{file}"
+      Sauce.logger.debug "  Line #{linenumber}" unless linenumber.nil?
       Sauce::Config.called_from_integrations
       perfile_browsers = @opts[:perfile_browsers]
       
@@ -227,8 +229,10 @@ module Sauce
         else
           platforms = perfile_browsers[file]
         end
+        Sauce.logger.debug "  Found - #{platforms}"
         platforms.map { |p| [p['os'], p['browser'], p['version'], (p['caps'] || {})] }
       else
+        Sauce.logger.debug "No perfile browsers; Using browsers array instead."
         browsers
       end
     end

@@ -96,7 +96,9 @@ module Sauce
         test_each platforms, job_name do |selenium, caps|
           @selenium = selenium
 
-          Sauce.driver_pool[Thread.current.object_id] = @selenium
+          thread_id = Thread.current.object_id
+          Sauce.logger.debug "Cucumber - Thread #{thread_id} storing driver #{@selenium.session_id} in driver pool."
+          Sauce.driver_pool[thread_id] = @selenium
 
           driver = ::Capybara.current_session.driver
           # This session_id is the job ID used by Sauce Labs, we're pulling it

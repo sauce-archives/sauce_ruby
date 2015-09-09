@@ -41,7 +41,7 @@ module Sauce
 
     attr_reader :config, :driver, :watir, :raw_driver
 
-    def_delegator :@driver, :execute_script
+    def_delegator :@raw_driver, :execute_script
 
     def self.used_at_least_once?
       @used_at_least_once || false
@@ -75,7 +75,7 @@ module Sauce
     end
 
     def method_missing(meth, *args)
-      @driver.send(meth, *args)
+      raw_driver.send(meth, *args)
     end
 
     def session_id

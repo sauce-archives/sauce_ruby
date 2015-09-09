@@ -140,7 +140,9 @@ begin
               example.instance_variable_set(:@exception, nil)
               
               @selenium = selenium
-              Sauce.driver_pool[Thread.current.object_id] = @selenium
+              thread_id = Thread.current.object_id
+              Sauce.logger.debug "RSpec - Thread #{thread_id} storing driver #{@selenium.session_id} in driver pool."
+              Sauce.driver_pool[thread_id] = @selenium
               example.metadata[:sauce_public_link] = SauceWhisk.public_link(@selenium.session_id)
 
               begin
@@ -162,6 +164,7 @@ begin
                   Sauce.logger.error "Error running post job hooks"
                   Sauce.logger.error e
                 end
+                Sauce.logger.debug "RSpec - Removing driver for #{Thread.current.object_id} from driver pool."
                 Sauce.driver_pool.delete Thread.current.object_id
               end
               if (exceptions.length > 0)
