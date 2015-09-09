@@ -1,5 +1,8 @@
 # Changelog
 ## 3.5
+### 3.5.8
+MOAR logging.
+
 ### 3.5.7
 Added logger.
 
