@@ -1,5 +1,9 @@
 # Changelog
 ## 3.5
+
+### 3.5.9
+Fixed type in Cuke runner.
+
 ### 3.5.8
 MOAR logging.
 
