@@ -6,21 +6,21 @@ module ParallelTests
     class Runner < ParallelTests::Cucumber::Runner
 
       def self.run_tests(test_files, process_number, num_processes, options)
-        options = options.dup
+        our_options = options.dup
         sanitized_test_files = test_files.map { |val| Shellwords.escape(val) }
         env = Sauce::TestBroker.next_environment(test_files)
         env.merge!({"AUTOTEST" => "1"}) if $stdout.tty? # display color when we are in a terminal
-        options.merge!({:env => env})
+        our_options.merge!({:env => env})
         cmd = [
             executable,
             (runtime_logging if File.directory?(File.dirname(runtime_log))),
-            cucumber_opts(options[:test_options]),
+            cucumber_opts(our_options[:test_options]),
             *sanitized_test_files
         ].compact.join(" ")
         Sauce.logger.debug "Starting parallel process #{process_number} of #{num_processes}"
         Sauce.logger.debug "  #{cmd}"
         Sauce.logger.debug "  #{our_options}"
-        execute_command(cmd, process_number, num_processes, options)
+        execute_command(cmd, process_number, num_processes, our_options)
       end
 
       def self.tests_in_groups(tests, num_groups, options={})
