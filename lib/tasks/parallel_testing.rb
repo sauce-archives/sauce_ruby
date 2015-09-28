@@ -72,7 +72,11 @@ namespace :sauce do
 end
 
 def run_parallel_tests(t, args, command)
-  if ParallelTests.number_of_running_processes == 0
+  skip_check = ENV["SAUCE_SKIP_PARALLEL_CHECKS"]
+  
+  warn_of_skipped_parallel_processes if skip_check
+
+  if((ParallelTests.number_of_running_processes == 0) || skip_check)
     username    = ENV["SAUCE_USERNAME"].to_s
     access_key  = ENV["SAUCE_ACCESS_KEY"].to_s
     if(!username.empty? && !access_key.empty?)
@@ -145,4 +149,16 @@ def parse_task_args(test_tool=:rspec, args)
   return_args.concat files.split
 
   return return_args
+end
+
+def warn_of_skipped_parallel_processes
+  puts <<-ENDLINE
+  ---------------------------------------------------------------------------
+  The SAUCE_SKIP_PARALLEL_CHECKS environment variable is truthy. This will
+  cause the gem to run regardless of other parallel_tests processes running,
+  and may lead to unexpected behaviour including never ending tests.
+
+  Automatic control of Sauce Connect does NOT work with this option.
+  ---------------------------------------------------------------------------
+  ENDLINE
 end
