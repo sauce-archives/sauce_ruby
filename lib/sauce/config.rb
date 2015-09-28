@@ -379,7 +379,7 @@ module Sauce
 
         paths.each do |path|
             if File.exist? path
-                Sauce.debug.info "Loading Sauce config from yaml file at #{path}"
+                Sauce.logger.info "Loading Sauce config from yaml file at #{path}"
                 conf = YAML.load_file(path)
                 return conf.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
             end
