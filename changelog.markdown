@@ -1,5 +1,8 @@
 # Changelog
 ## 3.5
+### 3.5.10
+Allow users to set SAUCE_SKIP_PARALLEL_CHECKS to disable checks for pre-running parallel processes.  May totally bust up your tests.
+Fix a logging bug in YAML config reading.
 
 ### 3.5.9
 Fixed type in Cuke runner.
