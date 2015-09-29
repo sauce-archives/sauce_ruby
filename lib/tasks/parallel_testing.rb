@@ -72,8 +72,9 @@ namespace :sauce do
 end
 
 def run_parallel_tests(t, args, command)
-  skip_check = ENV["SAUCE_SKIP_PARALLEL_CHECKS"]
-  
+  skip_check_string = (ENV["SAUCE_SKIP_PARALLEL_CHECKS"] || 'false').downcase
+  skip_check = (skip_check_string == 'true')
+
   warn_of_skipped_parallel_processes if skip_check
 
   if((ParallelTests.number_of_running_processes == 0) || skip_check)
