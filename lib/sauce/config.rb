@@ -70,7 +70,7 @@ module Sauce
         selenium-version command-timeout prerun prerun-args screen-resolution
         disable-popup-handler avoid-proxy public name iedriver-version parent-tunnel
         time-zone device-orientation record-logs webdriver-remote-quiet-exceptions
-        iedriver-version
+        iedriver-version chromeOptions
     }
 
     def self.get_application_port
