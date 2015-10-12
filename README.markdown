@@ -217,7 +217,7 @@ All the standard Selenium & Sauce capabilities are accessible from the Sauce.con
 ```ruby
 Sauce.config do |config|
   # Build is already allowed
-  config[:build] => "9001AMeme"
+  config[:build] = "9001AMeme"
 
   # Shiny is not allowed yet
   c.whitelist 'shiny'
