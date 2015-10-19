@@ -220,7 +220,7 @@ Sauce.config do |config|
   config[:build] => "9001AMeme"
 
   # Shiny is not allowed yet
-  c.whitelist 'shiny'
+  config.whitelist 'shiny'
   config['shiny'] = "Something"
 end
 ```
