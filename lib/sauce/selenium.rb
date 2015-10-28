@@ -56,9 +56,12 @@ module Sauce
       http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new
       http_client.timeout = 300 # Browser launch can take a while
 
+      desired_capabilities = @config.to_desired_capabilities
+      Sauce.logger.debug "Desired Capabilities at creation: #{desired_capabilities}"
+
       @driver = Sauce.webdriver_method.call(:remote,
                       :url => "http://#{@config.username}:#{@config.access_key}@#{@config.host}:#{@config.port}/wd/hub",
-                      :desired_capabilities => @config.to_desired_capabilities,
+                      :desired_capabilities => desired_capabilities,
                       :http_client => http_client)
       http_client.timeout = 90 # Once the browser is up, commands should time out reasonably
 
