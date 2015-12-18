@@ -371,12 +371,14 @@ describe Sauce::Capybara do
         config.automatic_reload = true
         config.ignore_hidden_elements = true
         config.server_port = nil
+      when ruby_version => 2.5
+        config.default_max_wait_time = 2
       end
 
       config.run_server = true
       config.server {|app, port| Capybara.run_default_server(app, port)}
       config.default_selector = :css
-      config.default_max_wait_time = 2
+      config.default_wait_time = 2
       config.default_host = "http://www.example.com"
 
       Sauce::Capybara.configure_capybara
