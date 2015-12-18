@@ -376,7 +376,7 @@ describe Sauce::Capybara do
       config.run_server = true
       config.server {|app, port| Capybara.run_default_server(app, port)}
       config.default_selector = :css
-      config.default_wait_time = 2
+      config.default_max_wait_time = 2
       config.default_host = "http://www.example.com"
 
       Sauce::Capybara.configure_capybara
