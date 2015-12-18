@@ -312,7 +312,13 @@ describe Sauce::Capybara do
       Sauce.driver_pool[Thread.current.object_id] = nil
     end
 
-    it "should use one of the Sauce Connect ports", :capybara_version => [2, "2.9.9"], :js => true do
+    it "should use one of the Sauce Connect ports", :capybara_version => ["2.5.0", "2.9.9"], :js => true do
+      reset_capybara(2.5)
+      used_port = Capybara.current_session.server.port
+      Sauce::Config::POTENTIAL_PORTS.should include used_port 
+    end
+
+    it "should use one of the Sauce Connect ports", :capybara_version => [2, "2.4.9"], :js => true do
       reset_capybara(2.0)
       used_port = Capybara.current_session.server.port
       Sauce::Config::POTENTIAL_PORTS.should include used_port 
