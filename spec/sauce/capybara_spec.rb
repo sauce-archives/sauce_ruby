@@ -371,7 +371,7 @@ describe Sauce::Capybara do
         config.automatic_reload = true
         config.ignore_hidden_elements = true
         config.server_port = nil
-      when ruby_version => 2.5
+      when capy_version => 2.5
         config.default_max_wait_time = 2
       end
 
