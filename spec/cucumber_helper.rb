@@ -13,6 +13,7 @@ module Sauce
 
       def step_mother
         @step_mother ||= ::Cucumber::Runtime.new
+        return @step_mother
       end
 
       def load_features(content)

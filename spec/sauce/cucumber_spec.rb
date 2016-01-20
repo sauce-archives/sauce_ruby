@@ -62,6 +62,7 @@ module Sauce::Capybara
       let(:driver) do
         driver = double('Sauce::Selenium2 Driver')
         driver.stub(:finish!)
+        driver.stub(:session_id).and_return(session_id)
         driver.stub_chain(:browser, :quit)
         driver.stub_chain(:browser, :session_id).and_return(session_id)
         driver
@@ -71,7 +72,8 @@ module Sauce::Capybara
         # Need to create our nice mocked Capybara driver
         Capybara.stub_chain(:current_session, :driver).and_return(driver)
         SauceWhisk::Job.stub(:new).and_return(nil)
-        Sauce::Selenium2.stub(:new).with(anything).and_return Object.new
+        Sauce::Selenium2.stub(:new).with(anything).and_return driver
+        
         Sauce.config do |c|
           c[:browsers] = [
             ["OS X 10.8", "Safari", "6"],
