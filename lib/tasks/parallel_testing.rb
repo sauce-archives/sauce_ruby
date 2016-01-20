@@ -76,7 +76,11 @@ def run_parallel_tests(t, args, command)
   skip_check = (skip_check_string == 'true')
 
   warn_of_skipped_parallel_processes if skip_check
-  WebMock.disable! if ENV['DISABLE_WEBMOCK'] == 'true'
+  
+  if defined? WebMock
+    WebMock.disable! if ENV['DISABLE_WEBMOCK_FOR_RAKE'] == 'true'
+  end
+
   if((ParallelTests.number_of_running_processes == 0) || skip_check)
     username    = ENV["SAUCE_USERNAME"].to_s
     access_key  = ENV["SAUCE_ACCESS_KEY"].to_s

@@ -277,6 +277,8 @@ If you want full control of your mocking, just include saucelabs.com when allowi
 WebMock.disable_net_connect!(:allow => [/saucelabs.com/], "www.example.com")
 ```
 
+When using the parallel testing rake tasks, the Sauce gem will reach out to the Sauce Labs REST API.  If WebMock is active during Rake tasks, you can set the `DISABLE_WEBMOCK_FOR_RAKE` environment variable to 'true' to allow this to continue.
+
 ## Reporting Results
 
 ### RSpec 2, Test::Unit and Cucumber
