@@ -1,4 +1,11 @@
 # Changelog
+## 3.7
+### 3.7.0
+Skipped 3.6 b/c there were existing tags?
+Ability to skip WebMock in Rake task (Thanks @drewbailey)
+Removed deprecated Capybara option (Thanks @Kolajy)
+Added tests for Capybara 2.5+ (Thanks @jlok)
+
 ## 3.5
 ### 3.5.11
 SAUCE_SKIP_PARALLEL_CHECKS now *only* works when set specifically to a string which downcases to 'true'.
