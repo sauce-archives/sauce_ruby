@@ -168,7 +168,7 @@ begin
                   @selenium.stop
                   Sauce.logger.debug "RSpec - Removing driver for #{Thread.current.object_id} from driver pool."
                   Sauce.driver_pool.delete Thread.current.object_id
-                rescue
+                rescue Exception => e
                   Sauce.logger.error "Error stopping selenium instance"
                   Sauce.logger.error e
                 end
