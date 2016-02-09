@@ -315,6 +315,12 @@ The Sauce gem has been optimized to work most effectively with RSpec.
 
 Check the [Troubleshooting Guide](https://github.com/saucelabs/sauce_ruby/wiki/Troubleshooting)
 
+### My tests keep erroring out with 
+
+You're either quitting your tests inside your test blocks, _or_ something is going wrong with your test sessions.  When the gem goes to quit the sessions, they then fail.  This is revealed by design as having sessions closed during tests is considered to be bad thing.
+
+If you're sure you want to supress this behaviour, you can do so by setting the `suppress_session_quit_failures` config value to true.
+
 ## Contributing to the Gem
 
 * Fork the GitHub project

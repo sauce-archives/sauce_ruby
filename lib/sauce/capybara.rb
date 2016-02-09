@@ -43,6 +43,7 @@ module Sauce
       alias :base_find_window :find_window
       alias :base_execute_script :execute_script
       alias :base_evaluate_script :evaluate_script
+      alias :base_reset! :reset!
 
       @methods_to_retry = [:visit, :current_url,
         :within_frame, :within_window, :find_window, :source,
@@ -126,6 +127,21 @@ module Sauce
         Sauce.logger.debug "Capybara - Removing driver for #{Thread.current.object_id} from driver pool."
         Sauce.driver_pool[Thread.current.object_id] = nil
         @using_rspec_browser = nil
+      end
+
+      def reset!
+        begin
+          base_reset!
+
+        rescue Selenium::WebDriver::Error::WebDriverError => e 
+          session_finished = e.message.match "ERROR Job is not in progress"
+
+          if @browser.config[:suppress_session_quit_failures] && session_finished
+            @browser=nil
+          else
+            raise e
+          end
+        end   
       end
 
       def render(path)

@@ -28,7 +28,8 @@ module Sauce
         :start_tunnel => true,
         :start_local_application => true,
         :warn_on_skipped_integration => true,
-        :skip_connection_test => false
+        :skip_connection_test => false,
+        :suppress_session_quit_failures => false
     }
 
     DEFAULT_BROWSERS = {
