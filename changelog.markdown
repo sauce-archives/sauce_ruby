@@ -1,5 +1,10 @@
 # Changelog
 ## 3.7
+### 3.7.1
+Added `chromedriver-version` to whitelist
+Added `suppress_session_quit_failures` to Config.  Will prevent test cleanup from
+throwing objections when a Sauce session is already closed.
+
 ### 3.7.0
 Skipped 3.6 b/c there were existing tags?
 Ability to skip WebMock in Rake task (Thanks @drewbailey)
