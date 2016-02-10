@@ -91,8 +91,23 @@ module Sauce
 
     def stop
       Sauce.logger.debug "Thread #{Thread.current.object_id} quitting driver #{@driver.session_id}"
-      @driver.quit
+      quit_and_maybe_rescue @driver
       Sauce.logger.debug "Thread #{Thread.current.object_id} has quit driver #{@driver.session_id}"
+    end
+
+    def quit
+      quit_and_maybe_rescue raw_driver
+    end
+
+    def quit_and_maybe_rescue driver
+      begin
+        driver.quit
+      rescue Selenium::WebDriver::Error::WebDriverError => e 
+        session_finished = e.message.match "has already finished, and can't receive further commands"
+        unless @config[:suppress_session_quit_failures] && session_finished
+          raise e
+        end   
+      end
     end
   end
 end

@@ -28,7 +28,8 @@ module Sauce
         :start_tunnel => true,
         :start_local_application => true,
         :warn_on_skipped_integration => true,
-        :skip_connection_test => false
+        :skip_connection_test => false,
+        :suppress_session_quit_failures => false
     }
 
     DEFAULT_BROWSERS = {
@@ -70,7 +71,7 @@ module Sauce
         selenium-version command-timeout prerun prerun-args screen-resolution
         disable-popup-handler avoid-proxy public name iedriver-version parent-tunnel
         time-zone device-orientation record-logs webdriver-remote-quiet-exceptions
-        iedriver-version chromeOptions
+        chromedriver-version chromeOptions
     }
 
     def self.get_application_port
