@@ -1,3 +1,5 @@
+#[DEPRECATED] Sauce Labs does not recommend this gem. It will not receive further development or support.
+
 # Sauce for Ruby
 
 [![Build Status](https://travis-ci.org/saucelabs/sauce_ruby.png)](https://travis-ci.org/saucelabs/sauce_ruby)
