@@ -117,6 +117,10 @@ module Sauce
           @browser
         end
       end
+      
+      def session_id
+        browser.session_id if existing_browser?
+      end
 
       def finish!
         Sauce.logger.debug "Capybara integration called #finish!"
