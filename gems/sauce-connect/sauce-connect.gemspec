@@ -5,8 +5,8 @@ Gem::Specification.new do |gem|
   gem.version       = "3.6.2"
   gem.authors       = ["R. Tyler Croy", "Steve Hazel", "Dylan Lacey", "Rick Martínez"]
   gem.email         = ["tyler@monkeypox.org"]
-  gem.description   = "A wrapper to start and stop a Sauce Connect tunnel programatically."
-  gem.summary       = "Manage Sauce Connect from within your tests"
+  gem.description   = "A wrapper to start and stop a Sauce Connect tunnel programatically.  [DEPRECATED] Sauce Labs does not recommend this gem. It will not receive further development or support."
+  gem.summary       = "[DEPRECATED] Manage Sauce Connect from within your tests"
   gem.homepage      = "https://docs.saucelabs.com/reference/sauce-connect"
   gem.license       = "Apache 2.0"
 
@@ -28,4 +28,6 @@ Gem::Specification.new do |gem|
 
   gem.requirements << 'An account at http://www.saucelabs.com'
   gem.requirements << 'A working copy of Sauce Connect from https://docs.saucelabs.com/reference/sauce-connect'
+
+  gem.post_install_message "WARNING: This gem is no longer supported.  Please see https://wiki.saucelabs.com/display/DOCS/Instant+Selenium+Ruby+Tests for assistance running Ruby tests with Sauce Labs."
 end

@@ -1,6 +1,6 @@
 # Sauce::Cucumber
 
-TODO: Write a gem description
+#[DEPRECATED] Sauce Labs does not recommend this gem. It will not receive further development or support.
 
 ## Installation
 
