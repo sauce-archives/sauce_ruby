@@ -19,5 +19,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency('sauce_whisk', "~>0.0.10")
   gem.add_dependency('cucumber', ['>= 1.2.0', '<2.0.0'])
 
-  gem.post_install_message "WARNING: This gem is no longer supported.  Please see https://wiki.saucelabs.com/display/DOCS/Instant+Selenium+Ruby+Tests for assistance running Ruby tests with Sauce Labs."
+  gem.post_install_message = "WARNING: This gem is no longer supported.  Please see https://wiki.saucelabs.com/display/DOCS/Instant+Selenium+Ruby+Tests for assistance running Ruby tests with Sauce Labs."
 end
