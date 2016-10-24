@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors = ["Dylan Lacey", "Steven Hazel", "R. Tyler Croy", "Santiago Suarez Ordoñez", "Eric Allen", "Sean Grove", "Isaac Murchie"]
   s.homepage = 'http://github.com/sauce-labs/sauce_ruby'
   s.email = 'help@saucelabs.com'
-  s.summary = "A Ruby helper for running tests in Sauce Labs"
-  s.description = "A Ruby helper for running tests in Sauce Labs' browser testing cloud service"
+  s.summary = "[DEPRECATED] A Ruby helper for running tests in Sauce Labs"
+  s.description = "[DEPRECATED] A Ruby helper for running tests in Sauce Labs' browser testing cloud service.  #[DEPRECATED] Sauce Labs does not recommend this gem. It will not receive further development or support."
   s.license = 'Apache 2.0'
   # Include pretty much everything in Git except the examples/ directory
   s.files = Dir['lib/**/*.rb'] + Dir['lib/**/**/*.rb']
@@ -34,4 +34,6 @@ Gem::Specification.new do |s|
   s.add_dependency('highline', [">= 1.5.0"])
   s.add_dependency('parallel_tests', [">= 1.1.1", "<= 1.3.7"])
   s.add_dependency('sauce_whisk', ["~> 0.0.11"])
+
+  s.post_install_message "WARNING: This gem is no longer supported.  Please see https://wiki.saucelabs.com/display/DOCS/Instant+Selenium+Ruby+Tests for assistance running Ruby tests with Sauce Labs."
 end
