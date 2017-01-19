@@ -150,7 +150,6 @@ begin
                 the_test.run
                 success = example.exception.nil?
               ensure
-                @selenium.stop
                 begin
                   os = caps[:os]
                   browser = caps[:browser]
@@ -164,8 +163,15 @@ begin
                   Sauce.logger.error "Error running post job hooks"
                   Sauce.logger.error e
                 end
-                Sauce.logger.debug "RSpec - Removing driver for #{Thread.current.object_id} from driver pool."
-                Sauce.driver_pool.delete Thread.current.object_id
+
+                begin
+                  @selenium.stop
+                  Sauce.logger.debug "RSpec - Removing driver for #{Thread.current.object_id} from driver pool."
+                  Sauce.driver_pool.delete Thread.current.object_id
+                rescue Exception => e
+                  Sauce.logger.error "Error stopping selenium instance"
+                  Sauce.logger.error e
+                end
               end
               if (exceptions.length > 0)
                 example.instance_variable_set(:@exception, exceptions.first[1])
