@@ -79,7 +79,7 @@ module Sauce
         at_exit do
           Sauce.logger.debug "#{Thread.current.object_id} - At exit hook called in Sauce::Utilities::RailsServer."
           Sauce.logger.info "Stopping Rails App Server."
-          @server.stop(3, "INT")
+          @server.stop(3)
           RailsServer.server_pool.delete Thread.current.object_id
         end
         Sauce.logger.info "Rails server running!"
@@ -90,7 +90,7 @@ module Sauce
       def stop
         Sauce.logger.debug "#{Thread.current.object_id} - Stopping Rails app server with #stop method."
         begin
-          @server.stop(3, "INT")
+          @server.stop(3)
         rescue
           Sauce.logger.error "#{Thread.current.object_id} - Rails server could not be killed. Did it fail to start?"
         end
